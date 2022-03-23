@@ -1,0 +1,40 @@
+spring:
+#  for h2
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/deumarketplace
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+
+#  for mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: localDeuMarket
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        # show_sql: true
+        format_sql: true
+
+#  profiles:
+#    include: oauth
+
+#app:
+#  auth:
+#    tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
+#    tokenExpirationMsec: 864000000
+#  oauth2:
+#    authorizedRedirectUris:
+#      http://localhost:3000/oauth2/redirect
+
+# log
+logging.level:
+  org.hibernate.SQL: debug
+
+  org.springframework.security: debug
+  # org.hibernate.type: trace
