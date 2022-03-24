@@ -13,5 +13,5 @@ public class BookState {
 
     private String writeState;
     private String surfaceState;
-    private int regularPrice;
+    private Integer regularPrice;
 }

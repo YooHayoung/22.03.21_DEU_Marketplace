@@ -16,6 +16,7 @@ import com.deu.marketplace.web.item.dto.BuyItemListResponseDto;
 import com.deu.marketplace.web.item.dto.ItemDetailResponseDto;
 import com.deu.marketplace.web.item.dto.ItemSaveRequestDto;
 import com.deu.marketplace.web.item.dto.SellItemListResponseDto;
+import com.deu.marketplace.web.itemImg.dto.ItemImgRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NoResultException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,12 +43,12 @@ public class ItemController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<?> getItems(ItemSearchCond cond,
-                                      @PageableDefault(size = 20, page = 0,
-                                              sort = "lastModifiedDate",
-                                              direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<?> getItemList(ItemSearchCond cond,
+                                         @PageableDefault(size = 20, page = 0,
+                                                 sort = "lastModifiedDate",
+                                                 direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Item> items = itemService.searchItemPage(cond, pageable);
-        if (cond.getClassification().equals(Classification.SELL)) {
+        if (cond.getClassification().equals(Classification.SELL.name())) {
             Page<SellItemListResponseDto> dtoPage = items.map(item -> new SellItemListResponseDto(item));
             return ResponseEntity.ok().body(dtoPage);
         } else {
@@ -55,7 +58,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> getOneItemById(@PathVariable("itemId") Long itemId) {
+    public ResponseEntity<?> getOneItem(@PathVariable("itemId") Long itemId) {
         Item item = itemService.getOneItemById(itemId).orElseThrow();
         List<ItemImg> findItemImgs = itemImgService.getAllByItemId(itemId);
         ItemDetailResponseDto itemDetailResponseDto =
@@ -63,37 +66,95 @@ public class ItemController {
         return ResponseEntity.ok().body(itemDetailResponseDto);
     }
 
+//    @PatchMapping("/{itemId}")
+//    public ResponseEntity<?> updateOneItem(@PathVariable("itemId") Long itemId) {}
+//
+//    @DeleteMapping("/{itemId}")
+//    public ResponseEntity<?> deleteOneItem(@PathVariable("itemId") Long itemId) {}
+
     @PostMapping("/save")
     public ResponseEntity<?> saveItem(@RequestBody ItemSaveRequestDto requestDto) {
         ItemCategory itemCategory = itemCategoryService
                 .searchOneById(requestDto.getItemCategoryId()).orElseThrow(() -> new NoResultException());
         String categoryName = itemCategory.getCategoryName();
-        if (categoryName.equals("대학 교재")) {
-            Lecture lecture = lectureService
-                    .getOneById(requestDto.getLectureId()).orElseThrow(() -> new NoResultException());
-            Item item = Item.ByUnivBookBuilder()
-                    .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null))
+        if (requestDto.getClassification().equals(Classification.SELL.name())) {
+            if (categoryName.equals("대학 교재")) {
+                Lecture lecture = lectureService
+                        .getOneById(requestDto.getLectureId()).orElseThrow(() -> new NoResultException());
+                Item item = Item.ByUnivBookBuilder()
+                        .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null)) //
+                        .itemCategory(itemCategory)
+                        .title(requestDto.getTitle())
+                        .lecture(lecture)
+                        .bookState(new BookState(requestDto.getWriteState(),
+                                requestDto.getSurfaceState(), requestDto.getRegularPrice()))
+                        .price(requestDto.getPrice())
+                        .description(requestDto.getDescription())
+                        .classification(Classification.valueOf(requestDto.getClassification()))
+                        .build();
+                itemImgDtosToEntity(requestDto.getItemImgs(), item);
+                return ResponseEntity.ok().body(itemService.saveItem(item));
+            } else if (categoryName.equals("강의 관련 물품")) {
+                Lecture lecture = lectureService
+                        .getOneById(requestDto.getLectureId()).orElseThrow(() -> new NoResultException());
+                Item item = Item.ByUnivBookBuilder()
+                        .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null)) //
+                        .itemCategory(itemCategory)
+                        .title(requestDto.getTitle())
+                        .lecture(lecture)
+                        .price(requestDto.getPrice())
+                        .description(requestDto.getDescription())
+                        .classification(Classification.valueOf(requestDto.getClassification()))
+                        .build();
+                itemImgDtosToEntity(requestDto.getItemImgs(), item);
+                return ResponseEntity.ok().body(itemService.saveItem(item));
+            } else if (categoryName.equals("서적")) {
+                Item item = Item.ByUnivBookBuilder()
+                        .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null)) //
+                        .itemCategory(itemCategory)
+                        .title(requestDto.getTitle())
+                        .bookState(new BookState(requestDto.getWriteState(),
+                                requestDto.getSurfaceState(), requestDto.getRegularPrice()))
+                        .price(requestDto.getPrice())
+                        .description(requestDto.getDescription())
+                        .classification(Classification.valueOf(requestDto.getClassification()))
+                        .build();
+                itemImgDtosToEntity(requestDto.getItemImgs(), item);
+                return ResponseEntity.ok().body(itemService.saveItem(item));
+            } else {
+                Item item = Item.ByNormalItemBuilder()
+                        .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null)) //
+                        .itemCategory(itemCategory)
+                        .title(requestDto.getTitle())
+                        .price(requestDto.getPrice())
+                        .description(requestDto.getDescription())
+                        .classification(Classification.valueOf(requestDto.getClassification()))
+                        .build();
+                return ResponseEntity.ok().body(itemService.saveItem(item));
+            }
+        } else {
+            Item item = Item.ByNormalItemBuilder()
+                    .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null)) //
                     .itemCategory(itemCategory)
                     .title(requestDto.getTitle())
-                    .lecture(lecture)
-                    .bookState(new BookState(requestDto.getWriteState(),
-                            requestDto.getSurfaceState(), requestDto.getRegularPrice()))
                     .price(requestDto.getPrice())
                     .description(requestDto.getDescription())
                     .classification(Classification.valueOf(requestDto.getClassification()))
                     .build();
-            return  ResponseEntity.ok().body(itemService.saveItem(item));
-        } else {
-            Item item = Item.ByNormalItemBuilder()
-                    .member(memberService.getMemberById(requestDto.getMemberId()).orElse(null))
-                    .itemCategory(itemCategory)
-                    .title(requestDto.getTitle())
-                    .price(requestDto.getPrice())
-                    .description(requestDto.getDescription())
-                    .build();
             return ResponseEntity.ok().body(itemService.saveItem(item));
         }
-
-
+    }
+    private List<?> itemImgDtosToEntity(List<ItemImgRequestDto> dtos, Item item) {
+        List<ItemImg> itemImgs = new ArrayList<>();
+        if (dtos != null) {
+            for (ItemImgRequestDto dto : dtos) {
+                itemImgs.add(ItemImg.builder()
+                        .item(item)
+                        .imgFile(dto.getImgFile())
+                        .imgSeq(dto.getImgSeq())
+                        .build());
+            }
+        }
+        return itemImgs;
     }
 }

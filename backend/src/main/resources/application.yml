@@ -1,36 +1,37 @@
 spring:
 #  for h2
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/deumarketplace
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/deumarketplace
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
 #  for mysql
-  datasource:
-    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-    username: localDeuMarket
-    password:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+#    username: localDeuMarket
+#    password:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         # show_sql: true
         format_sql: true
 
-#  profiles:
-#    include: oauth
+# oauth include
+  profiles:
+    include: oauth
 
-#app:
-#  auth:
-#    tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
-#    tokenExpirationMsec: 864000000
-#  oauth2:
-#    authorizedRedirectUris:
-#      http://localhost:3000/oauth2/redirect
+app:
+  auth:
+    tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
+    tokenExpirationMsec: 864000000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:8080/oauth2/redirect #
 
 # log
 logging.level:

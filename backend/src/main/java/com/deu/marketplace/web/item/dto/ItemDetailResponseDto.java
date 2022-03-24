@@ -5,6 +5,7 @@ import com.deu.marketplace.domain.item.entity.Classification;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import com.deu.marketplace.web.itemImg.dto.ItemImgResponseDto;
+import com.deu.marketplace.web.lecture.dto.LectureDto;
 import lombok.Getter;
 
 import java.util.List;
@@ -14,8 +15,9 @@ import java.util.stream.Collectors;
 public class ItemDetailResponseDto {
     private Long itemId;
     private String itemCategoryName;
-    private String lectureName;
-    private String professorName;
+    private LectureDto lecture;
+//    private String lectureName;
+//    private String professorName;
     private BookState bookInfo;
     private String title;
     private int price;
@@ -30,13 +32,16 @@ public class ItemDetailResponseDto {
     public ItemDetailResponseDto(Item item, List<ItemImg> itemImgs) {
         this.itemId = item.getId();
         this.itemCategoryName = item.getItemCategory().getCategoryName();
-        this.lectureName = item.getLecture().getLectureName();
-        this.professorName = item.getLecture().getProfessorName();
-        this.bookInfo = BookState.builder()
-                .writeState(item.getBookState().getWriteState())
-                .surfaceState(item.getBookState().getSurfaceState())
-                .regularPrice(item.getBookState().getRegularPrice())
-                .build();
+//        this.lectureName = item.getLecture().getLectureName();
+//        this.professorName = item.getLecture().getProfessorName();
+        if (item.getLecture() != null) this.lecture = new LectureDto(item.getLecture());
+        if (item.getBookState() != null) {
+            this.bookInfo = BookState.builder()
+                    .writeState(item.getBookState().getWriteState())
+                    .surfaceState(item.getBookState().getSurfaceState())
+                    .regularPrice(item.getBookState().getRegularPrice())
+                    .build();
+        }
         this.title = item.getTitle();
         this.price = item.getPrice();
         this.description = item.getDescription();

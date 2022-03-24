@@ -1,26 +1,25 @@
-package com.deu.marketplace.web.member.dto;
+package com.deu.marketplace.config.security.dto;
 
 import com.deu.marketplace.domain.member.entity.Member;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-public class SignUpRequestDto {
-
+public class OauthUserDto {
+    private String oauthId;
     private String name;
     private String email;
 
     @Builder
-    public SignUpRequestDto(String name, String email) {
+    public OauthUserDto(String oauthId, String name, String email) {
+        this.oauthId = oauthId;
         this.name = name;
         this.email = email;
     }
 
-    public Member toEntity() {
+    public Member toMemberEntity() {
         return Member.ByUserBuilder()
+                .oauthId(oauthId)
                 .name(name)
                 .email(email)
                 .build();

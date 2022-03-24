@@ -19,6 +19,8 @@ public class LectureController {
 
     private final LectureService lectureService;
 
+    //수정예정
+    
     @GetMapping
     public ResponseEntity<?> getAllLectures() {
         return ResponseEntity.ok().body(lectureService.getAll());

@@ -2,14 +2,18 @@ package com.deu.marketplace.domain.item.entity;
 
 import com.deu.marketplace.domain.BaseTimeEntity;
 import com.deu.marketplace.domain.itemCategory.entity.ItemCategory;
+import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import com.deu.marketplace.domain.lecture.entity.Lecture;
 import com.deu.marketplace.domain.member.entity.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,6 +38,7 @@ public class Item extends BaseTimeEntity {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
+    // Embedded Type은 저장할 때 적절한 검증을 통해 모든 필드 값이 null로 저장되지 않도록 하는 것이 좋다. <- 꺼내쓸때 너무 힘들다..
     @Embedded
     private BookState bookState;
 
@@ -46,6 +51,11 @@ public class Item extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private Classification classification;
+
+    //@Builder.Default
+    @JsonIgnore
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemImg> itemImgs = new ArrayList<>();
 
     @Builder(builderClassName = "ByUnivBookBuilder", builderMethodName = "ByUnivBookBuilder")
     public Item(Member member, ItemCategory itemCategory,

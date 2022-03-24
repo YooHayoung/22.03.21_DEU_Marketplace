@@ -20,6 +20,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public Item saveItem(Item item) {
         return itemRepository.save(item);
     }

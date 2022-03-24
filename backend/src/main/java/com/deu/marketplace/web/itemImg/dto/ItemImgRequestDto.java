@@ -8,15 +8,16 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class ItemImgRequestDto {
     private String imgFile;
     private int imgSeq;
 
-    public ItemImg toEntity() {
-        return ItemImg.builder()
-                .imgFile(imgFile)
-                .imgSeq(imgSeq)
-                .build();
-    }
+//    public ItemImg toEntity() {
+//        return ItemImg.builder()
+//                .imgFile(imgFile)
+//                .imgSeq(imgSeq)
+//                .build();
+//    }
 }

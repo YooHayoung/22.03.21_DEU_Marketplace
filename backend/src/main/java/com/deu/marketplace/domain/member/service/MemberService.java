@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
+
     Optional<Member> getMemberById(Long id);
 
     Optional<Member> getMemberByEmail(String email);

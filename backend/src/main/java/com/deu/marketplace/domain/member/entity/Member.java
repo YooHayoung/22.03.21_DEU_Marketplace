@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -19,10 +18,15 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String oauthId;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String email;
+
+//    private String profileImg;
 
     @Column(nullable = false)
     private String nickname;
@@ -30,15 +34,21 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean certification;
 
-    @Builder(builderClassName = "ByDefaultNicknameBuilder", builderMethodName = "ByDefaultNicknameBuilder")
-    public Member(String name, String email) {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
+    public Member(String oauthId, String name, String email) {
+        Assert.notNull(oauthId, "oauthId must not be null");
         Assert.notNull(name, "name must not be null");
         Assert.notNull(email, "email must not be null");
 
+        this.oauthId = oauthId;
         this.name = name;
         this.email = email;
         this.nickname = createRandomNickname();
         this.certification = false;
+        this.role = Role.MEMBER;
     }
 
     public String createRandomNickname() {
@@ -54,6 +64,12 @@ public class Member extends BaseTimeEntity {
         return defaultFrontNickName + stringBuilder.toString();
     }
 
+    public Member updateInfo(String name, String email) {
+        this.name = name;
+        this.email = email;
+        return this;
+    }
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -66,6 +82,10 @@ public class Member extends BaseTimeEntity {
 
     public Boolean isCertified() {
         return this.certification;
+    }
+
+    public String getRoleKey() {
+        return role.getKey();
     }
 
 }
