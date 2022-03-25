@@ -8,6 +8,7 @@ import com.deu.marketplace.web.itemImg.dto.ItemImgResponseDto;
 import com.deu.marketplace.web.lecture.dto.LectureDto;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

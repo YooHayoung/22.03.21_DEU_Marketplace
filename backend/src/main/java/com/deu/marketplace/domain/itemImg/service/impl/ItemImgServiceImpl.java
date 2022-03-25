@@ -1,9 +1,12 @@
 package com.deu.marketplace.domain.itemImg.service.impl;
 
+import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import com.deu.marketplace.domain.itemImg.repository.ItemImgRepository;
 import com.deu.marketplace.domain.itemImg.service.ItemImgService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +16,11 @@ import java.util.List;
 public class ItemImgServiceImpl implements ItemImgService {
 
     private final ItemImgRepository itemImgRepository;
+
+    @Override
+    public Page<ItemImg> getFirstItemImgsByItemId(ItemSearchCond cond, Pageable pageable) {
+        return itemImgRepository.searchFirstItemImgByItem(cond, pageable);
+    }
 
     @Override
     public List<ItemImg> saveAll(List<ItemImg> itemImgs) {

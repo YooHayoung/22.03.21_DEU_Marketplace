@@ -1,8 +1,10 @@
-package com.deu.marketplace.domain.item.repository;
+package com.deu.marketplace.domain.itemImg.repository;
 
 import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.item.entity.Classification;
-import com.deu.marketplace.domain.item.entity.Item;
+import com.deu.marketplace.domain.item.entity.QItem;
+import com.deu.marketplace.domain.itemImg.entity.ItemImg;
+import com.deu.marketplace.domain.itemImg.entity.QItemImg;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static com.deu.marketplace.domain.item.entity.QItem.item;
@@ -21,31 +22,33 @@ import static com.deu.marketplace.domain.lecture.entity.QLecture.lecture;
 import static com.deu.marketplace.domain.member.entity.QMember.member;
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
-public class ItemRepositoryImpl implements ItemRepositoryCustom {
+public class ItemImgRepositoryImpl implements ItemImgRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public  ItemRepositoryImpl(EntityManager em) {
+    public  ItemImgRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
-    public Page<Item> searchItemPage(ItemSearchCond cond, Pageable pageable) {
-        List<Item> content = queryFactory
-                .select(item)
-                .from(item)
+    public Page<ItemImg> searchFirstItemImgByItem(ItemSearchCond cond, Pageable pageable) {
+        List<ItemImg> content = queryFactory
+                .select(itemImg)
+                .from(itemImg)
                 .leftJoin(item.member, member)
                 .leftJoin(item.itemCategory, itemCategory)
                 .leftJoin(item.lecture, lecture)
-                .fetchJoin()
-                .where(classificationEq(cond.getClassification()),
+                .join(itemImg.item, item)
+                    .on(itemImg.item.eq(item))
+                .where(itemImg.imgSeq.eq(1),
+                        classificationEq(cond.getClassification()),
                         itemCategoryEq(cond.getItemCategoryId()),
                         itemTitleContains(cond.getTitle()),
                         lectureNameContains(cond.getLectureName()),
                         priceGoe(cond.getPriceGoe()),
                         priceLoe(cond.getPriceLoe()))
-                .offset(pageable.getOffset()) //페이징처리
-                .limit(pageable.getPageSize()) // 페이징처리
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory

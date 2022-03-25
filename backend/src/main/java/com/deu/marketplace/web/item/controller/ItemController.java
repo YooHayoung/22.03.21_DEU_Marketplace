@@ -12,10 +12,11 @@ import com.deu.marketplace.domain.itemImg.service.ItemImgService;
 import com.deu.marketplace.domain.lecture.entity.Lecture;
 import com.deu.marketplace.domain.lecture.service.LectureService;
 import com.deu.marketplace.domain.member.service.MemberService;
-import com.deu.marketplace.web.item.dto.BuyItemListResponseDto;
+import com.deu.marketplace.query.dto.BuyItemDto;
+import com.deu.marketplace.query.dto.SellItemDto;
+import com.deu.marketplace.query.repository.ItemListRepository;
 import com.deu.marketplace.web.item.dto.ItemDetailResponseDto;
 import com.deu.marketplace.web.item.dto.ItemSaveRequestDto;
-import com.deu.marketplace.web.item.dto.SellItemListResponseDto;
 import com.deu.marketplace.web.itemImg.dto.ItemImgRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -41,19 +41,29 @@ public class ItemController {
     private final ItemCategoryService itemCategoryService;
     private final LectureService lectureService;
     private final MemberService memberService;
+    private final ItemListRepository itemListRepository;
 
     @GetMapping
     public ResponseEntity<?> getItemList(ItemSearchCond cond,
                                          @PageableDefault(size = 20, page = 0,
                                                  sort = "lastModifiedDate",
-                                                 direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Item> items = itemService.searchItemPage(cond, pageable);
+                                                 direction = Sort.Direction.DESC) Pageable pageable,
+                                         @RequestHeader(value = "memberId") Long memberId) {
+//        Page<Item> items = itemService.searchItemPage(cond, pageable);
+//        if (cond.getClassification().equals(Classification.SELL.name())) {
+//            Page<SellItemListResponseDto> dtoPage = items.map(item -> new SellItemListResponseDto(item));
+//            return ResponseEntity.ok().body(dtoPage);
+//        } else {
+//            Page<BuyItemListResponseDto> dtoPage = items.map(item -> new BuyItemListResponseDto(item));
+//            return ResponseEntity.ok().body(dtoPage);
+//        }
+
         if (cond.getClassification().equals(Classification.SELL.name())) {
-            Page<SellItemListResponseDto> dtoPage = items.map(item -> new SellItemListResponseDto(item));
-            return ResponseEntity.ok().body(dtoPage);
+            Page<SellItemDto> sellItemPages = itemListRepository.getSellItemPages(cond, pageable, memberId);
+            return ResponseEntity.ok().body(sellItemPages);
         } else {
-            Page<BuyItemListResponseDto> dtoPage = items.map(item -> new BuyItemListResponseDto(item));
-            return ResponseEntity.ok().body(dtoPage);
+            Page<BuyItemDto> buyItemPages = itemListRepository.getBuyItemPages(cond, pageable, memberId);
+            return ResponseEntity.ok().body(buyItemPages);
         }
     }
 

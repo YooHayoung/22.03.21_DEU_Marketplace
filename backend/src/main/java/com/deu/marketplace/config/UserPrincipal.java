@@ -1,4 +1,4 @@
-package com.deu.marketplace.config.security.dto;
+package com.deu.marketplace.config;
 
 import com.deu.marketplace.domain.member.entity.Member;
 import lombok.Builder;

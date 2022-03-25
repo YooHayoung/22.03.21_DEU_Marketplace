@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
+public interface ItemImgRepository extends JpaRepository<ItemImg, Long>, ItemImgRepositoryCustom {
     List<ItemImg> findAllByItemId(Long itemId);
 }

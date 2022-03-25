@@ -1,4 +1,4 @@
-DELETE FROM lecture;
+# DELETE FROM lecture;
 
 Insert Into lecture (lecture_name,professor_name) values ( '실용한자' ,'이상협');
 Insert Into lecture (lecture_name,professor_name) values ( '영어회화' ,'아데');
@@ -3283,3 +3283,55 @@ INSERT INTO item_category(category_name) VALUES('기타');
 INSERT INTO post_category(category_name) VALUES('자유');
 INSERT INTO post_category(category_name) VALUES('질문');
 INSERT INTO post_category(category_name) VALUES('정보공유');
+
+
+insert into member(name, email, nickname, certification, created_date, last_modified_date, oauth_id, role)
+    values ('유하영', 'yoo971202@naver.com', '닉네임123', true, now(), now(), 'asdfasdf', 'MEMBER'),
+           ('김경률', 'rlarudfbf@naver.com', '1김2경3률', true, now(), now(), 'ghgvrf123', 'MEMBER'),
+           ('김도일', 'rlaehdlf@naver.com', '김2도3일4', true, now(), now(), 'slrqfqb', 'MEMBER');
+
+insert into item(member_id, item_category_id, title, lecture_id, write_state, surface_state, regular_price, price, description, classification, created_date, last_modified_date)
+    values (1, 1, '상품팝니다', 5, '양호', '양호', 15000, 10000, '설명설명설명설명설명설명', 'SELL', now(), now()),
+           (1, 2, '상품12팝니다', 6, null, null, null, 10000, '설명123설15124명설246명설명설명설명', 'SELL', now(), now()),
+           (2, 3, '상515품235팝니다', null, '양호', '양호', 12000, 8000, '345명설356346명설명설명', 'SELL', now(), now()),
+           (2, 4, '상품팝니다', null, null, null, null, 13000, 'gasbdhjjba', 'SELL', now(), now()),
+           (3, 5, '사요', null, null, null, null, 5000, 'ㄹㅇㅍㅁ쥬ㅓㄹㄷ', 'BUY', now(), now()),
+           (3, 1, '살게용', null, null, null, null, 3000, 'BUYBUYBUYBUYBUBY', 'BUY', now(), now());
+
+insert into item_deal(item_id, target_member, appointment_date_time, meeting_place, deal_state, created_date, last_modified_date)
+    values (1, 2, '2022-05-12 12:00:00', '동의대', '거래예약', now(), now()),
+           (2, 3, '2022-05-11 11:00:00', '동의대', '거래예약', now(), now()),
+           (3, 3, '2022-03-20 12:00:00', '동의대', '거래완료', now(), now()),
+           (4, 1, '2022-03-25 12:00:00', '동의대', '거래완료', now(), now());
+
+
+insert into item_img(item_id, img_file, img_seq) values
+    (1, 'file://123123.123123123.124121312', 3),
+    (1, 'file://33222.123123123.124121312', 4),
+    (1, 'file://sdf.123123123.124121312', 2),
+    (1, 'file://asdf.sdf.124121312', 1),
+    (2, 'file://123123.123123123.124121312', 2),
+    (2, 'file://hbavwef.ahaev3.gas', 1),
+    (4, 'file://weaefh.ahaev3.gas', 1),
+    (4, 'file://asasv.ahaev3.gas', 2),
+    (4, 'file://,mn.ahaev3.gas', 3),
+    (6, 'file://35.ahaev3.gas', 2),
+    (6, 'file://123.ahaev3.gas', 1);
+
+insert into item(member_id, item_category_id, title, lecture_id, write_state, surface_state, regular_price, price, description, classification, created_date, last_modified_date)
+values (1, 1, '상품팝니다', null, null, null, null, 10000, '설명설명설명설명설명설명', 'BUY', now(), now());
+
+insert into item_deal(item_id, target_member, appointment_date_time, meeting_place, deal_state, created_date, last_modified_date)
+values (7, 1, '2022-05-12 12:00:00', '동의대', '거래예약', now(), now());
+
+insert into wish_item(wished_member_id, item_id, created_date, last_modified_date)
+    values (1, 3, now(), now()),
+            (3, 3, now(), now()),
+            (1, 4, now(), now()),
+            (1, 6, now(), now());
+
+insert into wish_item(wished_member_id, item_id, created_date, last_modified_date)
+    values (2, 1, now(), now()),
+           (3, 1, now(), now()),
+           (2, 2, now(), now()),
+           (3, 2, now(), now());

@@ -1,4 +1,4 @@
-package com.deu.marketplace.config.app;
+package com.deu.marketplace.config;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -15,20 +15,20 @@ public class AppProperties {
     private final OAuth2 oauth2 = new OAuth2();
 
     @Getter
-    @RequiredArgsConstructor
     public static class Auth {
         private String tokenSecret;
         private long tokenExpirationMsec;
 
-        @Builder
-        public Auth(String tokenSecret, long tokenExpirationMsec) {
+        public void setTokenSecret(String tokenSecret) {
             this.tokenSecret = tokenSecret;
+        }
+
+        public void setTokenExpirationMsec(long tokenExpirationMsec) {
             this.tokenExpirationMsec = tokenExpirationMsec;
         }
     }
 
     @Getter
-    @RequiredArgsConstructor
     public static final class OAuth2 {
         private List<String> authorizedRedirectUris = new ArrayList<>();
 

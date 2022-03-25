@@ -40,6 +40,8 @@ CREATE OR replace TABLE member (
 	certification BOOLEAN NOT NULL,
 	created_date TIMESTAMP NOT NULL,
 	last_modified_date TIMESTAMP NOT NULL,
+	oauth_id varchar(50) NOT NULL,
+	role varchar(20) NOT NULL,
 	PRIMARY KEY(member_id)
 );
 
@@ -134,13 +136,15 @@ CREATE OR REPLACE TABLE chat_log (
 CREATE OR REPLACE TABLE item_deal (
 	item_deal_id BIGINT NOT NULL AUTO_INCREMENT,
 	item_id BIGINT NOT NULL,
+	target_member bigint not null,
 	appointment_date_time TIMESTAMP NOT NULL,
 	meeting_place VARCHAR(100) NOT NULL,
 	deal_state VARCHAR(20) NOT NULL,
 	created_date TIMESTAMP NOT NULL,
 	last_modified_date TIMESTAMP NOT NULL,
 	PRIMARY KEY(item_deal_id),
-	FOREIGN KEY(item_id) REFERENCES item(item_id)
+	FOREIGN KEY(item_id) REFERENCES item(item_id),
+	foreign key(target_member) references member(member_id)
 );
 
 CREATE OR REPLACE TABLE post (

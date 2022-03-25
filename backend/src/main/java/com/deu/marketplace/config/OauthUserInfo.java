@@ -1,17 +1,17 @@
-package com.deu.marketplace.config.security.dto;
+package com.deu.marketplace.config;
 
 import com.deu.marketplace.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class OauthUserDto {
+public class OauthUserInfo {
     private String oauthId;
     private String name;
     private String email;
 
     @Builder
-    public OauthUserDto(String oauthId, String name, String email) {
+    public OauthUserInfo(String oauthId, String name, String email) {
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;

@@ -12,11 +12,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity @Getter
+@Table(name = "item_deal")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Deal extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deal_id")
+    @Column(name = "item_deal_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -24,7 +25,7 @@ public class Deal extends BaseTimeEntity {
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "target_member", nullable = false)
     private Member targetMember;
 
     @Column(nullable = false)
@@ -50,9 +51,9 @@ public class Deal extends BaseTimeEntity {
         this.dealState = DealState.COMPLETE;
     }
 
-    public void cancelDeal() {
-        this.dealState = DealState.CANCEL;
-    }
+//    public void cancelDeal() {
+//        this.dealState = DealState.CANCEL;
+//    }
 
     public void appointmentDeal() {
         this.dealState = DealState.APPOINTMENT;
