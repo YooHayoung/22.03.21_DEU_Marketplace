@@ -13,13 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class ItemListRepositoryTest {
 
     @Autowired
-    ItemListRepository itemListRepository;
+    ItemViewRepository itemListRepository;
 
     @Test
     @Transactional(readOnly = true)
@@ -36,6 +34,7 @@ class ItemListRepositoryTest {
         for (SellItemDto sellItemDto : content) {
             System.out.println("----------------------------------");
             System.out.println("itemId : " + sellItemDto.getItemId());
+            System.out.println("classification : " + sellItemDto.getClassification());
             System.out.println("itemImgFile : " + sellItemDto.getItemImgFile());
             System.out.println("title : " + sellItemDto.getTitle());
             System.out.println("itemCategoryId : " + sellItemDto.getItemCategoryId());
@@ -65,6 +64,7 @@ class ItemListRepositoryTest {
         for (BuyItemDto buyItemDto : content) {
             System.out.println("----------------------------------");
             System.out.println("itemId : " + buyItemDto.getItemId());
+            System.out.println("classification : " + buyItemDto.getClassification());
             System.out.println("itemImgFile : " + buyItemDto.getItemImgFile());
             System.out.println("title : " + buyItemDto.getTitle());
             System.out.println("price : " + buyItemDto.getPrice());

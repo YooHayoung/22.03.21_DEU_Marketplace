@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +105,25 @@ public class Item extends BaseTimeEntity {
         this.price = price;
         this.description = description;
         this.classification = classification;
+    }
+
+    public void validWriterIdAndMemberId(Long memberId) throws ValidationException {
+        if (this.member.getId() != memberId)
+            throw new ValidationException("Member is not the same as writer");
+    }
+
+    public void updateItem(Item updateItemInfo) {
+        this.itemCategory = updateItemInfo.itemCategory;
+        this.title = updateItemInfo.title;
+        this.lecture = updateItemInfo.lecture;
+        this.bookState = updateItemInfo.bookState;
+        this.price = updateItemInfo.price;
+        this.description = updateItemInfo.description;
+        this.classification = updateItemInfo.classification;
+    }
+
+    public void clearItemImgs() {
+        this.itemImgs.clear();
     }
 
     public void updateUnivBookItemInfo(ItemCategory itemCategory, String title, Lecture lecture,

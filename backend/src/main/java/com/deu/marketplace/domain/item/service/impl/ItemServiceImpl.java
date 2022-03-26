@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.ValidationException;
 import java.util.Optional;
 
 @Service
@@ -33,5 +34,28 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Optional<Item> getOneItemById(Long id) {
         return itemRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Item> getOneItemInfoById(Long itemId) {
+        return itemRepository.findItemFetchJoinByMemberId(itemId);
+    }
+
+    @Override
+    @Transactional
+    public Item updateItem(Long itemId, Item item, Long memberId) throws ValidationException {
+        Item findItem = itemRepository.findItemFetchJoinByMemberId(itemId).orElseThrow();
+        findItem.validWriterIdAndMemberId(memberId);
+        findItem.clearItemImgs();
+        findItem.updateItem(item);
+        return findItem;
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(Long itemId, Long memberId) throws ValidationException {
+        Item item = itemRepository.findById(itemId).orElseThrow();
+        item.validWriterIdAndMemberId(memberId);
+        itemRepository.delete(item);
     }
 }

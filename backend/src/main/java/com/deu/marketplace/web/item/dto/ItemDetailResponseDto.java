@@ -1,53 +1,44 @@
 package com.deu.marketplace.web.item.dto;
 
+import com.deu.marketplace.domain.deal.entity.Deal;
+import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.BookState;
 import com.deu.marketplace.domain.item.entity.Classification;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import com.deu.marketplace.web.itemImg.dto.ItemImgResponseDto;
 import com.deu.marketplace.web.lecture.dto.LectureDto;
+import com.querydsl.core.Tuple;
+import lombok.Builder;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
 public class ItemDetailResponseDto {
-    private Long itemId;
-    private String itemCategoryName;
-    private LectureDto lecture;
-//    private String lectureName;
-//    private String professorName;
-    private BookState bookInfo;
-    private String title;
-    private int price;
-    private String description;
-    private String memberNickName;
-    private Classification classification;
-    private List<ItemImgResponseDto> itemImgResponseDtos;
-    // wish
-    // deal
+    private ItemDetailDto itemDetailDto;
+    private ItemWishInfo wishInfo;
+    private DealState dealState;
+    private Long chatRoomId;
+    private List<ItemImgResponseDto> imgList;
 
-
-    public ItemDetailResponseDto(Item item, List<ItemImg> itemImgs) {
-        this.itemId = item.getId();
-        this.itemCategoryName = item.getItemCategory().getCategoryName();
-//        this.lectureName = item.getLecture().getLectureName();
-//        this.professorName = item.getLecture().getProfessorName();
-        if (item.getLecture() != null) this.lecture = new LectureDto(item.getLecture());
-        if (item.getBookState() != null) {
-            this.bookInfo = BookState.builder()
-                    .writeState(item.getBookState().getWriteState())
-                    .surfaceState(item.getBookState().getSurfaceState())
-                    .regularPrice(item.getBookState().getRegularPrice())
+    @Builder
+    public ItemDetailResponseDto(Item item, Optional<Tuple> wishInfo,
+                                 Optional<Deal> deal, Long chatRoomId, List<ItemImg> itemImgs) {
+        this.itemDetailDto = ItemDetailDto.builder().item(item).build();
+        if (wishInfo.isPresent()) {
+            Tuple tuple = wishInfo.orElseThrow();
+            this.wishInfo = ItemWishInfo.builder()
+                    .wishCount(tuple.get(1, Long.class))
+                    .myWish(tuple.get(2, Boolean.class))
                     .build();
         }
-        this.title = item.getTitle();
-        this.price = item.getPrice();
-        this.description = item.getDescription();
-        this.memberNickName = item.getMember().getNickname();
-        this.classification = item.getClassification();
-        this.itemImgResponseDtos = itemImgs.stream().map(ItemImgResponseDto::new).collect(Collectors.toList());
+        if (deal.isPresent()) {
+            this.dealState = deal.orElseThrow().getDealState();
+        }
+        this.chatRoomId = chatRoomId;
+        this.imgList = itemImgs.stream().map(ItemImgResponseDto::new).collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.deu.marketplace.query.dto;
 
 import com.deu.marketplace.domain.deal.entity.DealState;
+import com.deu.marketplace.domain.item.entity.Classification;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class SellItemDto {
     private Long itemId;
+    private Classification classification;
     private String itemImgFile;
     private String title;
     private Integer price;
@@ -22,8 +24,9 @@ public class SellItemDto {
     private Long wishedMemberId;
 
     @QueryProjection
-    public SellItemDto(Long itemId, String itemImgFile, String title, Integer price, LocalDateTime lastModifiedDate, Long itemCategoryId, String itemCategoryName, String lectureName, String professorName, Long itemDealId, DealState dealState, Long wishedMemberId) {
+    public SellItemDto(Long itemId, Classification classification, String itemImgFile, String title, Integer price, LocalDateTime lastModifiedDate, Long itemCategoryId, String itemCategoryName, String lectureName, String professorName, Long itemDealId, DealState dealState, Long wishedMemberId) {
         this.itemId = itemId;
+        this.classification = classification;
         this.itemImgFile = itemImgFile;
         this.title = title;
         this.price = price;

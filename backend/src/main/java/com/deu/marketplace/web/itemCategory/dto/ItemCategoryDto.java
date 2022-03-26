@@ -11,7 +11,7 @@ public class ItemCategoryDto {
     private Long id;
     private String categoryName;
 
-
+    @Builder
     public ItemCategoryDto(ItemCategory itemCategory) {
         this.id = itemCategory.getId();
         this.categoryName = itemCategory.getCategoryName();

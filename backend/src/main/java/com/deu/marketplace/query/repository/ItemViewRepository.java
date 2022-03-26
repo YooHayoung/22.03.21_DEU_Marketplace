@@ -25,11 +25,11 @@ import static com.deu.marketplace.domain.wishItem.entity.QWishItem.wishItem;
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Repository
-public class ItemListRepository {
+public class ItemViewRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public ItemListRepository(EntityManager em) {
+    public ItemViewRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -47,6 +47,7 @@ public class ItemListRepository {
         List<SellItemDto> content = queryFactory
                 .select(new QSellItemDto(
                         item.id,
+                        item.classification,
                         itemImg.imgFile,
                         item.title,
                         item.price,
@@ -97,6 +98,7 @@ public class ItemListRepository {
         List<BuyItemDto> content = queryFactory
                 .select(new QBuyItemDto(
                         item.id,
+                        item.classification,
                         itemImg.imgFile,
                         item.title,
                         item.price,

@@ -36,7 +36,7 @@ public class ItemImg extends BaseTimeEntity {
         item.getItemImgs().add(this);
     }
 
-    public void updateSeq(int seq) {
-        this.imgSeq = seq;
+    public void updateItemImg(ItemImg imgToThis) {
+
     }
 }
