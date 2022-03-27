@@ -1,5 +1,6 @@
 package com.deu.marketplace.domain.chatLog.entity;
 
+import com.deu.marketplace.domain.BaseTimeEntity;
 import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
 import com.deu.marketplace.domain.member.entity.Member;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChatLog {
+public class ChatLog extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_log_id")
@@ -42,6 +43,8 @@ public class ChatLog {
         this.recipient = recipient;
         this.content = content;
         this.isRead = false;
+
+        this.chatRoom.getLogs().add(this);
     }
 
     public void readChatLog() {

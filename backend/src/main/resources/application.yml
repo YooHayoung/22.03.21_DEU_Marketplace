@@ -8,7 +8,7 @@ spring:
 
 #  for mysql
   datasource:
-    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
     username: localDeuMarket
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -1,5 +1,6 @@
 package com.deu.marketplace.web.item.dto;
 
+import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
 import com.deu.marketplace.domain.deal.entity.Deal;
 import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.BookState;
@@ -26,7 +27,7 @@ public class ItemDetailResponseDto {
 
     @Builder
     public ItemDetailResponseDto(Item item, Optional<Tuple> wishInfo,
-                                 Optional<Deal> deal, Long chatRoomId, List<ItemImg> itemImgs) {
+                                 Optional<Deal> deal, ChatRoom chatRoom, List<ItemImg> itemImgs) {
         this.itemDetailDto = ItemDetailDto.builder().item(item).build();
         if (wishInfo.isPresent()) {
             Tuple tuple = wishInfo.orElseThrow();
@@ -38,7 +39,7 @@ public class ItemDetailResponseDto {
         if (deal.isPresent()) {
             this.dealState = deal.orElseThrow().getDealState();
         }
-        this.chatRoomId = chatRoomId;
+        if(chatRoom != null) this.chatRoomId = chatRoom.getId();
         this.imgList = itemImgs.stream().map(ItemImgResponseDto::new).collect(Collectors.toList());
     }
 }

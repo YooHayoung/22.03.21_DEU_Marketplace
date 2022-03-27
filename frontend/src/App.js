@@ -1,10 +1,14 @@
+import React from "react";
 import './App.css';
+
+
+import ChatRoomPage from "./pages/ChatRoomPage";
+
 
 function App() {
   return (
     <div className="App">
-      <h1>Index Page</h1>
-      <button>로그인하기</button>
+      <ChatRoomPage />
     </div>
   );
 }

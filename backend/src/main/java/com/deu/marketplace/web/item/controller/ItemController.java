@@ -1,9 +1,10 @@
 package com.deu.marketplace.web.item.controller;
 
 import com.deu.marketplace.common.ItemSearchCond;
+import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
+import com.deu.marketplace.domain.chatRoom.service.ChatRoomService;
 import com.deu.marketplace.domain.deal.entity.Deal;
 import com.deu.marketplace.domain.deal.service.DealService;
-import com.deu.marketplace.domain.item.entity.BookState;
 import com.deu.marketplace.domain.item.entity.Classification;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.item.service.ItemService;
@@ -55,7 +56,7 @@ public class ItemController {
     private final MemberService memberService;
     private final DealService dealService;
     private final WishItemService wishItemService;
-//    private final ChatRoomService chatRoomService;
+    private final ChatRoomService chatRoomService;
 
     private final ItemViewRepository itemViewRepository;
 
@@ -82,13 +83,14 @@ public class ItemController {
         Optional<Deal> deal = dealService.getOneByItemId(item.getId());
 //
         List<ItemImg> findItemImgs = itemImgService.getAllByItemId(itemId);
-
+        ChatRoom chatRoom = chatRoomService
+                .getOneChatRoomByItemIdAndMemberId(itemId, memberId).orElse(null);
         ItemDetailResponseDto itemDetailResponseDto =
                 ItemDetailResponseDto.builder()
                         .item(item)
                         .wishInfo(wishInfo)
                         .deal(deal)
-                        .chatRoomId(null)
+                        .chatRoom(chatRoom)
                         .itemImgs(findItemImgs)
                         .build();
         return ResponseEntity.ok().body(itemDetailResponseDto);

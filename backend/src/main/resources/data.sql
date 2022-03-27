@@ -3335,3 +3335,37 @@ insert into wish_item(wished_member_id, item_id, created_date, last_modified_dat
            (3, 1, now(), now()),
            (2, 2, now(), now()),
            (3, 2, now(), now());
+
+insert into chat_room(item_id, requested_member_id, socket, created_date, last_modified_date)
+    values  (1, 2, 'asdfasdfasdf', now(), now()),
+            (2, 3, 'jhgvefqf', now(), now()),
+            (3, 1, 'zzzzzzzzzzz', now(), now()),
+            (3, 3, 'gqetjerg', now(), now()),
+            (1, 3, 'zzgweje', now(), now());
+
+insert into chat_log(chat_room_id, sender_id, recipient_id, content, created_date, last_modified_date, is_read)
+    values  (5, 2, 1, '물건 사고싶어요', '2022-03-26 12:00:00', '2022-03-26 12:00:00', 1),
+            (5, 1, 2, '네', '2022-03-26 12:01:00', '2022-03-26 12:01:00', 1),
+            (5, 2, 1, '얼마에 파시나요? 물건 상태 괜찮은가요? 직거래 하고싶어요', '2022-03-26 12:03:00', '2022-03-26 12:03:00', 1),
+            (5, 2, 1, '저기요', '2022-03-26 12:15:00', '2022-03-26 12:15:00', 1),
+            (5, 1, 2, '네 물건 상태 괜찮습니다. 금액은 올려둔 금액대로 원해요. 직거래 좋습니다', '2022-03-26 13:21:00', '2022-03-26 13:21:00', 0);
+
+insert into chat_log(chat_room_id, sender_id, recipient_id, content, created_date, last_modified_date, is_read)
+values  (6, 3, 1, '안녕하세요', '2022-03-26 15:00:00', '2022-03-26 12:00:00', 1),
+        (6, 3, 1, '물건 아직 파나요?', '2022-03-26 15:01:00', '2022-03-26 12:01:00', 1),
+        (6, 1, 3, '네 팔고있습니다.', '2022-03-26 15:13:00', '2022-03-26 15:13:00', 1),
+        (6, 3, 1, '사고싶어요', '2022-03-26 15:45:00', '2022-03-26 15:45:00', 0);
+
+insert into chat_log(chat_room_id, sender_id, recipient_id, content, created_date, last_modified_date, is_read)
+values  (7, 1, 2, '물건 사고싶어요', '2022-03-26 12:21:00', '2022-03-26 12:21:00', 0),
+        (7, 1, 2, '아직 파나요?', '2022-03-26 12:22:00', '2022-03-26 12:22:00', 0);
+
+insert into chat_log(chat_room_id, sender_id, recipient_id, content, created_date, last_modified_date, is_read)
+values  (8, 3, 2, 'ㅎㅎ', '2022-03-27 11:00:00', '2022-03-27 11:00:00', 0),
+        (8, 3, 2, 'ㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎㅎ', '2022-03-27 12:22:00', '2022-03-27 12:22:00', 0);
+
+insert into chat_log(chat_room_id, sender_id, recipient_id, content, created_date, last_modified_date, is_read)
+values  (9, 3, 1, '저기요', '2022-03-26 21:21:00', '2022-03-26 21:21:00', 1),
+        (9, 3, 1, '팔렸나요?', '2022-03-26 21:22:00', '2022-03-26 21:22:00', 1),
+        (9, 1, 3, '아뇨', '2022-03-26 22:00:00', '2022-03-26 22:00:00', 1),
+        (9, 3, 1, '살게요', '2022-03-26 22:22:22', '2022-03-26 22:22:22', 0);
