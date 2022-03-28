@@ -38,6 +38,13 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3-1'
     // mysql
     implementation 'mysql:mysql-connector-java'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
+    implementation 'org.apache.httpcomponents:httpcore:4.4.13'
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    implementation 'commons-logging:commons-logging:1.2'
+
 
     // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"

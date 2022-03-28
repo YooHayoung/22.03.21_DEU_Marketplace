@@ -17,4 +17,8 @@ public class LogInfo {
         this.lastModifiedTime = lastModifiedTime;
         this.notReadNum = notReadNum;
     }
+
+    public void setNotReadNum(Long notReadNum) {
+        this.notReadNum = notReadNum;
+    }
 }

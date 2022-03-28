@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +30,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public Optional<ChatRoom> getOneChatRoomByRoomId(Long chatRoomId) {
-        return chatRoomRepository.findById(chatRoomId);
+        return chatRoomRepository.findChatRoomByIdFetch(chatRoomId);
+    }
+
+    @Override
+    public Optional<ChatRoom> getOneToEnterChatRoom(Long chatRoomId, Long memberId) {
+        return chatRoomRepository.findChatRoomByIdAndMemberId(chatRoomId, memberId);
     }
 }

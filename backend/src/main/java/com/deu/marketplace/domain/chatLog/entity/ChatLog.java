@@ -23,11 +23,11 @@ public class ChatLog extends BaseTimeEntity {
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "sender_id", nullable = false, updatable = false, insertable = false)
     private Member sender;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "recipient_id", nullable = false, updatable = false, insertable = false)
     private Member recipient;
 
     @Column(nullable = false)
@@ -41,6 +41,22 @@ public class ChatLog extends BaseTimeEntity {
         this.chatRoom = chatRoom;
         this.sender = sender;
         this.recipient = recipient;
+        this.content = content;
+        this.isRead = false;
+
+        this.chatRoom.getLogs().add(this);
+    }
+
+    @Builder(builderClassName = "bySenderId", builderMethodName = "bySenderId")
+    public ChatLog(ChatRoom chatRoom, String content, Long senderId) {
+        this.chatRoom = chatRoom;
+        if (chatRoom.getRequestedMember().getId() == senderId) {
+            this.sender = chatRoom.getRequestedMember();
+            this.recipient = chatRoom.getItem().getMember();
+        } else {
+            this.sender = chatRoom.getItem().getMember();
+            this.recipient = chatRoom.getRequestedMember();
+        }
         this.content = content;
         this.isRead = false;
 

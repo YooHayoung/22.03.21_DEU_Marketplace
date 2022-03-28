@@ -12,4 +12,6 @@ public interface ChatRoomService {
     Optional<ChatRoom> getOneChatRoomByItemIdAndMemberId(Long itemId, Long memberId);
 
     Optional<ChatRoom> getOneChatRoomByRoomId(Long chatRoomId);
+
+    Optional<ChatRoom> getOneToEnterChatRoom(Long chatRoomId, Long memberId);
 }

@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.deu.marketplace.domain.chatRoom.entity.QChatRoom.chatRoom;
 import static com.deu.marketplace.domain.item.entity.QItem.item;
@@ -28,8 +29,24 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .from(chatRoom)
                 .leftJoin(chatRoom.item, item)
                 .leftJoin(item.member, member)
+                .fetchJoin()
                 .where(chatRoom.requestedMember.id.eq(memberId).or(item.member.id.eq(memberId)))
                 .fetch();
-        return null;
+        return result;
+    }
+
+    @Override
+    public Optional<ChatRoom> findChatRoomByIdAndMemberId(Long chatRoomId, Long memberId) {
+        ChatRoom result = queryFactory
+                .select(chatRoom)
+                .from(chatRoom)
+                .leftJoin(chatRoom.requestedMember, new QMember("requestedMember"))
+                .leftJoin(chatRoom.item, item)
+                .leftJoin(chatRoom.item.member, member)
+                .fetchJoin()
+                .where(chatRoom.id.eq(chatRoomId),
+                        chatRoom.requestedMember.id.eq(memberId).or(chatRoom.item.member.id.eq(memberId)))
+                .fetchOne();
+        return Optional.ofNullable(result);
     }
 }

@@ -33,57 +33,29 @@ class ChatRoomViewRepositoryTest {
 
         // when
         Page<ChatRoomViewDto> result = chatRoomViewRepository.getChatRoomPages(memberId, pageable);
-        List<ChatRoomViewDto> content = result.getContent();
-        System.out.println("result = " + result.getTotalElements());
-        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(content, memberId);
-        List<ChatRoomListResponseDto> responseDtos = new ArrayList<>();
+        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(result.getContent(), memberId);
+
         // then
         System.out.println("---------------------------------");
-        for (ChatRoomViewDto chatRoomViewDto : content) {
-            System.out.println("chatRoomViewDto.getChatRoomId() = " + chatRoomViewDto.getChatRoomId());
-            ItemInfo itemInfo = ItemInfo.builder()
-                    .itemId(chatRoomViewDto.getItemId())
-                    .itemImg(chatRoomViewDto.getItemImg())
-                    .title(chatRoomViewDto.getTitle())
-                    .dealState(chatRoomViewDto.getDealState())
-                    .build();
-            MemberInfo itemSavedMemberInfo = MemberInfo.builder()
-                    .memberId(chatRoomViewDto.getItemSavedMemberId())
-                    .nickname(chatRoomViewDto.getItemSavedMemberNickname())
-                    .build();
-            MemberInfo requestedMemberInfo = MemberInfo.builder()
-                    .memberId(chatRoomViewDto.getRequestedMemberId())
-                    .nickname(chatRoomViewDto.getRequestedMemberNickname())
-                    .build();
-            LogInfo logInfo = LogInfo.builder()
-                    .content(chatRoomViewDto.getLastLogContent())
-                    .lastModifiedTime(chatRoomViewDto.getLastModifiedTime())
-                    .notReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()))
-                    .build();
-            ChatRoomListResponseDto responseDto = ChatRoomListResponseDto.builder()
-                    .chatRoomId(chatRoomViewDto.getChatRoomId())
-                    .itemInfo(itemInfo)
-                    .savedItemMemberInfo(itemSavedMemberInfo)
-                    .requestedMemberInfo(requestedMemberInfo)
-                    .lastLogInfo(logInfo)
-                    .build();
-            responseDtos.add(responseDto);
+        for (ChatRoomViewDto chatRoomViewDto : result.getContent()) {
+            chatRoomViewDto.getLastLogInfo()
+                    .setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
         }
 
-        for (ChatRoomListResponseDto responseDto : responseDtos) {
+        for (ChatRoomViewDto chatRoomViewDto : result) {
             System.out.println("-------------------------------------------");
-            System.out.println("responseDto.getChatRoomId() = " + responseDto.getChatRoomId());
-            System.out.println("responseDto.getItemInfo().getItemId() = " + responseDto.getItemInfo().getItemId());
-            System.out.println("responseDto.getItemInfo().getItemImg() = " + responseDto.getItemInfo().getItemImg());
-            System.out.println("responseDto.getItemInfo().getTitle() = " + responseDto.getItemInfo().getTitle());
-            System.out.println("responseDto.getItemInfo().getDealState() = " + responseDto.getItemInfo().getDealState());
-            System.out.println("responseDto.getSavedItemMemberInfo().getMemberId() = " + responseDto.getSavedItemMemberInfo().getMemberId());
-            System.out.println("responseDto.getSavedItemMemberInfo().getNickname() = " + responseDto.getSavedItemMemberInfo().getNickname());
-            System.out.println("responseDto.getRequestedMemberInfo().getMemberId() = " + responseDto.getRequestedMemberInfo().getMemberId());
-            System.out.println("responseDto.getRequestedMemberInfo().getNickname() = " + responseDto.getRequestedMemberInfo().getNickname());
-            System.out.println("responseDto.getLastLogInfo().getContent() = " + responseDto.getLastLogInfo().getContent());
-            System.out.println("responseDto.getLastLogInfo().getLastModifiedTime() = " + responseDto.getLastLogInfo().getLastModifiedTime());
-            System.out.println("responseDto.getLastLogInfo().getNotReadNum() = " + responseDto.getLastLogInfo().getNotReadNum());
+            System.out.println("responseDto.getChatRoomId() = " + chatRoomViewDto.getChatRoomId());
+            System.out.println("responseDto.getItemInfo().getItemId() = " + chatRoomViewDto.getItemInfo().getItemId());
+            System.out.println("responseDto.getItemInfo().getItemImg() = " + chatRoomViewDto.getItemInfo().getItemImg());
+            System.out.println("responseDto.getItemInfo().getTitle() = " + chatRoomViewDto.getItemInfo().getTitle());
+            System.out.println("responseDto.getItemInfo().getDealState() = " + chatRoomViewDto.getItemInfo().getDealState());
+            System.out.println("responseDto.getSavedItemMemberInfo().getMemberId() = " + chatRoomViewDto.getSavedItemMemberInfo().getMemberId());
+            System.out.println("responseDto.getSavedItemMemberInfo().getNickname() = " + chatRoomViewDto.getSavedItemMemberInfo().getNickname());
+            System.out.println("responseDto.getRequestedMemberInfo().getMemberId() = " + chatRoomViewDto.getRequestedMemberInfo().getMemberId());
+            System.out.println("responseDto.getRequestedMemberInfo().getNickname() = " + chatRoomViewDto.getRequestedMemberInfo().getNickname());
+            System.out.println("responseDto.getLastLogInfo().getContent() = " + chatRoomViewDto.getLastLogInfo().getContent());
+            System.out.println("responseDto.getLastLogInfo().getLastModifiedTime() = " + chatRoomViewDto.getLastLogInfo().getLastModifiedTime());
+            System.out.println("responseDto.getLastLogInfo().getNotReadNum() = " + chatRoomViewDto.getLastLogInfo().getNotReadNum());
         }
 
 

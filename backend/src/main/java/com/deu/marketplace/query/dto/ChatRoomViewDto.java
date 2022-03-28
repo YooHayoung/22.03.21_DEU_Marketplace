@@ -1,6 +1,9 @@
 package com.deu.marketplace.query.dto;
 
 import com.deu.marketplace.domain.deal.entity.DealState;
+import com.deu.marketplace.web.chatRoom.dto.ItemInfo;
+import com.deu.marketplace.web.chatRoom.dto.LogInfo;
+import com.deu.marketplace.web.chatRoom.dto.MemberInfo;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,16 +15,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoomViewDto {
     private Long chatRoomId;
-    private String itemImg;
-    private Long itemId;
-    private String title;
-    private DealState dealState;
-    private Long itemSavedMemberId;
-    private String itemSavedMemberNickname;
-    private Long requestedMemberId;
-    private String requestedMemberNickname;
-    private String lastLogContent;
-    private LocalDateTime lastModifiedTime;
+    private ItemInfo itemInfo;
+    private MemberInfo savedItemMemberInfo;
+    private MemberInfo requestedMemberInfo;
+    private LogInfo lastLogInfo;
 
     @QueryProjection
     public ChatRoomViewDto(Long chatRoomId, String itemImg, Long itemId,
@@ -29,15 +26,23 @@ public class ChatRoomViewDto {
                            String itemSavedMemberNickname, Long requestedMemberId, String requestedMemberNickname,
                            String lastLogContent, LocalDateTime lastModifiedTime) {
         this.chatRoomId = chatRoomId;
-        this.itemImg = itemImg;
-        this.itemId = itemId;
-        this.title = title;
-        this.dealState = dealState;
-        this.itemSavedMemberId = itemSavedMemberId;
-        this.itemSavedMemberNickname = itemSavedMemberNickname;
-        this.requestedMemberId = requestedMemberId;
-        this.requestedMemberNickname = requestedMemberNickname;
-        this.lastLogContent = lastLogContent;
-        this.lastModifiedTime = lastModifiedTime;
+        this.itemInfo = ItemInfo.builder()
+                .itemImg(itemImg)
+                .itemId(itemId)
+                .title(title)
+                .dealState(dealState)
+                .build();
+        this.savedItemMemberInfo = MemberInfo.builder()
+                .memberId(itemSavedMemberId)
+                .nickname(itemSavedMemberNickname)
+                .build();
+        this.requestedMemberInfo = MemberInfo.builder()
+                .memberId(requestedMemberId)
+                .nickname(requestedMemberNickname)
+                .build();
+        this.lastLogInfo = LogInfo.builder()
+                .content(lastLogContent)
+                .lastModifiedTime(lastModifiedTime)
+                .build();
     }
 }

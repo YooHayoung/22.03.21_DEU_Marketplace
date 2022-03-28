@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>채팅방 목록</title>
+</head>
+<body>
+<h1 th:text="${#request.getHeader('memberId')}"></h1>
+<ul th:each="content : ${contents}">
+    <li th:text="${content.chatRoomId}"></li>
+    <li th:text="${content.itemInfo.itemId}"></li>
+    <li th:text="${content.itemInfo.itemImg}"></li>
+    <li th:text="${content.itemInfo.title}"></li>
+    <li th:text="${content.itemInfo.dealState}"></li>
+    <li th:text="${content.savedItemMemberInfo.memberId}"></li>
+    <li th:text="${content.savedItemMemberInfo.nickname}"></li>
+    <li th:text="${content.requestedMemberInfo.memberId}"></li>
+    <li th:text="${content.requestedMemberInfo.nickname}"></li>
+    <li th:text="${content.lastLogInfo.content}"></li>
+    <li th:text="${content.lastLogInfo.lastModifiedTime}"></li>
+    <li th:text="${content.lastLogInfo.notReadNum}"></li>
+</ul>
+</body>
+</html>

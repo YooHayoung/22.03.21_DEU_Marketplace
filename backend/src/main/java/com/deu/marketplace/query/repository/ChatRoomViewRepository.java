@@ -2,9 +2,12 @@ package com.deu.marketplace.query.repository;
 
 import com.deu.marketplace.domain.chatLog.entity.QChatLog;
 import com.deu.marketplace.domain.chatRoom.entity.QChatRoom;
+import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.QItem;
 import com.deu.marketplace.domain.member.entity.QMember;
+import com.deu.marketplace.query.dto.ChatRoomInfoDto;
 import com.deu.marketplace.query.dto.ChatRoomViewDto;
+import com.deu.marketplace.query.dto.QChatRoomInfoDto;
 import com.deu.marketplace.query.dto.QChatRoomViewDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
@@ -16,10 +19,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.deu.marketplace.domain.chatLog.entity.QChatLog.chatLog;
 import static com.deu.marketplace.domain.chatRoom.entity.QChatRoom.chatRoom;
@@ -126,5 +126,36 @@ public class ChatRoomViewRepository {
             map.put(chatRoomId, notReadNum);
         }
         return map;
+    }
+
+//    Long chatRoomId, Long itemId, String itemImg, String title, int price,
+//    DealState dealState, Long itemSavedMemberId, String itemSavedMemberNickname,
+//    Long requestedMemberId, String requestedMemberNickname
+    public Optional<ChatRoomInfoDto> getChatRoomInfo(Long chatRoomId, Long memberId) {
+        return Optional.ofNullable(queryFactory
+                .select(new QChatRoomInfoDto(
+                        chatRoom.id,
+                        item.id,
+                        itemImg.imgFile,
+                        item.title,
+                        item.price,
+                        deal.dealState,
+                        item.member.id,
+                        item.member.nickname,
+                        chatRoom.requestedMember.id,
+                        chatRoom.requestedMember.nickname
+                ))
+                .from(chatRoom)
+                .leftJoin(chatRoom.requestedMember, new QMember("requestedMember"))
+                .leftJoin(chatRoom.item, item)
+                .leftJoin(item.member, member)
+                .leftJoin(itemImg).on(item.eq(itemImg.item))
+                .leftJoin(deal).on(item.eq(deal.item))
+                .fetchJoin()
+                .where(chatRoom.requestedMember.id.eq(memberId)
+                                .or(chatRoom.item.member.id.eq(memberId)),
+                        (itemImg.imgSeq.eq(1).or(itemImg.imgSeq.isNull())),
+                        chatRoom.id.eq(chatRoomId))
+                .fetchOne());
     }
 }
