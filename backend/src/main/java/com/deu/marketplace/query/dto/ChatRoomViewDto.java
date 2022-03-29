@@ -42,7 +42,7 @@ public class ChatRoomViewDto {
                 .build();
         this.lastLogInfo = LogInfo.builder()
                 .content(lastLogContent)
-                .lastModifiedTime(lastModifiedTime)
+                .lastModifiedDate(lastModifiedTime)
                 .build();
     }
 }

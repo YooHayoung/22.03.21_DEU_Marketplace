@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 public class ChatDto {
     private Long roomId;
     private Long senderId;
-    private Long recipientId;
     private String message;
 
     @Builder
-    public ChatDto(Long roomId, Long senderId, Long recipientId, String message) {
+    public ChatDto(Long roomId, Long senderId, String message) {
         this.roomId = roomId;
         this.senderId = senderId;
-        this.recipientId = recipientId;
         this.message = message;
     }
 
@@ -26,8 +24,4 @@ public class ChatDto {
         this.message = message;
     }
 
-    public ChatLog toEntity() {
-        return ChatLog.builder()
-                .build();
-    }
 }

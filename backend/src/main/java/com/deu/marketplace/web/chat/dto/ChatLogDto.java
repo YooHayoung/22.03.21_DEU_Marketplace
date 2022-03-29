@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,7 +15,7 @@ public class ChatLogDto {
     private Long senderId;
     private Long recipientId;
     private String message;
-    private LocalDateTime lastModifiedDate;
+    private String lastModifiedDate;
     private boolean read;
 
     @Builder
@@ -24,7 +25,7 @@ public class ChatLogDto {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.message = message;
-        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedDate = lastModifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.read = read;
     }
 }

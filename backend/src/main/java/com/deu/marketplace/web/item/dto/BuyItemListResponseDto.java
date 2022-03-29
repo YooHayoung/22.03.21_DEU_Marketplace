@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
@@ -14,7 +15,7 @@ public class BuyItemListResponseDto {
     private String itemImgFile;
     private String title;
     private int price;
-    private LocalDateTime lastModifiedDate;
+    private String lastModifiedDate;
     private String dealState;
     private boolean myWish;
 
@@ -22,6 +23,7 @@ public class BuyItemListResponseDto {
         this.itemId = item.getId();
         this.title = item.getTitle();
         this.price = item.getPrice();
-        this.lastModifiedDate = item.getLastModifiedDate();
+        this.lastModifiedDate = LocalDateTime.parse(item.getLastModifiedDate().toString(),
+                DateTimeFormatter.ofPattern("YYYY-MM-DD HH:MM")).toString();
     }
 }

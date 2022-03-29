@@ -1,6 +1,7 @@
 package com.deu.marketplace.web.chatRoom.controller;
 
 import com.deu.marketplace.domain.chatLog.entity.ChatLog;
+import com.deu.marketplace.domain.chatLog.service.ChatLogService;
 import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
 import com.deu.marketplace.domain.chatRoom.service.ChatRoomService;
 import com.deu.marketplace.domain.item.entity.Item;
@@ -10,13 +11,16 @@ import com.deu.marketplace.domain.member.service.MemberService;
 import com.deu.marketplace.query.dto.ChatRoomInfoDto;
 import com.deu.marketplace.query.dto.ChatRoomViewDto;
 import com.deu.marketplace.query.repository.ChatRoomViewRepository;
+import com.deu.marketplace.web.chat.dto.ChatLogDto;
+import com.deu.marketplace.web.chatRoom.dto.ChatRoomListDto;
+import com.deu.marketplace.web.chatRoom.dto.EnterChatRoomDto;
+import com.deu.marketplace.web.chatRoom.dto.MemberInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,6 +41,7 @@ public class ChatRoomController {
     private final MemberService memberService;
     private final ItemService itemService;
     private final ChatRoomService chatRoomService;
+    private final ChatLogService chatLogService;
     private final ChatRoomViewRepository chatRoomViewRepository;
 //    private final ChatLogService chatLogService;
 
@@ -58,33 +63,52 @@ public class ChatRoomController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
-//    // 이거 써야함
+    @GetMapping
+    public ResponseEntity<?> getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
+                                          @RequestHeader(value = "memberId") Long memberId) {
+        log.info("Get ChatRooms. Page : " + pageable.getPageNumber());
+        Page<ChatRoomViewDto> chatRoomPages =
+                chatRoomViewRepository.getChatRoomPages(memberId, pageable);
+        Page<ChatRoomListDto> ChatRoomListDtos = chatRoomPages.map(chatRoomViewDto -> {
+            return ChatRoomListDto.builder()
+                    .chatRoomId(chatRoomViewDto.getChatRoomId())
+                    .itemInfo(chatRoomViewDto.getItemInfo())
+                    .targetMemberInfo(getTargetMemberInfo(memberId,
+                            chatRoomViewDto.getSavedItemMemberInfo(),
+                            chatRoomViewDto.getRequestedMemberInfo()))
+                    .lastLogInfo(chatRoomViewDto.getLastLogInfo())
+                    .build();
+        });
+        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
+        for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
+            chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
+        }
+
+        return ResponseEntity.ok().body(ChatRoomListDtos);
+    }
+
+    private MemberInfo getTargetMemberInfo(Long myId, MemberInfo itemSavedMemberInfo,
+                                           MemberInfo requestedMemberInfo) {
+        if (itemSavedMemberInfo.getMemberId() != myId) {
+            return itemSavedMemberInfo;
+        } else {
+            return requestedMemberInfo;
+        }
+    }
+
 //    @GetMapping
 //    public ResponseEntity<?> getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
 //                                          @RequestHeader(value = "memberId") Long memberId) {
 //        log.info("Get ChatRooms. Page : " + pageable.getPageNumber());
-//        Page<ChatRoomViewDto> chatRoomPages =
-//                chatRoomViewRepository.getChatRoomPages(memberId, pageable);
-//        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
+//        List<ChatRoomViewDto> chatRoomPages =
+//                chatRoomViewRepository.getChatRoomPages(memberId, pageable).getContent();
+//        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(chatRoomPages, memberId);
 //        for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
 //            chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
 //        }
 //
 //        return ResponseEntity.ok().body(chatRoomPages);
 //    }
-    @GetMapping
-    public ResponseEntity<?> getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
-                                          @RequestHeader(value = "memberId") Long memberId) {
-        log.info("Get ChatRooms. Page : " + pageable.getPageNumber());
-        List<ChatRoomViewDto> chatRoomPages =
-                chatRoomViewRepository.getChatRoomPages(memberId, pageable).getContent();
-        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(chatRoomPages, memberId);
-        for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
-            chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
-        }
-
-        return ResponseEntity.ok().body(chatRoomPages);
-    }
 
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<?> enterChatRoom(@PathVariable("chatRoomId") Long chatRoomId,
@@ -98,7 +122,23 @@ public class ChatRoomController {
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.setLocation(redirectUri);
 //        return new ResponseEntity<>(chatRoomInfoDto, httpHeaders, HttpStatus.SEE_OTHER);
-        return new ResponseEntity<>(chatRoomInfoDto, null, HttpStatus.OK);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by("lastModifiedDate").descending());
+        Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable);
+        Page<ChatLogDto> chatLogDtos = chatLogPage.map(chatLog -> {
+            return ChatLogDto.builder()
+                    .chatLogId(chatLog.getId())
+                    .senderId(chatLog.getSender().getId())
+                    .recipientId(chatLog.getRecipient().getId())
+                    .message(chatLog.getContent())
+                    .lastModifiedDate(chatLog.getLastModifiedDate())
+                    .read(chatLog.isRead())
+                    .build();
+        });
+        EnterChatRoomDto enterChatRoomDto = EnterChatRoomDto.builder()
+                .chatRoomInfoDto(chatRoomInfoDto)
+                .chatLogDtoPage(chatLogDtos)
+                .build();
+        return ResponseEntity.ok().body(enterChatRoomDto);
     }
 
     // 채팅방 삭제

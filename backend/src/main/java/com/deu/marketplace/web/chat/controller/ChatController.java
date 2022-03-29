@@ -64,47 +64,47 @@ public class ChatController {
         log.info("ChatLog is saved.");
     }
 
-//      //이거 써야함
-//    @GetMapping("/api/v1/chat/{chatRoomId}")
-//    public ResponseEntity<?> getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
-//                                         @PageableDefault(size = 30, page = 0,
-//                                                 sort = "lastModifiedDate",
-//                                                 direction = Sort.Direction.DESC) Pageable pageable) {
-//        log.info("Get ChatLogs Page");
-//        Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable);
-//        Page<ChatLogDto> chatLogDtos = chatLogPage.map(chatLog -> {
-//            return ChatLogDto.builder()
-//                    .chatLogId(chatLog.getId())
-//                    .senderId(chatLog.getSender().getId())
-//                    .recipientId(chatLog.getRecipient().getId())
-//                    .message(chatLog.getContent())
-//                    .lastModifiedDate(chatLog.getLastModifiedDate())
-//                    .isRead(chatLog.isRead())
-//                    .build();
-//        });
-//
-//        return ResponseEntity.ok().body(chatLogDtos);
-//    }
-
+      //이거 써야함
     @GetMapping("/api/v1/chat/{chatRoomId}")
     public ResponseEntity<?> getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
-                                         @PageableDefault(size = 30, page = 0,
+                                         @PageableDefault(size = 30, page = 1,
                                                  sort = "lastModifiedDate",
                                                  direction = Sort.Direction.DESC) Pageable pageable) {
-        List<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable).getContent();
-        List<ChatLogDto> chatLogDtos = new ArrayList<>();
-        for (ChatLog chatLog : chatLogPage) {
-            chatLogDtos.add(ChatLogDto.builder()
+        log.info("Get ChatLogs Page");
+        Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable);
+        Page<ChatLogDto> chatLogDtos = chatLogPage.map(chatLog -> {
+            return ChatLogDto.builder()
                     .chatLogId(chatLog.getId())
                     .senderId(chatLog.getSender().getId())
                     .recipientId(chatLog.getRecipient().getId())
                     .message(chatLog.getContent())
                     .lastModifiedDate(chatLog.getLastModifiedDate())
                     .read(chatLog.isRead())
-                    .build());
-        }
+                    .build();
+        });
 
         return ResponseEntity.ok().body(chatLogDtos);
     }
+
+//    @GetMapping("/api/v1/chat/{chatRoomId}")
+//    public ResponseEntity<?> getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
+//                                         @PageableDefault(size = 30, page = 0,
+//                                                 sort = "lastModifiedDate",
+//                                                 direction = Sort.Direction.DESC) Pageable pageable) {
+//        List<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable).getContent();
+//        List<ChatLogDto> chatLogDtos = new ArrayList<>();
+//        for (ChatLog chatLog : chatLogPage) {
+//            chatLogDtos.add(ChatLogDto.builder()
+//                    .chatLogId(chatLog.getId())
+//                    .senderId(chatLog.getSender().getId())
+//                    .recipientId(chatLog.getRecipient().getId())
+//                    .message(chatLog.getContent())
+//                    .lastModifiedDate(chatLog.getLastModifiedDate())
+//                    .read(chatLog.isRead())
+//                    .build());
+//        }
+//
+//        return ResponseEntity.ok().body(chatLogDtos);
+//    }
 
 }

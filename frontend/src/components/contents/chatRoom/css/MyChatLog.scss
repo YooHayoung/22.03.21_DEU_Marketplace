@@ -1,0 +1,24 @@
+.div_myChatLog {
+   //max-width: 22rem;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   overflow: hidden;
+   background-color: yellow;
+   display: grid;
+   grid-template-columns: 1fr 2fr 5fr;
+   
+   .contents {
+      grid-column: 3;
+      grid-row: 1;
+   }
+   
+   .sendTime {
+      grid-column: 2;
+      grid-row: 1;
+   }
+   
+   .isRead {
+      grid-column: 1;
+      grid-row: 1;
+   }
+}

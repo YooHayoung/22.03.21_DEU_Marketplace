@@ -1,0 +1,17 @@
+.div_targetChatLog {
+   //max-width: 22rem;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   overflow: hidden;
+   background-color: goldenrod;
+   display: grid;
+   grid-template-columns: 6fr 2fr;
+   
+   .contents {
+      grid-column: 1;
+   }
+   
+   .sendTime {
+      grid-column: 2;
+   }
+}

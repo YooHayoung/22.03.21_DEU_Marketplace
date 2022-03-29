@@ -6,6 +6,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 public class BuyItemDto {
@@ -14,7 +15,7 @@ public class BuyItemDto {
     private String itemImgFile;
     private String title;
     private Integer price;
-    private LocalDateTime lastModifiedDate;
+    private String lastModifiedDate;
     private Long itemDealId;
     private DealState dealState;
     private Long wishedMemberId;
@@ -28,7 +29,7 @@ public class BuyItemDto {
         this.itemImgFile = itemImgFile;
         this.title = title;
         this.price = price;
-        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedDate = lastModifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.itemDealId = itemDealId;
         this.dealState = dealState;
         this.wishedMemberId = wishedMemberId;
