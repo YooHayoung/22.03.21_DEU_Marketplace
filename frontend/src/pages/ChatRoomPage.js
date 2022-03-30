@@ -3,6 +3,11 @@ import axios from "../../node_modules/axios/index";
 import { useMatch } from "../../node_modules/react-router-dom/index";
 import ChatLogs from "../components/contents/chatRoom/ChatLogs";
 
+
+import SockJS from 'sockjs-client';
+import * as StompJS from '@stomp/stompjs';
+
+
 import ItemInfo from "../components/contents/chatRoom/ItemInfo";
 import MyChatLog from "../components/contents/chatRoom/MyChatLog";
 import TargetChatLog from "../components/contents/chatRoom/TargetChatLog";
@@ -12,10 +17,12 @@ import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
 
 import './ChatRoomPage.scss'
 
+var sock = SockJS("/stomp/chat");
+var client = null;
 
 const ChatRoomPage = (props) => {
 
-   const { params } = useMatch('/chatRooms/:chatRoomId');
+   const { params } = useMatch('localhost:3000/chatRooms/:chatRoomId');
    const [roomInfo, setRoomInfo] = useState({
       itemInfo: { // 초기화
          itemId: 0,
@@ -28,11 +35,17 @@ const ChatRoomPage = (props) => {
    const [chats, setChats] = useState([]);
    const [chatPage, setChatPage] = useState(0);
    const [message, setMessage] = useState('');
+   const [data, setData] = useState({
+      roomId: 0,
+      senderId: 0,
+      message: ''
+   });
 
    useEffect(() => {
+      console.log(props);
       (async () => {
          const headers = {
-            'memberId': 1
+            'memberId': props.memberId
          }
          axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { headers: headers })
             .then((response) => {
@@ -45,6 +58,81 @@ const ChatRoomPage = (props) => {
             })
       })();
    }, []);
+
+   /////////////////////
+   const subscribe = () => {
+      if (client != null) {
+         client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
+            const messagedto = JSON.parse(chatDto.body);
+            console.log(messagedto);
+         });
+      }
+   };
+
+   useEffect(() => {
+      connect();
+      return () => disConnect();
+   }, []);
+
+   const connect = () => {
+      client = new StompJS.Client({
+         brokerURL: "/stomp/chat",
+         debug: function (str) {
+            console.log(str);
+         },
+         onConnect: () => {
+            subscribe();
+         },
+      });
+
+      client.activate();
+   };
+
+   const disConnect = () => {
+      if (client != null) {
+         if (client.connected) client.deactivate();
+      }
+   };
+
+   const GetMessage = (message) => {
+      if (client != null) {
+         if (!client.connected) return;
+
+         setMessage(message);
+         console.log(message);
+         setData({
+            'roomId': roomInfo.chatRoomId,
+            'senderId': roomInfo.myId,
+            'message': message
+         });
+
+         client.publish({
+            destination: "/app/chat/message/",
+            body: JSON.stringify(data),
+         });
+      }
+   };
+
+   ///////////////////////////
+
+   // useEffect(() => {
+   //    client.connect({}, () => {
+   //       console.log('Connected : ' + roomInfo.myId)
+   //       client.send("/app/chat/enter", {}, JSON.stringify(roomInfo.chatRoomId, roomInfo.myId)) // 접속
+
+   //       // Create Message
+
+   //       client.send(`/app/chat/message`, {}, JSON.stringify(data))
+
+   //       client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
+   //          const messagedto = JSON.parse(chatDto.body);
+   //          console.log(messagedto);
+   //       })
+
+   //    })
+   //    return () => wsDisconnect();
+
+   // }, [client, data])
 
    const getChats = () => {
 
@@ -80,10 +168,16 @@ const ChatRoomPage = (props) => {
       }
    });
 
-   const GetMessage = (message) => {
-      setMessage(message);
-      console.log(message);
-   };
+   // const GetMessage = (message) => {
+   //    setMessage(message);
+   //    console.log(message);
+   //    setData({
+   //       'roomId': roomInfo.chatRoomId,
+   //       'senderId': roomInfo.myId,
+   //       'message': message
+   //    });
+   // };
+
 
 
    return (

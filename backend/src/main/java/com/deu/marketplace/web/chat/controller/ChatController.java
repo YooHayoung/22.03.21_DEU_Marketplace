@@ -47,6 +47,9 @@ public class ChatController {
     // /queue/chat/room/{roomId} 입력
     @MessageMapping("/chat/enter")
     public void enter(ChatDto chatDto) {
+        ChatRoom chatRoom =
+                chatRoomService.getOneToEnterChatRoom(chatDto.getRoomId(), chatDto.getSenderId()).orElseThrow();
+
         chatDto.setMessage(chatDto.getSenderId() + "님 입장.");
         simpMessagingTemplate.convertAndSend("/queue/chat/" + chatDto.getRoomId(), chatDto);
     }

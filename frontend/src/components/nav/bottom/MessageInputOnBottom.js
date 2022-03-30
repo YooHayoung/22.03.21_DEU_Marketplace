@@ -8,13 +8,16 @@ const MessageInputOnBottom = (props) => {
    const [message, setMessage] = useState('');
 
    const onChange = (e) => {
-      console.log(e.target.value);
       setMessage(e.target.value);
    }
 
    const onClick = () => {
-      props.GetMessage(message);
-      setMessage('');
+      if (message !== '') {
+         props.GetMessage(message);
+         setMessage('');
+      } else {
+         alert('메세지를 입력하세요');
+      }
    };
 
    const enterKeyEventHandler = (e) => {

@@ -3,17 +3,18 @@ import React, { useEffect, useState } from "react";
 import ChatRoom from "../components/contents/chatRoomList/ChatRoom";
 
 import axios from "../../node_modules/axios/index";
+import { useCookies } from "../../node_modules/react-cookie/cjs/index";
+import { Cookies } from "../../node_modules/react-cookie/cjs/index";
 
-const ChatRoomListPage = () => {
+const ChatRoomListPage = (props) => {
    const [contents, setContents] = useState([]);
    const [page, setPage] = useState(0);
+   const cookies = new Cookies('token');
 
    useEffect(() => {
+      console.log(cookies.token);
       (async () => {
-         const headers = {
-            'memberId': 1
-         }
-         axios.get('http://localhost:8080/api/v1/chatRoom', { headers: headers })
+         axios.get('http://localhost:8080/api/v1/chatRoom', { withCredentials: true })
             .then((response) => {
                console.log(response.data);
                setContents(response.data.content);

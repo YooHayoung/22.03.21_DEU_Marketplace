@@ -33,6 +33,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.NoResultException;
@@ -65,7 +66,7 @@ public class ItemController {
                                          @PageableDefault(size = 20, page = 0,
                                                  sort = "lastModifiedDate",
                                                  direction = Sort.Direction.DESC) Pageable pageable,
-                                         @RequestHeader(value = "memberId") Long memberId) {
+                                         @AuthenticationPrincipal Long memberId) {
         if (cond.getClassification().equals(Classification.SELL.name())) {
             Page<SellItemDto> sellItemPages = itemViewRepository.getSellItemPages(cond, pageable, memberId);
             return ResponseEntity.ok().body(sellItemPages);
@@ -77,7 +78,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<?> getOneItem(@PathVariable("itemId") Long itemId,
-                                        @RequestHeader("memberId") Long memberId) {
+                                        @AuthenticationPrincipal Long memberId) {
         Item item = itemService.getOneItemInfoById(itemId).orElseThrow();
         Optional<Tuple> wishInfo = wishItemService.getWishCountAndMyWishByItemId(itemId, memberId);
         Optional<Deal> deal = dealService.getOneByItemId(item.getId());
@@ -98,7 +99,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<?> updateOneItem(@PathVariable("itemId") Long itemId,
-                                           @RequestHeader("memberId") Long memberId,
+                                           @AuthenticationPrincipal Long memberId,
                                            @RequestBody ItemSaveRequestDto requestDto) throws Exception {
         Item item = requestInfoToEntities(requestDto, memberId);
         Item updateItem = itemService.updateItem(itemId, item, memberId);
@@ -111,7 +112,7 @@ public class ItemController {
 
     @DeleteMapping("/{itemId}")
     public ResponseEntity<?> deleteOneItem(@PathVariable("itemId") Long itemId,
-                                           @RequestHeader("memberId") Long memberId) throws URISyntaxException, ValidationException {
+                                           @AuthenticationPrincipal Long memberId) throws URISyntaxException, ValidationException {
         itemService.deleteItem(itemId, memberId);
 
         URI redirectUri = new URI("http://localhost:8080/api/v1/items/");
@@ -122,7 +123,7 @@ public class ItemController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveItem(@RequestBody ItemSaveRequestDto requestDto,
-                                      @RequestHeader("memberId") Long memberId) throws URISyntaxException {
+                                      @AuthenticationPrincipal Long memberId) throws URISyntaxException {
         Item item = requestInfoToEntities(requestDto, memberId);
         item = itemService.saveItem(item);
 
@@ -133,7 +134,7 @@ public class ItemController {
     }
 
     private Item requestInfoToEntities(@RequestBody ItemSaveRequestDto requestDto,
-                                       @RequestHeader("memberId") Long memberId) {
+                                       @AuthenticationPrincipal Long memberId) {
         Member member = memberService.getMemberById(memberId).orElseThrow(NoResultException::new);
         ItemCategory itemCategory = itemCategoryService
                 .searchOneById(requestDto.getItemCategoryId()).orElseThrow(NoResultException::new);

@@ -25,6 +25,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -46,7 +47,7 @@ public class ChatRoomController {
 //    private final ChatLogService chatLogService;
 
     @PostMapping("/new")
-    public ResponseEntity<?> createChatRoom(@RequestHeader("memberId") Long memberId,
+    public ResponseEntity<?> createChatRoom(@AuthenticationPrincipal Long memberId,
                                             @RequestBody ItemIdDto itemIdDto) throws URISyntaxException {
         log.info("Create ChatRoom.");
         Member requestedMember = memberService.getMemberById(memberId).orElseThrow();
@@ -65,7 +66,7 @@ public class ChatRoomController {
 
     @GetMapping
     public ResponseEntity<?> getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
-                                          @RequestHeader(value = "memberId") Long memberId) {
+                                          @AuthenticationPrincipal Long memberId) {
         log.info("Get ChatRooms. Page : " + pageable.getPageNumber());
         Page<ChatRoomViewDto> chatRoomPages =
                 chatRoomViewRepository.getChatRoomPages(memberId, pageable);
@@ -112,7 +113,7 @@ public class ChatRoomController {
 
     @GetMapping("/{chatRoomId}")
     public ResponseEntity<?> enterChatRoom(@PathVariable("chatRoomId") Long chatRoomId,
-                                           @RequestHeader("memberId") Long memberId) throws URISyntaxException {
+                                           @AuthenticationPrincipal Long memberId) throws URISyntaxException {
         log.info("Enter ChatRoom. Member : " + memberId + ", Room : " + chatRoomId);
         ChatRoomInfoDto chatRoomInfoDto =
                 chatRoomViewRepository.getChatRoomInfo(chatRoomId, memberId).orElseThrow();

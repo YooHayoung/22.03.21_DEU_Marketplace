@@ -31,7 +31,7 @@ app:
     tokenExpirationMsec: 864000000
   oauth2:
     authorizedRedirectUris:
-      - http://localhost:8080/oauth/callback #
+      - http://localhost:3000/oauth/redirect/ #
 
 # log
 logging.level:
