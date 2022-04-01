@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.repository.MemberRepository;
+import com.deu.marketplace.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -21,17 +22,17 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 	private final MemberRepository memberRepository;
-//	private final JwtTokenUtil jwtTokenUtil;
+	private final JwtTokenUtil jwtTokenUtil;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		log.info("OAuth : loadUser");
-		String resourceServerUri = userRequest.getClientRegistration()
-				.getProviderDetails().getUserInfoEndpoint().getUri();
-		String accessToken = userRequest.getAccessToken().getTokenValue();
-
-		System.out.println("accessToken = " + accessToken);
-		System.out.println("resourceServerUri = " + resourceServerUri);
+//		String resourceServerUri = userRequest.getClientRegistration()
+//				.getProviderDetails().getUserInfoEndpoint().getUri();
+//		String accessToken = userRequest.getAccessToken().getTokenValue();
+//
+//		System.out.println("accessToken = " + accessToken);
+//		System.out.println("resourceServerUri = " + resourceServerUri);
 
 		OAuth2UserService delegate = new DefaultOAuth2UserService();
 		OAuth2User oAuth2User = delegate.loadUser(userRequest);
@@ -51,9 +52,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 				.build();
 	}
 
+	// refreshToken 재발급
 	private Member saveOrUpdate(OauthUserInfo userInfo) {
 		Member member = memberRepository.findByOauthId(userInfo.getOauthId())
-				.map(m -> m.updateInfo(userInfo.getName(), userInfo.getEmail()))
+				.map(m -> m.updateInfo(userInfo.getName(), userInfo.getEmail(), jwtTokenUtil.createRefreshToken()))
 				.orElse(userInfo.toMemberEntity());
 		return memberRepository.save(member);
 	}

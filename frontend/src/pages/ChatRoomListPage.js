@@ -12,12 +12,20 @@ const ChatRoomListPage = (props) => {
    const cookies = new Cookies('token');
 
    useEffect(() => {
-      console.log(cookies.token);
+      console.log(props.accessToken);
       (async () => {
-         axios.get('http://localhost:8080/api/v1/chatRoom', { withCredentials: true })
+         axios.get('http://localhost:8080/api/v1/chatRoom', { headers: { 'Authorization': props.accessToken } })
             .then((response) => {
                console.log(response.data);
                setContents(response.data.content);
+               if (response.headers.Authorization !== null) {
+                  props.getAccessToken();
+               }
+            })
+            .catch((error) => {
+               console.log(error.status);
+               window.location.href = "/";
+               return Promise.reject(error);
             })
       })();
    }, []);

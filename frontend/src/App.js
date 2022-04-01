@@ -4,31 +4,33 @@ import { Route, Routes } from "../node_modules/react-router-dom/index";
 
 import './App.css';
 
-import IndexPage from "./pages/IndexPage";
+import LoginPage from "./pages/LoginPage";
 import ChatRoomListPage from "./pages/ChatRoomListPage";
 import ChatRoomPage from "./pages/ChatRoomPage";
 import CookiesProvider from "../node_modules/react-cookie/cjs/CookiesProvider";
+import LoginAccess from "./pages/LoginAccess";
 
 
 
 function App() {
-  const [memberId, setMemberId] = useState('');
+  const [accessToken, setAccessToken] = useState('');
 
-
-  const GetMemberId = (memberId) => {
-    setMemberId(memberId);
-    console.log(memberId);
-  };
-
+  const getAccessToken = () => {
+    if (document.cookie.match('accessToken') !== null) {
+      const test = document.cookie.match('accessToken').input;
+      setAccessToken(test.replace('accessToken=', ''));
+    }
+  }
 
   return (
     <div className="App">
       <CookiesProvider>
         <Routes>
-          <Route exact path="/" element={<IndexPage GetMemberId={GetMemberId} />} />
-          <Route exact path="/chatRooms" element={<ChatRoomListPage memberId={memberId} />} />
-          <Route exact path="/chatRooms/:chatRoomId" element={<ChatRoomPage memberId={memberId} />} />
-          <Route path="/oauth/redirect" element={<IndexPage />} />
+          <Route path="/" element={<LoginPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
+          <Route path="/oauth/redirect" element={<LoginPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
+          <Route path="/chatRooms" element={<ChatRoomListPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
+          <Route path="/chatRooms/:chatRoomId" element={<ChatRoomPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
+          {/* <Route path="/oauth/redirect/*" element={<LoginAccess />} /> */}
         </Routes>
       </CookiesProvider>
     </div>

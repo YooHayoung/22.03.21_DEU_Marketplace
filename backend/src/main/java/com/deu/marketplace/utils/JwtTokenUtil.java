@@ -17,15 +17,27 @@ public class JwtTokenUtil {
 
     private final AppProperties appProperties;
 
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getAccessTokenExpirationMsec());
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .setSubject(Long.toString(userPrincipal.getMemberId()))
+                .setIssuer("DeuMarket")
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .compact();
+    }
+
+    public String createRefreshToken() {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getRefreshTokenExpirationMsec());
+
+        return Jwts.builder()
+                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
                 .setIssuer("DeuMarket")
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)

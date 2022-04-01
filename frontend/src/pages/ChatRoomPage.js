@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../node_modules/axios/index";
-import { useMatch } from "../../node_modules/react-router-dom/index";
+import { useMatch, useParams } from "../../node_modules/react-router-dom/index";
 import ChatLogs from "../components/contents/chatRoom/ChatLogs";
 
 
@@ -17,12 +17,12 @@ import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
 
 import './ChatRoomPage.scss'
 
-var sock = SockJS("/stomp/chat");
-var client = null;
+// var sock = SockJS("/stomp/chat");
+// var client = null;
 
 const ChatRoomPage = (props) => {
+   const params = useParams('localhost:3000/chatRooms/:chatRoomId');
 
-   const { params } = useMatch('localhost:3000/chatRooms/:chatRoomId');
    const [roomInfo, setRoomInfo] = useState({
       itemInfo: { // 초기화
          itemId: 0,
@@ -42,76 +42,80 @@ const ChatRoomPage = (props) => {
    });
 
    useEffect(() => {
-      console.log(props);
+      console.log(props.accessToken);
       (async () => {
-         const headers = {
-            'memberId': props.memberId
-         }
-         axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { headers: headers })
+         axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { headers: { 'Authorization': props.accessToken } })
             .then((response) => {
                // console.log(response.data);
                setRoomInfo(response.data.chatRoomInfoDto);
                setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
                setChats(chats.concat(response.data.chatLogDtoPage.content));
-
+               if (response.headers.Authorization !== null) {
+                  props.getAccessToken();
+               }
                // console.log(chatPage);
+            })
+            .catch((error) => {
+               console.log(error.status);
+               window.location.href = "/";
+               return Promise.reject(error);
             })
       })();
    }, []);
 
    /////////////////////
-   const subscribe = () => {
-      if (client != null) {
-         client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
-            const messagedto = JSON.parse(chatDto.body);
-            console.log(messagedto);
-         });
-      }
-   };
+   // const subscribe = () => {
+   //    if (client != null) {
+   //       client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
+   //          const messagedto = JSON.parse(chatDto.body);
+   //          console.log(messagedto);
+   //       });
+   //    }
+   // };
 
-   useEffect(() => {
-      connect();
-      return () => disConnect();
-   }, []);
+   // useEffect(() => {
+   //    connect();
+   //    return () => disConnect();
+   // }, []);
 
-   const connect = () => {
-      client = new StompJS.Client({
-         brokerURL: "/stomp/chat",
-         debug: function (str) {
-            console.log(str);
-         },
-         onConnect: () => {
-            subscribe();
-         },
-      });
+   // const connect = () => {
+   //    client = new StompJS.Client({
+   //       brokerURL: "http://localhost:8080/stomp/chat",
+   //       debug: function (str) {
+   //          console.log(str);
+   //       },
+   //       onConnect: () => {
+   //          subscribe();
+   //       },
+   //    });
 
-      client.activate();
-   };
+   //    client.activate();
+   // };
 
-   const disConnect = () => {
-      if (client != null) {
-         if (client.connected) client.deactivate();
-      }
-   };
+   // const disConnect = () => {
+   //    if (client != null) {
+   //       if (client.connected) client.deactivate();
+   //    }
+   // };
 
-   const GetMessage = (message) => {
-      if (client != null) {
-         if (!client.connected) return;
+   // const GetMessage = (message) => {
+   //    if (client != null) {
+   //       if (!client.connected) return;
 
-         setMessage(message);
-         console.log(message);
-         setData({
-            'roomId': roomInfo.chatRoomId,
-            'senderId': roomInfo.myId,
-            'message': message
-         });
+   //       setMessage(message);
+   //       console.log(message);
+   //       setData({
+   //          'roomId': roomInfo.chatRoomId,
+   //          'senderId': roomInfo.myId,
+   //          'message': message
+   //       });
 
-         client.publish({
-            destination: "/app/chat/message/",
-            body: JSON.stringify(data),
-         });
-      }
-   };
+   //       client.publish({
+   //          destination: "/app/chat/message/",
+   //          body: JSON.stringify(data),
+   //       });
+   //    }
+   // };
 
    ///////////////////////////
 
@@ -135,15 +139,16 @@ const ChatRoomPage = (props) => {
    // }, [client, data])
 
    const getChats = () => {
-
-      const headers = {
-         'memberId': 1
-      }
-      axios.get('http://localhost:8080/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { headers: headers })
+      axios.get('http://localhost:8080/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { headers: { 'Authorization': props.accessToken } })
          .then((response) => {
             // console.log(response.data);
             setChatPage(response.data.pageable.pageNumber);
             setChats(chats.concat(response.data.content));
+         })
+         .catch((error) => {
+            console.log(error.status);
+            window.location.href = "/";
+            return Promise.reject(error);
          })
       console.log(chats);
    };
@@ -189,7 +194,8 @@ const ChatRoomPage = (props) => {
             {renderChatLogs}
             {/* <ChatLogs chats={chats} /> */}
          </div>
-         <MessageInputOnBottom GetMessage={GetMessage} />
+         <MessageInputOnBottom />
+         {/* GetMessage={GetMessage} */}
       </div>
    );
 };

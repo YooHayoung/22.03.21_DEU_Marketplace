@@ -17,14 +17,19 @@ public class AppProperties {
     @Getter
     public static class Auth {
         private String tokenSecret;
-        private long tokenExpirationMsec;
+        private long accessTokenExpirationMsec;
+        private long refreshTokenExpirationMsec;
 
         public void setTokenSecret(String tokenSecret) {
             this.tokenSecret = tokenSecret;
         }
 
-        public void setTokenExpirationMsec(long tokenExpirationMsec) {
-            this.tokenExpirationMsec = tokenExpirationMsec;
+        public void setAccessTokenExpirationMsec(long accessTokenExpirationMsec) {
+            this.accessTokenExpirationMsec = accessTokenExpirationMsec;
+        }
+
+        public void setRefreshTokenExpirationMsec(long refreshTokenExpirationMsec) {
+            this.refreshTokenExpirationMsec = refreshTokenExpirationMsec;
         }
     }
 

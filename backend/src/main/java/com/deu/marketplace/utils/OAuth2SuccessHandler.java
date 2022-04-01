@@ -1,6 +1,7 @@
 package com.deu.marketplace.utils;
 
 import com.deu.marketplace.config.AppProperties;
+import com.deu.marketplace.config.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private  JwtTokenUtil jwtTokenUtil;
     private  AppProperties appProperties;
     private  HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-    private static final int cookieExpireSeconds = 60000;
 
     public OAuth2SuccessHandler(@Lazy JwtTokenUtil jwtTokenUtil,@Lazy AppProperties appProperties,@Lazy HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository) {
         this.jwtTokenUtil = jwtTokenUtil;
@@ -36,36 +36,45 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     //token을 포함한 uri을 생성 후 인증요청 쿠키를 비워주고 redirect 한다.
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+        logger.info("onAuthenticationSuccess");
         String targetUrl = determineTargetUrl(request, response, authentication);
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
         clearAuthenticationAttributes(request, response);
-        CookieUtils.addCookie(response, "token", createToken(authentication), cookieExpireSeconds);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+//        response.setHeader("Authorization", createAccessToken(authentication));
+//        response.setHeader("Access-Controll-Allow-Origin", "http://localhost:3000");
+        CookieUtils.addNotHttpOnlyCookie(response, "accessToken", createAccessToken(authentication), 1);
+        CookieUtils.addCookie(response, "refreshToken", userPrincipal.getRefreshToken(), (int) (appProperties.getAuth().getRefreshTokenExpirationMsec()/1000));
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     //token을 생성하고 이를 포함한 프론트엔드로의 uri를 생성한다.
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        logger.info("determineTargetUrl");
         Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            try {
-                throw new Exception("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            try {
+//                throw new Exception("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-//        String token = jwtTokenUtil.createToken(authentication);
         return UriComponentsBuilder.fromUriString(targetUrl)
 //                .queryParam("token", token)
                 .build().toUriString();
     }
 
-    public String createToken(Authentication authentication) {
-        return jwtTokenUtil.createToken(authentication);
+    public String createAccessToken(Authentication authentication) {
+        return jwtTokenUtil.createAccessToken(authentication);
+    }
+
+    public String createRefreshToken() {
+        return jwtTokenUtil.createRefreshToken();
     }
 
     //인증정보 요청 내역을 쿠키에서 삭제한다.
@@ -76,6 +85,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     //application.properties에 등록해놓은 Redirect uri가 맞는지 확인한다. (app.redirect-uris)
     private boolean isAuthorizedRedirectUri(String uri) {
+        logger.info("redirectUri = " + uri);
+        logger.info("app-redirectUri = " + appProperties.getOauth2().getAuthorizedRedirectUris());
         URI clientRedirectUri = URI.create(uri);
         return appProperties.getOauth2().getAuthorizedRedirectUris()
                 .stream()

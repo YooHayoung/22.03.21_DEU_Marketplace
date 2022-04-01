@@ -20,16 +20,18 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String oauthId;
     private String name;
     private String email;
+    private String refreshToken;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
     @Builder(builderClassName = "byNoAttributesBuilder", builderMethodName = "byNoAttributesBuilder")
-    public UserPrincipal(Long memberId, String oauthId, String name, String email,
+    public UserPrincipal(Long memberId, String oauthId, String name, String email, String refreshToken,
                          Collection<? extends GrantedAuthority> authorities) {
         this.memberId = memberId;
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;
+        this.refreshToken = refreshToken;
         this.authorities = authorities;
     }
 
@@ -39,6 +41,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
+        this.refreshToken = member.getRefreshToken();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
         this.attributes = attributes;
     }
@@ -49,6 +52,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
+        this.refreshToken = member.getRefreshToken();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
     }
 

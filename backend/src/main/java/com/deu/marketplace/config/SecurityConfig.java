@@ -5,22 +5,17 @@ import com.deu.marketplace.utils.JwtAuthenticationFilter;
 import com.deu.marketplace.utils.OAuth2AuthenticationFailureHandler;
 import com.deu.marketplace.utils.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -53,6 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 	.disable()
 				 .httpBasic()
 				 	.disable()
+				 .exceptionHandling()
+				 	.authenticationEntryPoint(authenticationEntryPoint())
+				 	.and()
 				 .sessionManagement()
 				 	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				 	.and()
@@ -67,23 +65,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						.baseUri("/oauth/authorization") // front -> server 인증 요청 uri
 					 .and()
 					 .redirectionEndpoint()
-						.baseUri("/oauth/callback/*") // callback uri
+						.baseUri("/oauth/redirect") // callback uri
 					 .and()
 					 .userInfoEndpoint()
 						 .userService(customOAuth2UserService)
 						 .and()
 						 .successHandler(oAuth2SuccessHandler)
-						 .failureHandler((AuthenticationFailureHandler) oAuth2AuthenticationFailureHandler);
+						 .failureHandler(oAuth2AuthenticationFailureHandler);
 		 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
+	public CustomAuthenticationEntryPoint authenticationEntryPoint() {
+		return new CustomAuthenticationEntryPoint();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.addAllowedOriginPattern("*");
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
+//		configuration.addAllowedOrigin("http://localhost:3000");
 		configuration.setAllowCredentials(true);
+		configuration.addExposedHeader("Authorization");
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;

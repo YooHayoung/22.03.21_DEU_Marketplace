@@ -8,16 +8,15 @@ const ChatRoom = (props) => {
    return (
       <Link to={{
          pathname: url,
-         state: {
-            memberId: 1
-         },
+         state: { accessToken: props.accessToken },
       }}>
          <div className="div_chatRoom" >
             <div className="div_itemImg">{props.content.itemInfo.itemImg === null ? '이미지 없음' : props.content.itemInfo.itemImg}</div>
             <div className="div_targetMemberNick">{props.content.targetMemberInfo.nickname}</div>
             <div className="div_logContent">{props.content.lastLogInfo.content}</div>
             <div className="div_notReadNum">{props.content.lastLogInfo.notReadNum}</div>
-            <div className="div_dealState">{props.content.itemInfo.dealState}</div>
+            <div className="div_lastDate">{props.content.lastLogInfo.lastModifiedDate}</div>
+            <div className="div_dealState">{props.content.itemInfo.dealState === null ? '거래 없음' : props.content.itemInfo.dealState}</div>
          </div>
       </Link>
    );

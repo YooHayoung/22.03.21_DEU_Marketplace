@@ -193,3 +193,5 @@ CREATE OR REPLACE TABLE post_comment (
 	FOREIGN KEY(post_id) REFERENCES post(post_id),
 	FOREIGN KEY(member_id) REFERENCES member(member_id)
 );
+
+ALTER TABLE member add column refresh_token varchar(150);

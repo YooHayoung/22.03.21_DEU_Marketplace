@@ -6,7 +6,7 @@ spring:
           naver:
             client-id: DzgrFrgrm21HtqmUUgIv
             client-secret: bs7Z8Mw1Cy
-            redirect-uri: "{baseUrl}/oauth/callback/{registrationId}" #"http://localhost:8080/redirect/oauth"  #
+            redirect-uri: "http://localhost:8080/oauth/redirect" #"{baseUrl}/oauth/callback/{registrationId}" #"http://localhost:8080/redirect/oauth"  #
             authorization-grant-type: authorization_code
             scope: name, email
             client-name: Naver
