@@ -29,7 +29,6 @@ app:
   auth:
     tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
     accessTokenExpirationMsec: 60000 # 1min
-    refreshTokenExpirationMsec: 36000000 # 10 hour
   oauth2:
     authorizedRedirectUris:
       - http://localhost:8080/oauth/redirect/ #

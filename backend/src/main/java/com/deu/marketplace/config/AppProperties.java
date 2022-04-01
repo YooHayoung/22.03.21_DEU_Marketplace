@@ -1,8 +1,6 @@
 package com.deu.marketplace.config;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ public class AppProperties {
     public static class Auth {
         private String tokenSecret;
         private long accessTokenExpirationMsec;
-        private long refreshTokenExpirationMsec;
 
         public void setTokenSecret(String tokenSecret) {
             this.tokenSecret = tokenSecret;
@@ -26,10 +23,6 @@ public class AppProperties {
 
         public void setAccessTokenExpirationMsec(long accessTokenExpirationMsec) {
             this.accessTokenExpirationMsec = accessTokenExpirationMsec;
-        }
-
-        public void setRefreshTokenExpirationMsec(long refreshTokenExpirationMsec) {
-            this.refreshTokenExpirationMsec = refreshTokenExpirationMsec;
         }
     }
 

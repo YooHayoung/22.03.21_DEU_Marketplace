@@ -13,23 +13,15 @@ import LoginAccess from "./pages/LoginAccess";
 
 
 function App() {
-  const [accessToken, setAccessToken] = useState('');
-
-  const getAccessToken = () => {
-    if (document.cookie.match('accessToken') !== null) {
-      const test = document.cookie.match('accessToken').input;
-      setAccessToken(test.replace('accessToken=', ''));
-    }
-  }
 
   return (
     <div className="App">
       <CookiesProvider>
         <Routes>
-          <Route path="/" element={<LoginPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
-          <Route path="/oauth/redirect" element={<LoginPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
-          <Route path="/chatRooms" element={<ChatRoomListPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
-          <Route path="/chatRooms/:chatRoomId" element={<ChatRoomPage getAccessToken={getAccessToken} accessToken={accessToken} />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/oauth/redirect" element={<LoginPage />} />
+          <Route path="/chatRooms" element={<ChatRoomListPage />} />
+          <Route path="/chatRooms/:chatRoomId" element={<ChatRoomPage />} />
           {/* <Route path="/oauth/redirect/*" element={<LoginAccess />} /> */}
         </Routes>
       </CookiesProvider>

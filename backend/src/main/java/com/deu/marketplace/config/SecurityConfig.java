@@ -1,9 +1,6 @@
 package com.deu.marketplace.config;
 
-import com.deu.marketplace.utils.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.deu.marketplace.utils.JwtAuthenticationFilter;
-import com.deu.marketplace.utils.OAuth2AuthenticationFailureHandler;
-import com.deu.marketplace.utils.OAuth2SuccessHandler;
+import com.deu.marketplace.utils.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 //	private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtExceptionFilter jwtExceptionFilter;
 
 	@Bean
 	public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
@@ -48,9 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				 	.disable()
 				 .httpBasic()
 				 	.disable()
-				 .exceptionHandling()
-				 	.authenticationEntryPoint(authenticationEntryPoint())
-				 	.and()
+//				 .exceptionHandling()
+//				 	.authenticationEntryPoint(authenticationEntryPoint())
+//				 	.and()
 				 .sessionManagement()
 				 	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				 	.and()
@@ -73,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						 .successHandler(oAuth2SuccessHandler)
 						 .failureHandler(oAuth2AuthenticationFailureHandler);
 		 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		 http.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 	}
 
 	@Bean

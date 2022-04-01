@@ -8,7 +8,6 @@ const ChatRoom = (props) => {
    return (
       <Link to={{
          pathname: url,
-         state: { accessToken: props.accessToken },
       }}>
          <div className="div_chatRoom" >
             <div className="div_itemImg">{props.content.itemInfo.itemImg === null ? '이미지 없음' : props.content.itemInfo.itemImg}</div>

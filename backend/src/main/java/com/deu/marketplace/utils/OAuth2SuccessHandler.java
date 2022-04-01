@@ -43,11 +43,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             return;
         }
         clearAuthenticationAttributes(request, response);
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-//        response.setHeader("Authorization", createAccessToken(authentication));
-//        response.setHeader("Access-Controll-Allow-Origin", "http://localhost:3000");
-        CookieUtils.addNotHttpOnlyCookie(response, "accessToken", createAccessToken(authentication), 1);
-        CookieUtils.addCookie(response, "refreshToken", userPrincipal.getRefreshToken(), (int) (appProperties.getAuth().getRefreshTokenExpirationMsec()/1000));
+//        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        CookieUtils.addCookie(response, "accessToken", createAccessToken(authentication), (int) (appProperties.getAuth().getAccessTokenExpirationMsec()/1000));
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
@@ -65,16 +62,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         return UriComponentsBuilder.fromUriString(targetUrl)
-//                .queryParam("token", token)
                 .build().toUriString();
     }
 
     public String createAccessToken(Authentication authentication) {
         return jwtTokenUtil.createAccessToken(authentication);
-    }
-
-    public String createRefreshToken() {
-        return jwtTokenUtil.createRefreshToken();
     }
 
     //인증정보 요청 내역을 쿠키에서 삭제한다.
@@ -84,20 +76,20 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     //application.properties에 등록해놓은 Redirect uri가 맞는지 확인한다. (app.redirect-uris)
-    private boolean isAuthorizedRedirectUri(String uri) {
-        logger.info("redirectUri = " + uri);
-        logger.info("app-redirectUri = " + appProperties.getOauth2().getAuthorizedRedirectUris());
-        URI clientRedirectUri = URI.create(uri);
-        return appProperties.getOauth2().getAuthorizedRedirectUris()
-                .stream()
-                .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
-                    URI authorizedURI = URI.create(authorizedRedirectUri);
-                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
-                        return true;
-                    }
-                    return false;
-                });
-    }
+//    private boolean isAuthorizedRedirectUri(String uri) {
+//        logger.info("redirectUri = " + uri);
+//        logger.info("app-redirectUri = " + appProperties.getOauth2().getAuthorizedRedirectUris());
+//        URI clientRedirectUri = URI.create(uri);
+//        return appProperties.getOauth2().getAuthorizedRedirectUris()
+//                .stream()
+//                .anyMatch(authorizedRedirectUri -> {
+//                    // Only validate host and port. Let the clients use different paths if they want to
+//                    URI authorizedURI = URI.create(authorizedRedirectUri);
+//                    if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+//                            && authorizedURI.getPort() == clientRedirectUri.getPort()) {
+//                        return true;
+//                    }
+//                    return false;
+//                });
+//    }
 }

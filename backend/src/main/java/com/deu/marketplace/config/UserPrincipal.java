@@ -41,7 +41,6 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
-        this.refreshToken = member.getRefreshToken();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
         this.attributes = attributes;
     }
@@ -52,7 +51,6 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
-        this.refreshToken = member.getRefreshToken();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
     }
 

@@ -12,15 +12,11 @@ const ChatRoomListPage = (props) => {
    const cookies = new Cookies('token');
 
    useEffect(() => {
-      console.log(props.accessToken);
       (async () => {
-         axios.get('http://localhost:8080/api/v1/chatRoom', { headers: { 'Authorization': props.accessToken } })
+         axios.get('http://localhost:8080/api/v1/chatRoom', { withCredentials: true })
             .then((response) => {
                console.log(response.data);
                setContents(response.data.content);
-               if (response.headers.Authorization !== null) {
-                  props.getAccessToken();
-               }
             })
             .catch((error) => {
                console.log(error.status);

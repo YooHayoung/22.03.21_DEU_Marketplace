@@ -55,7 +55,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 	// refreshToken 재발급
 	private Member saveOrUpdate(OauthUserInfo userInfo) {
 		Member member = memberRepository.findByOauthId(userInfo.getOauthId())
-				.map(m -> m.updateInfo(userInfo.getName(), userInfo.getEmail(), jwtTokenUtil.createRefreshToken()))
+				.map(m -> m.updateInfo(userInfo.getName(), userInfo.getEmail()))
 				.orElse(userInfo.toMemberEntity());
 		return memberRepository.save(member);
 	}

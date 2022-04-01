@@ -42,24 +42,23 @@ const ChatRoomPage = (props) => {
    });
 
    useEffect(() => {
-      console.log(props.accessToken);
       (async () => {
-         axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { headers: { 'Authorization': props.accessToken } })
+         axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { withCredentials: true })
             .then((response) => {
                // console.log(response.data);
                setRoomInfo(response.data.chatRoomInfoDto);
                setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
                setChats(chats.concat(response.data.chatLogDtoPage.content));
-               if (response.headers.Authorization !== null) {
-                  props.getAccessToken();
-               }
                // console.log(chatPage);
             })
             .catch((error) => {
-               console.log(error.status);
-               window.location.href = "/";
-               return Promise.reject(error);
-            })
+               console.log(error.response.status);
+               if (error.response.status === 401) {
+                  console.log("redo");
+                  window.location.href = "/";
+                  return Promise.reject(error);
+               }
+            });
       })();
    }, []);
 
@@ -139,7 +138,7 @@ const ChatRoomPage = (props) => {
    // }, [client, data])
 
    const getChats = () => {
-      axios.get('http://localhost:8080/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { headers: { 'Authorization': props.accessToken } })
+      axios.get('http://localhost:8080/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { withCredentials: true })
          .then((response) => {
             // console.log(response.data);
             setChatPage(response.data.pageable.pageNumber);

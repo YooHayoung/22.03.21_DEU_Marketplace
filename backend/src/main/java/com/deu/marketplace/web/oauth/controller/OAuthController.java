@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OAuthController {
 
-    @GetMapping("/oauth")
+    @GetMapping("/api/v1/oauth/refresh")
     public ResponseEntity<?> login() {
-        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).header("location", "http://localhost:8080/oauth/authorization/naver?redirect_uri=http://localhost:3000/oauth/redirect").body(null);
+        return ResponseEntity.ok().body("refresh OK");
     }
 }

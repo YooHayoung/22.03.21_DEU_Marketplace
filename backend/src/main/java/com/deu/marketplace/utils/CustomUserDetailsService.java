@@ -32,11 +32,4 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .member(member)
                 .build();
     }
-
-    public UserDetails loadUserByRefreshToken(String refreshToken) {
-        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow();
-        return UserPrincipal.byMemberWithNoAttributesBuilder()
-                .member(member)
-                .build();
-    }
 }

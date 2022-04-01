@@ -37,8 +37,6 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String refreshToken;
-
     @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
     public Member(String oauthId, String name, String email) {
         Assert.notNull(oauthId, "oauthId must not be null");
@@ -66,10 +64,9 @@ public class Member extends BaseTimeEntity {
         return defaultFrontNickName + stringBuilder.toString();
     }
 
-    public Member updateInfo(String name, String email, String refreshToken) {
+    public Member updateInfo(String name, String email) {
         this.name = name;
         this.email = email;
-        this.refreshToken = refreshToken;
         return this;
     }
 
@@ -89,9 +86,5 @@ public class Member extends BaseTimeEntity {
 
     public String getRoleKey() {
         return role.getKey();
-    }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 }

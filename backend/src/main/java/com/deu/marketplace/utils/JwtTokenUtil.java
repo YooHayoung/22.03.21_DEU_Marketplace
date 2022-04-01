@@ -32,18 +32,6 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public String createRefreshToken() {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getRefreshTokenExpirationMsec());
-
-        return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
-                .setIssuer("DeuMarket")
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .compact();
-    }
-
     public Long getMemberIdFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(appProperties.getAuth().getTokenSecret())
