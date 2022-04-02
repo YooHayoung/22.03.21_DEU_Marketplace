@@ -13,7 +13,7 @@ const ChatRoomListPage = (props) => {
 
    useEffect(() => {
       (async () => {
-         axios.get('http://localhost:8080/api/v1/chatRoom', { withCredentials: true })
+         axios.get('http://localhost:8000/api/v1/chatRoom', { withCredentials: true })
             .then((response) => {
                console.log(response.data);
                setContents(response.data.content);

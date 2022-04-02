@@ -43,7 +43,7 @@ const ChatRoomPage = (props) => {
 
    useEffect(() => {
       (async () => {
-         axios.get('http://localhost:8080/api/v1/chatRoom/' + params.chatRoomId, { withCredentials: true })
+         axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, { withCredentials: true })
             .then((response) => {
                // console.log(response.data);
                setRoomInfo(response.data.chatRoomInfoDto);
@@ -138,7 +138,7 @@ const ChatRoomPage = (props) => {
    // }, [client, data])
 
    const getChats = () => {
-      axios.get('http://localhost:8080/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { withCredentials: true })
+      axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { withCredentials: true })
          .then((response) => {
             // console.log(response.data);
             setChatPage(response.data.pageable.pageNumber);
