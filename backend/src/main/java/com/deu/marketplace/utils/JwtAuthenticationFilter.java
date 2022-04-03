@@ -47,6 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.error("Expired Access Token.");
                 throw new JwtException("Expired Access Token.");
             }
+        } else {
+            log.warn("No access Token");
+            throw new IOException("No access Token");
         }
         filterChain.doFilter(request, response);
     }

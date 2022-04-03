@@ -14,6 +14,7 @@ import TargetChatLog from "../components/contents/chatRoom/TargetChatLog";
 import TargetNickname from "../components/contents/chatRoom/TargetNickname";
 import MessageInputOnBottom from "../components/nav/bottom/MessageInputOnBottom";
 import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
+import jwt_decode from "jwt-decode";
 
 import './ChatRoomPage.scss'
 
@@ -42,24 +43,64 @@ const ChatRoomPage = (props) => {
    });
 
    useEffect(() => {
-      (async () => {
-         axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, { withCredentials: true })
-            .then((response) => {
-               // console.log(response.data);
-               setRoomInfo(response.data.chatRoomInfoDto);
-               setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
-               setChats(chats.concat(response.data.chatLogDtoPage.content));
-               // console.log(chatPage);
-            })
-            .catch((error) => {
-               console.log(error.response.status);
-               if (error.response.status === 401) {
-                  console.log("redo");
-                  window.location.href = "/";
-                  return Promise.reject(error);
+      if (props.accessToken === '' || (jwt_decode(props.accessToken).exp <= Date.now() / 1000)) {
+         (async () => {
+            axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
+               .catch((error) => {
+                  if (error.response.status === 307) {
+                     console.log(error.response.headers.authorization);
+                     props.getAccessToken(error.response.headers.authorization);
+                     axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, {
+                        headers: {
+                           Authorization: `Bearer ${error.response.headers.authorization}`
+                        }
+                     })
+                        .then((response) => {
+                           // console.log(response.data);
+                           setRoomInfo(response.data.chatRoomInfoDto);
+                           setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
+                           setChats(chats.concat(response.data.chatLogDtoPage.content));
+                           // console.log(chatPage);
+                        })
+                        .catch((error) => {
+                           console.log(error.response.status);
+                           if (error.response.status === 401) {
+                              console.log("redo");
+                              window.location.href = "/";
+                              return Promise.reject(error);
+                           }
+                        });
+                  } else if (error.response.status === 401) {
+                     console.log(error.response.status);
+                     window.location.href = "/";
+                     return Promise.reject(error);
+                  }
+               })
+         })();
+      } else {
+         (async () => {
+            axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, {
+               headers: {
+                  Authorization: `Bearer ${props.accessToken}`
                }
-            });
-      })();
+            })
+               .then((response) => {
+                  // console.log(response.data);
+                  setRoomInfo(response.data.chatRoomInfoDto);
+                  setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
+                  setChats(chats.concat(response.data.chatLogDtoPage.content));
+                  // console.log(chatPage);
+               })
+               .catch((error) => {
+                  console.log(error.response.status);
+                  if (error.response.status === 401) {
+                     console.log("redo");
+                     window.location.href = "/";
+                     return Promise.reject(error);
+                  }
+               });
+         })();
+      }
    }, []);
 
    /////////////////////
@@ -138,19 +179,54 @@ const ChatRoomPage = (props) => {
    // }, [client, data])
 
    const getChats = () => {
-      axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), { withCredentials: true })
-         .then((response) => {
-            // console.log(response.data);
-            setChatPage(response.data.pageable.pageNumber);
-            setChats(chats.concat(response.data.content));
+      if (props.accessToken === '' || (jwt_decode(props.accessToken).exp <= Date.now() / 1000)) {
+         (async () => {
+            axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
+               .catch((error) => {
+                  if (error.response.status === 307) {
+                     console.log(error.response.headers.authorization);
+                     props.getAccessToken(error.response.headers.authorization);
+                     axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), {
+                        headers: {
+                           Authorization: `Bearer ${error.response.headers.authorization}`
+                        }
+                     })
+                        .then((response) => {
+                           // console.log(response.data);
+                           setChatPage(response.data.pageable.pageNumber);
+                           setChats(chats.concat(response.data.content));
+                        })
+                        .catch((error) => {
+                           console.log(error.status);
+                           // window.location.href = "/";
+                           return Promise.reject(error);
+                        })
+                  } else if (error.response.status === 401) {
+                     console.log(error.response.status);
+                     // window.location.href = "/";
+                     return Promise.reject(error);
+                  }
+               })
+         })();
+      } else {
+         axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), {
+            headers: {
+               Authorization: `Bearer ${props.accessToken}`
+            }
          })
-         .catch((error) => {
-            console.log(error.status);
-            window.location.href = "/";
-            return Promise.reject(error);
-         })
-      console.log(chats);
-   };
+            .then((response) => {
+               // console.log(response.data);
+               setChatPage(response.data.pageable.pageNumber);
+               setChats(chats.concat(response.data.content));
+            })
+            .catch((error) => {
+               console.log(error.status);
+               // window.location.href = "/";
+               return Promise.reject(error);
+            })
+         console.log(chats);
+      };
+   }
 
    // const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));
    let targetChatCount = 0;

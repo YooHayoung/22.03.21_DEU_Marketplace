@@ -32,8 +32,8 @@ spring:
 app:
   auth:
     tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
-    accessTokenExpirationMsec: 60000 # 1min
-    refreshTokenExpirationMsec: 600000 # 10min
+    accessTokenExpirationMsec: 30000 # 1min
+    refreshTokenExpirationMsec: 60000 # 10min
   oauth2:
     authorizedRedirectUris:
       - http://localhost:3000/oauth/redirect #

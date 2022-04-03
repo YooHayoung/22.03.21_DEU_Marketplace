@@ -11,6 +11,7 @@ import com.deu.marketplace.utils.HeaderUtil;
 import com.deu.marketplace.utils.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/oauth")
+@RequestMapping("/oauth")
 public class OAuthController {
 
     private final AppProperties appProperties;
@@ -38,6 +40,7 @@ public class OAuthController {
 
     @GetMapping("/refresh")
     public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
+        log.info("/oauth/refresh <- start!");
         // accessToken 검증
         String accessToken = HeaderUtil.getAccessToken(request);
         if (!jwtTokenUtil.validate(accessToken)) {

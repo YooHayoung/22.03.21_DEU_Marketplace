@@ -25,11 +25,11 @@ function App() {
     <div className="App">
       <CookiesProvider>
         <Routes>
-          <Route path="/" element={<SellPage accessToken={accessToken} />} />
+          <Route path="/" element={<SellPage accessToken={accessToken} getAccessToken={getAccessToken} />} />
           <Route path="/oauth" element={<LoginPage />} />
           <Route path="/oauth/redirect" element={<LoginPage getAccessToken={getAccessToken} />} />
-          <Route path="/chatRooms" element={<ChatRoomListPage />} />
-          <Route path="/chatRooms/:chatRoomId" element={<ChatRoomPage />} />
+          <Route path="/chatRooms" element={<ChatRoomListPage accessToken={accessToken} getAccessToken={getAccessToken} />} />
+          <Route path="/chatRooms/:chatRoomId" element={<ChatRoomPage accessToken={accessToken} getAccessToken={getAccessToken} />} />
           {/* <Route path="/oauth/redirect/*" element={<LoginAccess />} /> */}
         </Routes>
       </CookiesProvider>
