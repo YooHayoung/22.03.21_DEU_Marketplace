@@ -3,12 +3,16 @@ package com.deu.marketplace.domain.post.entity;
 import com.deu.marketplace.domain.BaseTimeEntity;
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.postCategory.entity.PostCategory;
+import com.deu.marketplace.domain.postImg.entity.PostImg;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +27,7 @@ public class Post extends BaseTimeEntity {
     private PostCategory postCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "writer_id", nullable = false)
     private Member writer;
 
     @Column(nullable = false)
@@ -31,6 +35,10 @@ public class Post extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String content;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImg> postImgs = new ArrayList<>();
 
     @Builder
     public Post(PostCategory postCategory, Member writer, String title, String content) {
@@ -44,5 +52,9 @@ public class Post extends BaseTimeEntity {
         this.postCategory = postCategory;
         this.title = title;
         this.content = content;
+    }
+
+    public void clearPostImgs() {
+        this.postImgs.clear();
     }
 }

@@ -37,8 +37,10 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String token;
+
     @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
-    public Member(String oauthId, String name, String email) {
+    public Member(String oauthId, String name, String email, String token) {
         Assert.notNull(oauthId, "oauthId must not be null");
         Assert.notNull(name, "name must not be null");
         Assert.notNull(email, "email must not be null");
@@ -46,6 +48,7 @@ public class Member extends BaseTimeEntity {
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;
+        this.token = token; //
         this.nickname = createRandomNickname();
         this.certification = false;
         this.role = Role.MEMBER;
@@ -64,9 +67,10 @@ public class Member extends BaseTimeEntity {
         return defaultFrontNickName + stringBuilder.toString();
     }
 
-    public Member updateInfo(String name, String email) {
+    public Member updateInfo(String name, String email, String token) {
         this.name = name;
         this.email = email;
+        this.token = token; //
         return this;
     }
 

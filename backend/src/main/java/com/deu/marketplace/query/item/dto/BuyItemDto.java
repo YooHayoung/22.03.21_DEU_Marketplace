@@ -1,4 +1,4 @@
-package com.deu.marketplace.query.dto;
+package com.deu.marketplace.query.item.dto;
 
 import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.Classification;

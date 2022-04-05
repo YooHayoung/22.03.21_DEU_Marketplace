@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/postCategory")
-public class PostController {
+public class PostCategoryController {
 
     private final PostCategoryService postCategoryService;
 

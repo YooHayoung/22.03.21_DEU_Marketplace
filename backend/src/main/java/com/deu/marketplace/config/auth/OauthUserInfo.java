@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class    OauthUserInfo {
+public class OauthUserInfo {
     private String oauthId;
     private String name;
     private String email;
+    private String token;
 
     @Builder
-    public OauthUserInfo(String oauthId, String name, String email) {
+    public OauthUserInfo(String oauthId, String name, String email, String token) {
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;
+        this.token = token;
     }
 
     public Member toMemberEntity() {
@@ -22,6 +24,11 @@ public class    OauthUserInfo {
                 .oauthId(oauthId)
                 .name(name)
                 .email(email)
+                .token(token)
                 .build();
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

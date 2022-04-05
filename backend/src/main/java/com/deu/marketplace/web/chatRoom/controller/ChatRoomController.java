@@ -8,9 +8,9 @@ import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.item.service.ItemService;
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.service.MemberService;
-import com.deu.marketplace.query.dto.ChatRoomInfoDto;
-import com.deu.marketplace.query.dto.ChatRoomViewDto;
-import com.deu.marketplace.query.repository.ChatRoomViewRepository;
+import com.deu.marketplace.query.chatRoom.dto.ChatRoomInfoDto;
+import com.deu.marketplace.query.chatRoom.dto.ChatRoomViewDto;
+import com.deu.marketplace.query.chatRoom.repository.ChatRoomViewRepository;
 import com.deu.marketplace.web.chat.dto.ChatLogDto;
 import com.deu.marketplace.web.chatRoom.dto.ChatRoomListDto;
 import com.deu.marketplace.web.chatRoom.dto.EnterChatRoomDto;
@@ -60,7 +60,7 @@ public class ChatRoomController {
                 .build();
         ChatRoom createdChatRoom = chatRoomService.createChatRoom(chatRoom);
 
-        URI redirectUri = new URI("http://localhost:8080/api/v1/chatRoom/" + createdChatRoom.getId());
+        URI redirectUri = new URI("http://localhost:8000/api/v1/chatRoom/" + createdChatRoom.getId());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);

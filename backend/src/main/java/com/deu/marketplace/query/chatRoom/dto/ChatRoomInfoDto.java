@@ -1,4 +1,4 @@
-package com.deu.marketplace.query.dto;
+package com.deu.marketplace.query.chatRoom.dto;
 
 import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.web.chatRoom.dto.MemberInfo;

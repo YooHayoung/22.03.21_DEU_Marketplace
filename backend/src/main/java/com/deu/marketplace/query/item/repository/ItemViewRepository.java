@@ -1,12 +1,12 @@
-package com.deu.marketplace.query.repository;
+package com.deu.marketplace.query.item.repository;
 
 import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.Classification;
-import com.deu.marketplace.query.dto.BuyItemDto;
-import com.deu.marketplace.query.dto.QBuyItemDto;
-import com.deu.marketplace.query.dto.QSellItemDto;
-import com.deu.marketplace.query.dto.SellItemDto;
+import com.deu.marketplace.query.item.dto.BuyItemDto;
+import com.deu.marketplace.query.item.dto.QBuyItemDto;
+import com.deu.marketplace.query.item.dto.QSellItemDto;
+import com.deu.marketplace.query.item.dto.SellItemDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;

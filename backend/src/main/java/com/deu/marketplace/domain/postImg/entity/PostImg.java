@@ -32,6 +32,8 @@ public class PostImg extends BaseTimeEntity {
         this.post = post;
         this.imgFile = imgFile;
         this.imgSeq = imgSeq;
+
+        post.getPostImgs().add(this);
     }
 
     public void changeSeq(int seq){

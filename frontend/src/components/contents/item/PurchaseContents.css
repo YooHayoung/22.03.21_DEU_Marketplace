@@ -1,0 +1,80 @@
+.ul, li {
+    list-style: none;
+}
+
+.board_wrap {
+    width: 80%;
+    margin: 50px auto;
+}
+.board_list{
+    width: 100%;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    vertical-align: middle;
+}
+
+.board_list > div{
+    border-bottom: 1px solid #ddd;
+    font-size: 0px;
+}
+
+.board_list>div>div{
+    display: inline-block;
+    font-size: 20px;
+    text-align: center;
+    padding:15px 0;
+}
+.board_list > div.list_top{
+    border-bottom: 1px solid #999;
+}
+.board_list >div.list_top>div{
+    font-weight:600 ;
+}
+.board_list .num{
+    width: 10%;
+}
+.board_list .title{
+    width: 60%;
+    text-align: left;
+}
+.board_list .list_top .title{
+    text-align: center;
+}
+.board_list .writer{
+    width: 15%;
+}
+.board_list .date{
+    width: 15%;
+}
+
+.board_page{
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0;
+}
+
+.board_page a{
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-left: 0;
+    vertical-align: middle;
+    line-height: 100%;
+}
+
+.board_page a.btn{
+    font-size: 10px;
+    padding-top: 10px;
+    letter-spacing: -1px;
+}
+
+.board_page a.num{
+    font-size: 12px;
+    padding-top: 9px;
+}
+
+.board_page a:first-child{
+    border-left: 1px solid #ddd;
+}

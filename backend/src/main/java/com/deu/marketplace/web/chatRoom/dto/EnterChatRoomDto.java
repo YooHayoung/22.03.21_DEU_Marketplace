@@ -1,6 +1,6 @@
 package com.deu.marketplace.web.chatRoom.dto;
 
-import com.deu.marketplace.query.dto.ChatRoomInfoDto;
+import com.deu.marketplace.query.chatRoom.dto.ChatRoomInfoDto;
 import com.deu.marketplace.web.chat.dto.ChatLogDto;
 import lombok.AccessLevel;
 import lombok.Builder;

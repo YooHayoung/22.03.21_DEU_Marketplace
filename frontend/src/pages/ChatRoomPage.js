@@ -17,11 +17,13 @@ import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
 import jwt_decode from "jwt-decode";
 
 import './ChatRoomPage.scss'
+import { getChatPage, getChatRoom } from "../api/Api";
+import { UseApi } from "../api/UseApi";
 
 // var sock = SockJS("/stomp/chat");
 // var client = null;
 
-const ChatRoomPage = (props) => {
+const ChatRoomPage = ({ token, setToken }) => {
    const params = useParams('localhost:3000/chatRooms/:chatRoomId');
 
    const [roomInfo, setRoomInfo] = useState({
@@ -42,65 +44,14 @@ const ChatRoomPage = (props) => {
       message: ''
    });
 
+   const getRoomInfoAndChatLogs = (res) => {
+      setRoomInfo(res.data.chatRoomInfoDto);
+      setChatPage(res.data.chatLogDtoPage.pageable.pageNumber);
+      setChats(chats.concat(res.data.chatLogDtoPage.content));
+   }
+
    useEffect(() => {
-      if (props.accessToken === '' || (jwt_decode(props.accessToken).exp <= Date.now() / 1000)) {
-         (async () => {
-            axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
-               .catch((error) => {
-                  if (error.response.status === 307) {
-                     console.log(error.response.headers.authorization);
-                     props.getAccessToken(error.response.headers.authorization);
-                     axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, {
-                        headers: {
-                           Authorization: `Bearer ${error.response.headers.authorization}`
-                        }
-                     })
-                        .then((response) => {
-                           // console.log(response.data);
-                           setRoomInfo(response.data.chatRoomInfoDto);
-                           setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
-                           setChats(chats.concat(response.data.chatLogDtoPage.content));
-                           // console.log(chatPage);
-                        })
-                        .catch((error) => {
-                           console.log(error.response.status);
-                           if (error.response.status === 401) {
-                              console.log("redo");
-                              window.location.href = "/";
-                              return Promise.reject(error);
-                           }
-                        });
-                  } else if (error.response.status === 401) {
-                     console.log(error.response.status);
-                     window.location.href = "/";
-                     return Promise.reject(error);
-                  }
-               })
-         })();
-      } else {
-         (async () => {
-            axios.get('http://localhost:8000/api/v1/chatRoom/' + params.chatRoomId, {
-               headers: {
-                  Authorization: `Bearer ${props.accessToken}`
-               }
-            })
-               .then((response) => {
-                  // console.log(response.data);
-                  setRoomInfo(response.data.chatRoomInfoDto);
-                  setChatPage(response.data.chatLogDtoPage.pageable.pageNumber);
-                  setChats(chats.concat(response.data.chatLogDtoPage.content));
-                  // console.log(chatPage);
-               })
-               .catch((error) => {
-                  console.log(error.response.status);
-                  if (error.response.status === 401) {
-                     console.log("redo");
-                     window.location.href = "/";
-                     return Promise.reject(error);
-                  }
-               });
-         })();
-      }
+      UseApi(getChatRoom, token, setToken, getRoomInfoAndChatLogs, params)
    }, []);
 
    /////////////////////
@@ -178,54 +129,18 @@ const ChatRoomPage = (props) => {
 
    // }, [client, data])
 
+   const getChatLogs = (res) => {
+      setChatPage(res.data.pageable.pageNumber);
+      setChats(chats.concat(res.data.content));
+   }
+
+   const getChatPageApiObject = {
+      chatRoomId: params.chatRoomId,
+      page: chatPage + 1
+   }
+
    const getChats = () => {
-      if (props.accessToken === '' || (jwt_decode(props.accessToken).exp <= Date.now() / 1000)) {
-         (async () => {
-            axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
-               .catch((error) => {
-                  if (error.response.status === 307) {
-                     console.log(error.response.headers.authorization);
-                     props.getAccessToken(error.response.headers.authorization);
-                     axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), {
-                        headers: {
-                           Authorization: `Bearer ${error.response.headers.authorization}`
-                        }
-                     })
-                        .then((response) => {
-                           // console.log(response.data);
-                           setChatPage(response.data.pageable.pageNumber);
-                           setChats(chats.concat(response.data.content));
-                        })
-                        .catch((error) => {
-                           console.log(error.status);
-                           // window.location.href = "/";
-                           return Promise.reject(error);
-                        })
-                  } else if (error.response.status === 401) {
-                     console.log(error.response.status);
-                     // window.location.href = "/";
-                     return Promise.reject(error);
-                  }
-               })
-         })();
-      } else {
-         axios.get('http://localhost:8000/api/v1/chat/' + params.chatRoomId + '?size=2&page=' + (chatPage + 1), {
-            headers: {
-               Authorization: `Bearer ${props.accessToken}`
-            }
-         })
-            .then((response) => {
-               // console.log(response.data);
-               setChatPage(response.data.pageable.pageNumber);
-               setChats(chats.concat(response.data.content));
-            })
-            .catch((error) => {
-               console.log(error.status);
-               // window.location.href = "/";
-               return Promise.reject(error);
-            })
-         console.log(chats);
-      };
+      UseApi(getChatPage, token, setToken, getChatLogs, getChatPageApiObject)
    }
 
    // const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));

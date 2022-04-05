@@ -1,10 +1,11 @@
-package com.deu.marketplace.query.repository;
+package com.deu.marketplace.query.chatRoom.repository;
 
 import com.deu.marketplace.domain.member.entity.QMember;
-import com.deu.marketplace.query.dto.ChatRoomInfoDto;
-import com.deu.marketplace.query.dto.ChatRoomViewDto;
-import com.deu.marketplace.query.dto.QChatRoomInfoDto;
-import com.deu.marketplace.query.dto.QChatRoomViewDto;
+import com.deu.marketplace.query.chatRoom.dto.ChatRoomInfoDto;
+import com.deu.marketplace.query.chatRoom.dto.ChatRoomViewDto;
+
+import com.deu.marketplace.query.chatRoom.dto.QChatRoomInfoDto;
+import com.deu.marketplace.query.chatRoom.dto.QChatRoomViewDto;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;

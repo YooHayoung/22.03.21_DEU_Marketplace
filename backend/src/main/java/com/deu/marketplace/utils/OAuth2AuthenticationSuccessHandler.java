@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -49,8 +52,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
+        ////
+
+        ////
+
+
         logger.info("onAuthenticationSuccess");
         String targetUrl = determineTargetUrl(request, response, authentication);
+
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
@@ -92,12 +101,29 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             memberRefreshTokenRepository.saveAndFlush(newRefreshToken);
         }
 
+        ////////////
+//        Cookie cookie = CookieUtils.getCookie(request, "refreshToken").orElse(null);
+//        logger.warn("naver refreshToken : "+ cookie.getValue());
+        ////////////
+
         CookieUtils.deleteCookie(request, response, "refreshToken");
         CookieUtils.addCookie(response, "refreshToken", refreshToken,
                 (int) (appProperties.getAuth().getRefreshTokenExpirationMsec()/1000));
 
+        logger.info("requestURI = " + request.getQueryString());
+        String[] split = request.getQueryString().split("&");
+        Map<String, String> queryMap = new HashMap<>();
+        for (int i=0; i<split.length; i++) {
+            String[] strings = split[i].split("=");
+            queryMap.put(strings[0], strings[1]);
+        }
+        logger.info("code: " + queryMap.get("code"));
+        logger.info("state: " + queryMap.get("state"));
+
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken)
+                .queryParam("code", queryMap.get("code"))
+                .queryParam("state", queryMap.get("state"))
                 .build().toUriString();
     }
 

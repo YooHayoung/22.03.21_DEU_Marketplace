@@ -20,35 +20,39 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String oauthId;
     private String name;
     private String email;
+    private String accessToken;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
     @Builder(builderClassName = "byNoAttributesBuilder", builderMethodName = "byNoAttributesBuilder")
-    public UserPrincipal(Long memberId, String oauthId, String name, String email, String refreshToken,
+    public UserPrincipal(Long memberId, String oauthId, String name, String email, String accessToken,
                          Collection<? extends GrantedAuthority> authorities) {
         this.memberId = memberId;
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;
+        this.accessToken = accessToken;
         this.authorities = authorities;
     }
 
     @Builder(builderClassName = "byMemberBuilder", builderMethodName = "byMemberBuilder")
-    public UserPrincipal(Member member, Map<String, Object> attributes) {
+    public UserPrincipal(Member member, Map<String, Object> attributes, String accessToken) {
         this.memberId = member.getId();
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
+        this.accessToken = accessToken;
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
         this.attributes = attributes;
     }
 
     @Builder(builderClassName = "byMemberWithNoAttributesBuilder", builderMethodName = "byMemberWithNoAttributesBuilder")
-    public UserPrincipal(Member member) {
+    public UserPrincipal(Member member, String accessToken) {
         this.memberId = member.getId();
         this.oauthId = member.getOauthId();
         this.name = member.getName();
         this.email = member.getEmail();
+        this.accessToken = accessToken;
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
     }
 

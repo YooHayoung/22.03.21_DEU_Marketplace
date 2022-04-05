@@ -4,13 +4,18 @@ import { useNavigate } from "../../node_modules/react-router/index";
 import { NAVER_LOGIN_REQUEST_URI } from "../OAuth"
 
 
-const LoginPage = (props) => {
+const LoginPage = ({ token, setToken, updateState }) => {
    let navigate = useNavigate();
 
    useEffect(() => {
+
       const url = new URL(window.location.href);
       if (url.pathname === '/oauth/redirect') {
-         props.getAccessToken(url.searchParams.get('token'));
+         setToken(url.searchParams.get('token'));
+         updateState({
+            code: url.searchParams.get("code"),
+            state: url.searchParams.get("state")
+         })
          navigate('/');
       }
    }, []);
