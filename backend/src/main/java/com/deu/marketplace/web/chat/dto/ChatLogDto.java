@@ -1,5 +1,6 @@
 package com.deu.marketplace.web.chat.dto;
 
+import com.deu.marketplace.domain.chatLog.entity.ChatLog;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +28,15 @@ public class ChatLogDto {
         this.message = message;
         this.lastModifiedDate = lastModifiedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         this.read = read;
+    }
+
+    @Builder(builderClassName = "byEntity", builderMethodName = "byEntity")
+    public ChatLogDto(ChatLog chatLog) {
+        this.chatLogId = chatLog.getId();
+        this.senderId = chatLog.getSender().getId();
+        this.recipientId = chatLog.getRecipient().getId();
+        this.message = chatLog.getContent();
+        this.lastModifiedDate = chatLog.getLastModifiedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.read = chatLog.isRead();
     }
 }

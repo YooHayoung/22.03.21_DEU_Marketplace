@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "../../node_modules/axios/index";
 import { useMatch, useParams } from "../../node_modules/react-router-dom/index";
 import ChatLogs from "../components/contents/chatRoom/ChatLogs";
 
 
+/////
 import SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
+import jwt_decode from "jwt-decode";
+import SockJsClient from 'react-stomp';
+import { TalkBox } from "react-talk";
+import { Stomp } from "../../node_modules/stompjs/lib/stomp";
+/////
 
 
 import ItemInfo from "../components/contents/chatRoom/ItemInfo";
@@ -14,7 +20,7 @@ import TargetChatLog from "../components/contents/chatRoom/TargetChatLog";
 import TargetNickname from "../components/contents/chatRoom/TargetNickname";
 import MessageInputOnBottom from "../components/nav/bottom/MessageInputOnBottom";
 import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
 
 import './ChatRoomPage.scss'
 import { getChatPage, getChatRoom } from "../api/Api";
@@ -36,8 +42,12 @@ const ChatRoomPage = ({ token, setToken }) => {
       },
    });
    const [chats, setChats] = useState([]);
+   const [newChats, setNewChats] = useState([]);
    const [chatPage, setChatPage] = useState(0);
    const [message, setMessage] = useState('');
+   const client = useRef({});
+   const [chatMessages, setChatMessages] = useState([]);
+   const [date, setDate] = useState('');
    const [data, setData] = useState({
       roomId: 0,
       senderId: 0,
@@ -54,80 +64,7 @@ const ChatRoomPage = ({ token, setToken }) => {
       UseApi(getChatRoom, token, setToken, getRoomInfoAndChatLogs, params)
    }, []);
 
-   /////////////////////
-   // const subscribe = () => {
-   //    if (client != null) {
-   //       client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
-   //          const messagedto = JSON.parse(chatDto.body);
-   //          console.log(messagedto);
-   //       });
-   //    }
-   // };
-
-   // useEffect(() => {
-   //    connect();
-   //    return () => disConnect();
-   // }, []);
-
-   // const connect = () => {
-   //    client = new StompJS.Client({
-   //       brokerURL: "http://localhost:8080/stomp/chat",
-   //       debug: function (str) {
-   //          console.log(str);
-   //       },
-   //       onConnect: () => {
-   //          subscribe();
-   //       },
-   //    });
-
-   //    client.activate();
-   // };
-
-   // const disConnect = () => {
-   //    if (client != null) {
-   //       if (client.connected) client.deactivate();
-   //    }
-   // };
-
-   // const GetMessage = (message) => {
-   //    if (client != null) {
-   //       if (!client.connected) return;
-
-   //       setMessage(message);
-   //       console.log(message);
-   //       setData({
-   //          'roomId': roomInfo.chatRoomId,
-   //          'senderId': roomInfo.myId,
-   //          'message': message
-   //       });
-
-   //       client.publish({
-   //          destination: "/app/chat/message/",
-   //          body: JSON.stringify(data),
-   //       });
-   //    }
-   // };
-
-   ///////////////////////////
-
-   // useEffect(() => {
-   //    client.connect({}, () => {
-   //       console.log('Connected : ' + roomInfo.myId)
-   //       client.send("/app/chat/enter", {}, JSON.stringify(roomInfo.chatRoomId, roomInfo.myId)) // 접속
-
-   //       // Create Message
-
-   //       client.send(`/app/chat/message`, {}, JSON.stringify(data))
-
-   //       client.subscribe('/queue/chat/' + roomInfo.chatRoomId, function (chatDto) {
-   //          const messagedto = JSON.parse(chatDto.body);
-   //          console.log(messagedto);
-   //       })
-
-   //    })
-   //    return () => wsDisconnect();
-
-   // }, [client, data])
+   //////////////////////////////////////
 
    const getChatLogs = (res) => {
       setChatPage(res.data.pageable.pageNumber);
@@ -136,7 +73,8 @@ const ChatRoomPage = ({ token, setToken }) => {
 
    const getChatPageApiObject = {
       chatRoomId: params.chatRoomId,
-      page: chatPage + 1
+      page: chatPage + 1,
+      enterTime: date
    }
 
    const getChats = () => {
@@ -144,34 +82,107 @@ const ChatRoomPage = ({ token, setToken }) => {
    }
 
    // const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));
-   let targetChatCount = 0;
-   const renderChatLogs = chats.slice(0).reverse().map((chat, idx) => {
-      if (roomInfo.myId === chat.senderId) {
-         targetChatCount = 0;
-         return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
-      } else {
-         if (targetChatCount === 0) {
-            targetChatCount++;
-            return (
-               <React.Fragment key={'f' + idx}>
-                  <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
-                  <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
-               </React.Fragment>);
-         } else {
-            return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
-         }
-      }
-   });
+   useEffect(() => {
 
-   // const GetMessage = (message) => {
-   //    setMessage(message);
-   //    console.log(message);
-   //    setData({
-   //       'roomId': roomInfo.chatRoomId,
-   //       'senderId': roomInfo.myId,
-   //       'message': message
-   //    });
-   // };
+   }, [chats])
+   let targetChatCount = 0;
+   const renderChatLogs = (chats) => {
+      return (JSON.parse(JSON.stringify(chats)).reverse().map((chat, idx) => {
+         if (roomInfo.myId === chat.senderId) {
+            targetChatCount = 0;
+            return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+         } else {
+            if (targetChatCount === 0) {
+               targetChatCount++;
+               return (
+                  <React.Fragment key={'f' + idx}>
+                     <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                     <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                  </React.Fragment>);
+            } else {
+               return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+            }
+         }
+      }))
+   }
+
+   const renderNewChatLogs = (chats) => {
+      return (chats.map((chat, idx) => {
+         if (roomInfo.myId === chat.senderId) {
+            targetChatCount = 0;
+            return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+         } else {
+            if (targetChatCount === 0) {
+               targetChatCount++;
+               return (
+                  <React.Fragment key={'f' + idx}>
+                     <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                     <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                  </React.Fragment>);
+            } else {
+               return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+            }
+         }
+      }))
+   }
+
+
+   useEffect(() => {
+      connect();
+
+      // return () => disconnect();
+   }, []);
+
+   const connect = () => {
+      setDate(new Date(+new Date() + 3240 * 10000).toISOString().replace("T", "_").replace(/\..*/, ''));
+      client.current = new StompJS.Client({
+         webSocketFactory: () => new SockJS("http://localhost:8000/ws"),
+
+         connectHeaders: {
+            Authorization: `Bearer ${token}`
+         },
+         debug: function (strr) {
+            console.log(strr);
+         },
+         reconnectDelay: 5000,
+         heartbeatIncoming: 4000,
+         heartbeatOutgoing: 4000,
+         onConnect: () => {
+            subscribe();
+         },
+         onStompError: (frame) => {
+            console.error(frame);
+         },
+      });
+
+      client.current.activate();
+   };
+
+   const disconnect = () => {
+      client.current.deactivate();
+   };
+
+   const subscribe = () => {
+      client.current.subscribe(`/sub/chat/${params.chatRoomId}`, ({ body }) => {
+         console.log(body);
+         setChatMessages((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
+         setNewChats((_chatMessages) => [..._chatMessages, JSON.parse(body)]);
+      });
+   };
+
+   const publish = (message) => {
+      if (!client.current.connected) {
+         return;
+      }
+
+      client.current.publish({
+         destination: `/pub/chat/${params.chatRoomId}`,
+         body: JSON.stringify({ message: message, senderId: jwt_decode(token).sub }),
+      });
+
+      console.log(date);
+      setMessage("");
+   };
 
 
 
@@ -181,11 +192,29 @@ const ChatRoomPage = ({ token, setToken }) => {
          <div className="div_contents">
             <button onClick={getChats}>불러오기</button>
             <ItemInfo itemInfo={roomInfo.itemInfo} />
-            {renderChatLogs}
-            {/* <ChatLogs chats={chats} /> */}
+            {renderChatLogs(chats)}
+            {renderNewChatLogs(newChats)}
          </div>
-         <MessageInputOnBottom />
-         {/* GetMessage={GetMessage} */}
+         {/* <div>
+            {chatMessages && chatMessages.length > 0 && (
+               <ul>
+                  {chatMessages.map((_chatMessage, index) => (
+                     <li key={index}>{_chatMessage.message}</li>
+                  ))}
+               </ul>
+            )}
+            <div>
+               <input
+                  type={"text"}
+                  placeholder={"message"}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={(e) => e.which === 13 && publish(message)}
+               />
+               <button onClick={() => publish(message)}>send</button>
+            </div>
+         </div> */}
+         <MessageInputOnBottom onClick={publish} />
       </div>
    );
 };

@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatDto {
-    private Long roomId;
     private Long senderId;
     private String message;
 
     @Builder
-    public ChatDto(Long roomId, Long senderId, String message) {
-        this.roomId = roomId;
+    public ChatDto(Long senderId, String message) {
         this.senderId = senderId;
         this.message = message;
     }

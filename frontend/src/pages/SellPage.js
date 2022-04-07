@@ -1,8 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "../../node_modules/react-router-dom/index";
 import jwt_decode from "jwt-decode";
 import axios from "../../node_modules/axios/index";
 import { doLogoutFromNaver, doLogoutFromServer, getNewAccessToken, getTokensFromNaver } from "../api/Api";
+
+
+/////
+import SockJS from 'sockjs-client';
+import * as StompJS from '@stomp/stompjs';
+import SockJsClient from 'react-stomp';
+import { TalkBox } from "react-talk";
+/////
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
    let navigate = useNavigate();
@@ -47,6 +55,42 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
       })();
    }
 
+
+   //////////////////////////////////////
+
+   // var sock = new SockJS('http://localhost:8000/chat')
+
+   // const [data, setData] = useState({
+   //    clientConnected: false,
+   //    messages: []
+   // });
+
+   // const onMessageReceive = (msg, topic) => {
+   //    setData(prevState => ({
+   //       messages: [...prevState.messages, msg]
+   //    }));
+   // }
+
+   // const sendMessage = (msg, selfMsg) => {
+   //    try {
+   //       this.clientRef.sendMessage("/app/enter/1", JSON.stringify(selfMsg));
+   //       return true;
+   //    } catch (e) {
+   //       return false;
+   //    }
+   // }
+
+   // const componentWillMount = () => {
+   //    Fetch("/history", {
+   //       method: "GET"
+   //    }).then((response) => {
+   //       setData({ messages: response.body });
+   //    });
+   // }
+
+
+
+   //////////////////////////////////////
 
    return (
       <div>

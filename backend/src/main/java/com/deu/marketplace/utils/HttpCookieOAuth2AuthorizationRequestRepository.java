@@ -15,7 +15,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
         implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
-    public static final int cookieExpireSeconds = 30;
+    public static final int cookieExpireSeconds = 10800; // 3H
 
     //쿠키에 저장된 인증요청 정보를 가지고 온다
     @Override

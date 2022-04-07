@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -120,13 +121,15 @@ public class ChatRoomController {
         ChatRoomInfoDto chatRoomInfoDto =
                 chatRoomViewRepository.getChatRoomInfo(chatRoomId, memberId).orElseThrow();
         chatRoomInfoDto.setMyId(memberId);
+        LocalDateTime now = LocalDateTime.now();
 
 //        URI redirectUri = new URI("http://localhost:8080/api/v1/chat/" + chatRoomInfoDto.getChatRoomId());
 //        HttpHeaders httpHeaders = new HttpHeaders();
 //        httpHeaders.setLocation(redirectUri);
 //        return new ResponseEntity<>(chatRoomInfoDto, httpHeaders, HttpStatus.SEE_OTHER);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("lastModifiedDate").descending());
-        Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable);
+        chatLogService.bulkUpdateRead(chatRoomId, memberId, now);
+        Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, now, pageable);
         Page<ChatLogDto> chatLogDtos = chatLogPage.map(chatLog -> {
             return ChatLogDto.builder()
                     .chatLogId(chatLog.getId())

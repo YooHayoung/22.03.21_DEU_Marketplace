@@ -16,7 +16,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long>, ChatR
                                                       @Param("memberId") Long memberId);
 
     @EntityGraph(attributePaths = {"item.member", "requestedMember"})
-    @Query("select cr from ChatRoom cr where cr.id = :chatRoomId")
+    @Query("select cr " +
+            "from ChatRoom cr join fetch cr.logs join fetch cr.requestedMember join fetch cr.item i join fetch i.member where cr.id = :chatRoomId")
     Optional<ChatRoom> findChatRoomByIdFetch(@Param("chatRoomId") Long chatRoomId);
 
 }

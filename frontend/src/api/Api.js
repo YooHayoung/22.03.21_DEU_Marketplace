@@ -34,9 +34,8 @@ export const getChatRoom = (token, object) => {
 
 // 채팅 로그 가져오기 - 페이징
 export const getChatPage = (token, object) => {
-   return client.get("api/v1/chat/" + object.chatRoomId + "?size=" + CHATLOG_PAGE_SIZE + "&page=" + object.page, { headers: { Authorization: `Bearer ${token}` } })
+   return client.get("api/v1/chat/" + object.chatRoomId + "?size=" + CHATLOG_PAGE_SIZE + "&page=" + object.page + "&enterTime=" + object.enterTime, { headers: { Authorization: `Bearer ${token}` } })
 }
-
 
 
 const getItemPage = () => {

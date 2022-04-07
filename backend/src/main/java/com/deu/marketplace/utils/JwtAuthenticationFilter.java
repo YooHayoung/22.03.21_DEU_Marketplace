@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = HeaderUtil.getAccessToken(request);
-
+        log.info(request.getRequestURI());
         if (StringUtils.hasText(accessToken)) {
             try {
                 jwtTokenUtil.validate(accessToken);
@@ -47,7 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.error("Expired Access Token.");
                 throw new JwtException("Expired Access Token.");
             }
-        } else {
+        } else if (request.getRequestURI().contains("/ws")) {
+            log.info(request.getQueryString());
+            String queryString = request.getQueryString();
+        }
+        else {
             log.warn("No access Token");
             throw new IOException("No access Token");
         }
