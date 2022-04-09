@@ -9,6 +9,7 @@ const Header = (props) => {
 
     const [isOpen, setMenu] = useState(false);  // 메뉴의 초기값을 false로 설정
 
+    const number = 10;
     const toggleMenu = () => {
         setMenu(isOpen => !isOpen); // on,off 개념 boolean
     }

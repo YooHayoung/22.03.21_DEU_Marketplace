@@ -12,7 +12,7 @@ export const getTokensFromNaver = ({ code, state }) => {
 export const doLogoutFromNaver = (accessToken) => {
    return axios.get(`https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=${NAVER_CLIENT_ID}&client_secret=${NAVER_CLIENT_SECRET}&access_token=${accessToken}&service_provider=NAVER`)
 }
-export const doLogoutFromServer = ({ code, state, token }) => {
+export const doLogoutFromServer = (token, { code, state }) => {
    return client.get(`/oauth/logout?code=${code}&state=${state}`, { headers: { Authorization: `Bearer ${token}` } })
    // return client.get("/oauth/logout", { headers: { Authorization: `Bearer ${token}` } })
 }

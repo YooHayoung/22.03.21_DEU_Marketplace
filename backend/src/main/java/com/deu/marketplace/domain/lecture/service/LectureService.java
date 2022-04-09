@@ -17,4 +17,5 @@ public interface LectureService {
     List<Lecture> getLecturesByLectureName(String lectureName);
 
     Page<Lecture> getAllByPage(Pageable pageable);
+
 }
