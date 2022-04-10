@@ -1,5 +1,6 @@
 package com.deu.marketplace.web.chatRoom.controller;
 
+import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.domain.chatLog.entity.ChatLog;
 import com.deu.marketplace.domain.chatLog.service.ChatLogService;
 import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
@@ -50,8 +51,8 @@ public class ChatRoomController {
 //    private final ChatLogService chatLogService;
 
     @PostMapping("/new")
-    public ResponseEntity<?> createChatRoom(@AuthenticationPrincipal Long memberId,
-                                            @RequestBody ItemIdDto itemIdDto) throws URISyntaxException {
+    public ApiResponse createChatRoom(@AuthenticationPrincipal Long memberId,
+                                      @RequestBody ItemIdDto itemIdDto) throws URISyntaxException {
         log.info("Create ChatRoom.");
         Member requestedMember = memberService.getMemberById(memberId).orElseThrow();
         Item targetItem = itemService.getOneItemById(itemIdDto.getItemId()).orElseThrow();
@@ -61,19 +62,16 @@ public class ChatRoomController {
                 .build();
         ChatRoom createdChatRoom = chatRoomService.createChatRoom(chatRoom);
 
-        URI redirectUri = new URI("http://localhost:8000/api/v1/chatRoom/" + createdChatRoom.getId());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(redirectUri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        return ApiResponse.success("result", createdChatRoom.getId());
     }
 
     @GetMapping
-    public ResponseEntity<?> getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
+    public ApiResponse getChatRooms(@PageableDefault(size = 20, page = 0) Pageable pageable,
                                           @AuthenticationPrincipal Long memberId) {
         log.info("Get ChatRooms. Page : " + pageable.getPageNumber());
         Page<ChatRoomViewDto> chatRoomPages =
                 chatRoomViewRepository.getChatRoomPages(memberId, pageable);
-        Page<ChatRoomListDto> ChatRoomListDtos = chatRoomPages.map(chatRoomViewDto -> {
+        Page<ChatRoomListDto> chatRoomListDtos = chatRoomPages.map(chatRoomViewDto -> {
             return ChatRoomListDto.builder()
                     .chatRoomId(chatRoomViewDto.getChatRoomId())
                     .itemInfo(chatRoomViewDto.getItemInfo())
@@ -83,12 +81,13 @@ public class ChatRoomController {
                     .lastLogInfo(chatRoomViewDto.getLastLogInfo())
                     .build();
         });
-        Map<Long, Long> notReadCounts = chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
+        Map<Long, Long> notReadCounts =
+                chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
         for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
             chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
         }
 
-        return ResponseEntity.ok().body(ChatRoomListDtos);
+        return ApiResponse.success("result", chatRoomListDtos);
     }
 
     private MemberInfo getTargetMemberInfo(Long myId, MemberInfo itemSavedMemberInfo,
@@ -115,7 +114,7 @@ public class ChatRoomController {
 //    }
 
     @GetMapping("/{chatRoomId}")
-    public ResponseEntity<?> enterChatRoom(@PathVariable("chatRoomId") Long chatRoomId,
+    public ApiResponse enterChatRoom(@PathVariable("chatRoomId") Long chatRoomId,
                                            @AuthenticationPrincipal Long memberId) throws URISyntaxException {
         log.info("Enter ChatRoom. Member : " + memberId + ", Room : " + chatRoomId);
         ChatRoomInfoDto chatRoomInfoDto =
@@ -144,7 +143,7 @@ public class ChatRoomController {
                 .chatRoomInfoDto(chatRoomInfoDto)
                 .chatLogDtoPage(chatLogDtos)
                 .build();
-        return ResponseEntity.ok().body(enterChatRoomDto);
+        return ApiResponse.success("result", enterChatRoomDto);
     }
 
     // 채팅방 삭제

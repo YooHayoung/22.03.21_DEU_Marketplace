@@ -19,7 +19,7 @@ public class ItemDetailResponseDto {
     private ItemDetailDto itemDetailDto;
     private ItemWishInfo wishInfo;
     private DealState dealState;
-    private Long chatRoomId;
+    private Long myChatRoomId;
     private List<ItemImgResponseDto> imgList;
 
     @Builder
@@ -36,7 +36,7 @@ public class ItemDetailResponseDto {
         if (deal.isPresent()) {
             this.dealState = deal.orElseThrow().getDealState();
         }
-        if(chatRoom != null) this.chatRoomId = chatRoom.getId();
+        if(chatRoom != null) this.myChatRoomId = chatRoom.getId();
         this.imgList = itemImgs.stream().map(ItemImgResponseDto::new).collect(Collectors.toList());
     }
 }

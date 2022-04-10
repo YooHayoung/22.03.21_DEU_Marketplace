@@ -2,6 +2,7 @@ package com.deu.marketplace.query.postListView.dto;
 
 import com.deu.marketplace.domain.post.entity.Post;
 import com.deu.marketplace.web.item.dto.MemberShortInfoDto;
+import com.deu.marketplace.web.postCategory.dto.PostCategoryDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostInfo {
     private Long postId;
-    private String postCategoryName;
+    private PostCategoryDto postCategoryInfo;
     private String title;
     private String content;
     private MemberShortInfoDto memberShortInfo;
@@ -33,7 +34,7 @@ public class PostInfo {
     @Builder
     public PostInfo(Post post) {
         this.postId = post.getId();
-        this.postCategoryName = post.getPostCategory().getCategoryName();
+        this.postCategoryInfo = PostCategoryDto.builder().postCategory(post.getPostCategory()).build();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.memberShortInfo = MemberShortInfoDto.builder().member(post.getWriter()).build();

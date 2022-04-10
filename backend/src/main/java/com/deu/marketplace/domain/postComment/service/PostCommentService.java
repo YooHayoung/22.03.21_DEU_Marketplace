@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.ValidationException;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,5 +19,16 @@ public class PostCommentService {
 
     public Page<PostComment> getPostCommentPage(Long postId, Pageable pageable){
         return postCommentRepository.findByPostId(postId, pageable);
+    }
+
+    public void deletePostComment(Long postCommentId, Long memberId) throws ValidationException {
+        PostComment postComment = postCommentRepository.findById(postCommentId).orElseThrow();
+        postComment.validWriterIdAndMemberId(memberId);
+        postCommentRepository.delete(postComment);
+    }
+
+    @Transactional
+    public PostComment savePostComment(PostComment postComment) {
+        return postCommentRepository.save(postComment);
     }
 }

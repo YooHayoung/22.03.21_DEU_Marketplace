@@ -16,4 +16,12 @@ public class LectureDto {
         this.lectureName = lecture.getLectureName();
         this.professorName = lecture.getProfessorName();
     }
+
+    public Lecture toEntity() {
+        return Lecture.dtoToEntityBuilder()
+                .id(id)
+                .lectureName(lectureName)
+                .professorName(professorName)
+                .build();
+    }
 }

@@ -12,11 +12,4 @@ import lombok.NoArgsConstructor;
 public class ItemImgRequestDto {
     private String imgFile;
     private int imgSeq;
-
-//    public ItemImg toEntity() {
-//        return ItemImg.builder()
-//                .imgFile(imgFile)
-//                .imgSeq(imgSeq)
-//                .build();
-//    }
 }

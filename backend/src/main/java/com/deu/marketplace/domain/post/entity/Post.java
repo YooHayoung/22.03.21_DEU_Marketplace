@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,5 +57,10 @@ public class Post extends BaseTimeEntity {
 
     public void clearPostImgs() {
         this.postImgs.clear();
+    }
+
+    public void validWriterIdAndMemberId(Long memberId) throws ValidationException {
+        if (this.writer.getId() != memberId)
+            throw new ValidationException("Member is not the same as writer");
     }
 }

@@ -3305,18 +3305,18 @@ insert into item_deal(item_id, target_member, appointment_date_time, meeting_pla
            (4, 1, '2022-03-25 12:00:00', '동의대', '거래완료', now(), now());
 
 
-insert into item_img(item_id, img_file, img_seq) values
-    (1, 'file://123123.123123123.124121312', 3),
-    (1, 'file://33222.123123123.124121312', 4),
-    (1, 'file://sdf.123123123.124121312', 2),
-    (1, 'file://asdf.sdf.124121312', 1),
-    (2, 'file://123123.123123123.124121312', 2),
-    (2, 'file://hbavwef.ahaev3.gas', 1),
-    (4, 'file://weaefh.ahaev3.gas', 1),
-    (4, 'file://asasv.ahaev3.gas', 2),
-    (4, 'file://,mn.ahaev3.gas', 3),
-    (6, 'file://35.ahaev3.gas', 2),
-    (6, 'file://123.ahaev3.gas', 1);
+insert into item_img(item_id, img_file, img_seq, created_date, last_modified_date) values
+    (1, 'file://123123.123123123.124121312', 3, now(), now()),
+    (1, 'file://33222.123123123.124121312', 4, now(), now()),
+    (1, 'file://sdf.123123123.124121312', 2, now(), now()),
+    (1, 'file://asdf.sdf.124121312', 1, now(), now()),
+    (2, 'file://123123.123123123.124121312', 2, now(), now()),
+    (2, 'file://hbavwef.ahaev3.gas', 1, now(), now()),
+    (4, 'file://weaefh.ahaev3.gas', 1, now(), now()),
+    (4, 'file://asasv.ahaev3.gas', 2, now(), now()),
+    (4, 'file://,mn.ahaev3.gas', 3, now(), now()),
+    (6, 'file://35.ahaev3.gas', 2, now(), now()),
+    (6, 'file://123.ahaev3.gas', 1, now(), now());
 
 insert into item(member_id, item_category_id, title, lecture_id, write_state, surface_state, regular_price, price, description, classification, created_date, last_modified_date)
 values (1, 1, '상품팝니다', null, null, null, null, 10000, '설명설명설명설명설명설명', 'BUY', now(), now());

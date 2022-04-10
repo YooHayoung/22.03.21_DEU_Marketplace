@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.xml.bind.ValidationException;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,5 +39,10 @@ public class PostComment extends BaseTimeEntity {
 
     public void updateComment(String content){
         this.content = content;
+    }
+
+    public void validWriterIdAndMemberId(Long memberId) throws ValidationException {
+        if (this.writer.getId() != memberId)
+            throw new ValidationException("Member is not the same as writer");
     }
 }

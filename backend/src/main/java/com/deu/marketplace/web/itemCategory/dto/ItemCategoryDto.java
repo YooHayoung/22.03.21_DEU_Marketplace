@@ -14,4 +14,11 @@ public class ItemCategoryDto {
         this.id = itemCategory.getId();
         this.categoryName = itemCategory.getCategoryName();
     }
+
+    public ItemCategory toEntity() {
+        return ItemCategory.dtoToEntityBuilder()
+                .id(id)
+                .categoryName(categoryName)
+                .build();
+    }
 }

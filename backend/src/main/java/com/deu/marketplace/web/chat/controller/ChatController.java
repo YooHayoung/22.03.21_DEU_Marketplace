@@ -1,5 +1,6 @@
 package com.deu.marketplace.web.chat.controller;//package com.deu.marketplace.web.chat.controller;
 
+import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.domain.chatLog.entity.ChatLog;
 import com.deu.marketplace.domain.chatLog.service.ChatLogService;
 import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
@@ -89,9 +90,9 @@ public class ChatController {
 
       //이거 써야함
     @GetMapping("/api/v1/chat/{chatRoomId}")
-    public ResponseEntity<?> getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
-                                         @RequestParam("enterTime") String enterTime,
-                                         @PageableDefault(size = 30, page = 1,
+    public ApiResponse getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
+                                   @RequestParam("enterTime") String enterTime,
+                                   @PageableDefault(size = 30, page = 1,
                                                  sort = "lastModifiedDate",
                                                  direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Get ChatLogs Page");
@@ -109,28 +110,7 @@ public class ChatController {
                     .build();
         });
 
-        return ResponseEntity.ok().body(chatLogDtos);
+        return ApiResponse.success("result", chatLogDtos);
     }
-
-//    @GetMapping("/api/v1/chat/{chatRoomId}")
-//    public ResponseEntity<?> getChatLogs(@PathVariable("chatRoomId") Long chatRoomId,
-//                                         @PageableDefault(size = 30, page = 0,
-//                                                 sort = "lastModifiedDate",
-//                                                 direction = Sort.Direction.DESC) Pageable pageable) {
-//        List<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, pageable).getContent();
-//        List<ChatLogDto> chatLogDtos = new ArrayList<>();
-//        for (ChatLog chatLog : chatLogPage) {
-//            chatLogDtos.add(ChatLogDto.builder()
-//                    .chatLogId(chatLog.getId())
-//                    .senderId(chatLog.getSender().getId())
-//                    .recipientId(chatLog.getRecipient().getId())
-//                    .message(chatLog.getContent())
-//                    .lastModifiedDate(chatLog.getLastModifiedDate())
-//                    .read(chatLog.isRead())
-//                    .build());
-//        }
-//
-//        return ResponseEntity.ok().body(chatLogDtos);
-//    }
 
 }

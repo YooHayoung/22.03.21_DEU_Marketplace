@@ -11,12 +11,12 @@ import org.springframework.data.domain.Page;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EnterChatRoomDto {
-    private ChatRoomInfoDto chatRoomInfoDto;
-    private Page<ChatLogDto> chatLogDtoPage;
+    private ChatRoomInfoDto chatRoomInfo;
+    private Page<ChatLogDto> chatLogInfos;
 
     @Builder
     public EnterChatRoomDto(ChatRoomInfoDto chatRoomInfoDto, Page<ChatLogDto> chatLogDtoPage) {
-        this.chatRoomInfoDto = chatRoomInfoDto;
-        this.chatLogDtoPage = chatLogDtoPage;
+        this.chatRoomInfo = chatRoomInfoDto;
+        this.chatLogInfos = chatLogDtoPage;
     }
 }

@@ -1,7 +1,7 @@
 package com.deu.marketplace.web.postCategory.controller;
 
+import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.domain.postCategory.service.PostCategoryService;
-import com.deu.marketplace.web.ResponseDto;
 import com.deu.marketplace.web.postCategory.dto.PostCategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,10 @@ public class PostCategoryController {
     private final PostCategoryService postCategoryService;
 
     @GetMapping
-    public ResponseEntity<?> getAllItemCategory() {
+    public ApiResponse getAllItemCategory() {
         List<PostCategoryDto> postCategoryDtos = postCategoryService.getAll()
                 .stream().map(PostCategoryDto::new).collect(Collectors.toList());
-        ResponseDto<PostCategoryDto> responseDto =
-                ResponseDto.<PostCategoryDto>builder().data(postCategoryDtos).build();
 
-        return ResponseEntity.ok().body(responseDto);
+        return ApiResponse.success("result", postCategoryDtos);
     }
 }

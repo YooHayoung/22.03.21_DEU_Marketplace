@@ -1,5 +1,6 @@
 package com.deu.marketplace.web.post.controller;
 
+import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.common.PostSearchCond;
 import com.deu.marketplace.domain.postComment.entity.PostComment;
 import com.deu.marketplace.domain.postComment.service.PostCommentService;
@@ -24,21 +25,21 @@ public class PostController {
     private final PostCommentService postCommentService;
 
     @GetMapping
-    public ResponseEntity<?> getPostList(PostSearchCond cond,
-                                         @PageableDefault(size = 20, page = 0,
+    public ApiResponse getPostList(PostSearchCond cond,
+                                   @PageableDefault(size = 20, page = 0,
                                                  sort = "lastModifiedDate",
                                                  direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostListViewDto> postsPages = postViewRepository.getPostsPages(cond, pageable);
-        return ResponseEntity.ok().body(postsPages);
+        return ApiResponse.success("result", postsPages);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<?> getOnePost(@PathVariable("postId") Long postId,
+    public ApiResponse getOnePost(@PathVariable("postId") Long postId,
                                         @AuthenticationPrincipal Long memberId) {
         PostDetailViewDto postDetailViewDto =
                 postViewRepository.getPostDetail(postId, memberId).orElseThrow();
 
-        return ResponseEntity.ok().body(postDetailViewDto);
+        return ApiResponse.success("result", postDetailViewDto);
     }
 
 //    @PatchMapping("/{postId}")

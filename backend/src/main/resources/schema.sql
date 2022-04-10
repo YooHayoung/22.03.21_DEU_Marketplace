@@ -17,22 +17,22 @@
 -- ------------------------------------------------------------------
 
 
-# DROP TABLE post_comment;
-# DROP TABLE post_recommend;
-# DROP TABLE post_img;
-# DROP TABLE post;
-# DROP TABLE item_deal;
-# DROP TABLE chat_log;
-# DROP TABLE chat_room;
-# DROP TABLE wish_item;
-# DROP TABLE item_img;
-# DROP TABLE item;
-# DROP TABLE post_category;
-# DROP TABLE item_category;
-# DROP TABLE lecture;
-# DROP TABLE member;
+DROP TABLE post_comment;
+DROP TABLE post_recommend;
+DROP TABLE post_img;
+DROP TABLE post;
+DROP TABLE item_deal;
+DROP TABLE chat_log;
+DROP TABLE chat_room;
+DROP TABLE wish_item;
+DROP TABLE item_img;
+DROP TABLE item;
+DROP TABLE post_category;
+DROP TABLE item_category;
+DROP TABLE lecture;
+DROP TABLE member;
 -- -------------------------------------------------
-CREATE OR replace TABLE member (
+CREATE TABLE member (
 	member_id BIGINT NOT NULL AUTO_INCREMENT,
 	name VARCHAR(20) NOT NULL,
 	email VARCHAR(40) NOT NULL,
@@ -45,26 +45,26 @@ CREATE OR replace TABLE member (
 	PRIMARY KEY(member_id)
 );
 
-CREATE OR REPLACE TABLE lecture (
+CREATE TABLE lecture (
 	lecture_id BIGINT NOT NULL AUTO_INCREMENT,
 	lecture_name varchar(40) NOT NULL,
 	professor_name VARCHAR(30),
 	PRIMARY KEY(lecture_id)
 );
 
-CREATE OR REPLACE TABLE item_category (
+CREATE TABLE item_category (
 	item_category_id BIGINT NOT NULL AUTO_INCREMENT,
 	category_name VARCHAR(30) NOT NULL,
 	PRIMARY KEY(item_category_id)
 );
 
-CREATE OR REPLACE TABLE post_category (
+CREATE TABLE post_category (
 	post_category_id BIGINT NOT NULL AUTO_INCREMENT,
 	category_name VARCHAR(30) NOT NULL,
 	PRIMARY KEY(post_category_id)
 );
 
-CREATE OR REPLACE TABLE item (
+CREATE TABLE item (
 	item_id BIGINT NOT NULL AUTO_INCREMENT,
 	member_id BIGINT NOT NULL,
 	item_category_id BIGINT NOT NULL,
@@ -84,7 +84,7 @@ CREATE OR REPLACE TABLE item (
 	FOREIGN KEY(lecture_id) REFERENCES lecture(lecture_id)
 );
 
-CREATE OR REPLACE TABLE item_img (
+CREATE TABLE item_img (
 	item_img_id BIGINT NOT NULL AUTO_INCREMENT,
 	item_id BIGINT NOT NULL,
 	img_file VARCHAR(100) NOT NULL,
@@ -95,7 +95,7 @@ CREATE OR REPLACE TABLE item_img (
 	FOREIGN KEY(item_id) REFERENCES item(item_id)
 );
 
-CREATE OR REPLACE TABLE wish_item (
+CREATE TABLE wish_item (
 	wish_item_id BIGINT NOT NULL AUTO_INCREMENT,
 	wished_member_id BIGINT NOT NULL,
 	item_id BIGINT NOT NULL,
@@ -106,11 +106,11 @@ CREATE OR REPLACE TABLE wish_item (
 	FOREIGN KEY(item_id) REFERENCES item(item_id)
 );
 
-CREATE OR REPLACE TABLE chat_room (
+CREATE TABLE chat_room (
 	chat_room_id BIGINT NOT NULL AUTO_INCREMENT,
 	item_id BIGINT NOT NULL,
 	requested_member_id BIGINT NOT NULL,
-	socekt VARCHAR(100) NOT NULL,
+	socket VARCHAR(100) NOT NULL,
 	created_date TIMESTAMP NOT NULL,
 	last_modified_date TIMESTAMP NOT NULL,
 	PRIMARY KEY(chat_room_id),
@@ -118,7 +118,7 @@ CREATE OR REPLACE TABLE chat_room (
 	FOREIGN KEY(requested_member_id) REFERENCES member(member_id)
 );
 
-CREATE OR REPLACE TABLE chat_log (
+CREATE TABLE chat_log (
 	chat_log_id BIGINT NOT NULL AUTO_INCREMENT,
 	chat_room_id BIGINT NOT NULL,
 	sender_id BIGINT NOT NULL,
@@ -133,7 +133,7 @@ CREATE OR REPLACE TABLE chat_log (
 	FOREIGN KEY(recipient_id) REFERENCES member(member_id)
 );
 
-CREATE OR REPLACE TABLE item_deal (
+CREATE TABLE item_deal (
 	item_deal_id BIGINT NOT NULL AUTO_INCREMENT,
 	item_id BIGINT NOT NULL,
 	target_member bigint not null,
@@ -147,7 +147,7 @@ CREATE OR REPLACE TABLE item_deal (
 	foreign key(target_member) references member(member_id)
 );
 
-CREATE OR REPLACE TABLE post (
+CREATE TABLE post (
 	post_id BIGINT NOT NULL AUTO_INCREMENT,
 	post_category_id BIGINT NOT NULL,
 	writer_id BIGINT NOT NULL,
@@ -160,7 +160,7 @@ CREATE OR REPLACE TABLE post (
 	FOREIGN KEY(writer_id) REFERENCES member(member_id)
 );
 
-CREATE OR REPLACE TABLE post_img (
+CREATE TABLE post_img (
 	post_img_id BIGINT NOT NULL AUTO_INCREMENT,
 	post_id BIGINT NOT NULL,
 	img_file VARCHAR(100) NOT NULL,
@@ -171,7 +171,7 @@ CREATE OR REPLACE TABLE post_img (
 	FOREIGN KEY(post_id) REFERENCES post(post_id)
 );
 
-CREATE OR REPLACE TABLE post_recommend (
+CREATE TABLE post_recommend (
 	post_recommend_id BIGINT NOT NULL AUTO_INCREMENT,
 	post_id BIGINT NOT NULL,
 	member_id BIGINT NOT NULL,
@@ -182,7 +182,7 @@ CREATE OR REPLACE TABLE post_recommend (
 	FOREIGN KEY(member_id) REFERENCES member(member_id)
 );
 
-CREATE OR REPLACE TABLE post_comment (
+CREATE TABLE post_comment (
 	post_comment_id BIGINT NOT NULL AUTO_INCREMENT,
 	post_id BIGINT NOT NULL,
 	member_id BIGINT NOT NULL,
@@ -194,4 +194,12 @@ CREATE OR REPLACE TABLE post_comment (
 	FOREIGN KEY(member_id) REFERENCES member(member_id)
 );
 
-ALTER TABLE member add column refresh_token varchar(150);
+# ALTER TABLE member add column refresh_token varchar(150);
+
+create table member_refresh_token (
+    refresh_token_id bigint not null auto_increment,
+    member_id bigint not null,
+    refresh_token varchar(255) not null,
+    primary key(refresh_token_id),
+    foreign key(member_id) references member(member_id)
+);

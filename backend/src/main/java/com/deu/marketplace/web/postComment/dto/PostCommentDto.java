@@ -13,13 +13,13 @@ import java.time.format.DateTimeFormatter;
 public class PostCommentDto {
 
     private Long postCommentId;
-    private MemberShortInfoDto memberShortInfo;
+    private MemberShortInfoDto memberInfo;
     private String content;
     private String createdDate;
 
     public PostCommentDto(PostComment postComment) {
         this.postCommentId = postComment.getId();
-        this.memberShortInfo = MemberShortInfoDto.builder().member(postComment.getWriter()).build();
+        this.memberInfo = MemberShortInfoDto.builder().member(postComment.getWriter()).build();
         this.content = postComment.getContent();
         this.createdDate = postComment.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }

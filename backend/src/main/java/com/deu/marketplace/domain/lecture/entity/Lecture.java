@@ -30,4 +30,11 @@ public class Lecture {
         this.lectureName = lectureName;
         this.professorName = professorName;
     }
+
+    @Builder(builderClassName = "dtoToEntityBuilder", builderMethodName = "dtoToEntityBuilder")
+    public Lecture(Long id, String lectureName, String professorName) {
+        this.id = id;
+        this.lectureName = lectureName;
+        this.professorName = professorName;
+    }
 }

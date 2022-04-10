@@ -6,7 +6,9 @@ import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.itemCategory.entity.ItemCategory;
 import com.deu.marketplace.domain.lecture.entity.Lecture;
 import com.deu.marketplace.domain.member.entity.Member;
+import com.deu.marketplace.web.itemCategory.dto.ItemCategoryDto;
 import com.deu.marketplace.web.itemImg.dto.ItemImgRequestDto;
+import com.deu.marketplace.web.lecture.dto.LectureDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,59 +22,55 @@ import java.util.List;
 @AllArgsConstructor
 public class ItemSaveRequestDto {
     private String classification;
-    private List<ItemImgRequestDto> itemImgs;
     private String title;
-    private Long itemCategoryId;
-    private Long lectureId;
-    private BookState bookState;
+    private ItemCategoryDto itemCategoryInfo;
+    private LectureDto lectureInfo;
+    private BookState bookStateInfo;
     private int price;
     private String description;
+    private List<ItemImgRequestDto> itemImgs;
 
-    public Item toItemEntity(Member member, ItemCategory itemCategory) {
-        return Item.ByNormalItemBuilder()
-                .classification(Classification.valueOf(classification))
-                .itemCategory(itemCategory)
-                .title(title)
-                .price(price)
-                .description(description)
-                .member(member)
-                .build();
-    }
-
-    public Item toItemEntity(Member member, ItemCategory itemCategory, Lecture lecture) {
-        if (itemCategory.getCategoryName().equals("대학 교재")) {
+    public Item toItemEntity(Member member) {
+        if (itemCategoryInfo.getCategoryName().equals("대학 교재")) {
             return Item.ByUnivBookBuilder()
                     .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategory)
-                    .lecture(lecture)
-                    .bookState(bookState)
+                    .itemCategory(itemCategoryInfo.toEntity())
+                    .lecture(lectureInfo.toEntity())
+                    .bookState(bookStateInfo)
                     .title(title)
                     .price(price)
                     .description(description)
                     .member(member)
                     .build();
-        } else if (itemCategory.getCategoryName().equals("강의 관련 물품")) {
+        } else if (itemCategoryInfo.getCategoryName().equals("강의 관련 물품")) {
             return Item.ByUnivItemBuilder()
                     .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategory)
-                    .lecture(lecture)
+                    .itemCategory(itemCategoryInfo.toEntity())
+                    .lecture(lectureInfo.toEntity())
                     .title(title)
                     .price(price)
                     .description(description)
                     .member(member)
                     .build();
-        } else if (itemCategory.getCategoryName().equals("서적")) {
+        } else if (itemCategoryInfo.getCategoryName().equals("서적")) {
             return Item.ByBookItemBuilder()
                     .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategory)
-                    .bookState(bookState)
+                    .itemCategory(itemCategoryInfo.toEntity())
+                    .bookState(bookStateInfo)
                     .title(title)
                     .price(price)
                     .description(description)
                     .member(member)
                     .build();
         } else {
-            return toItemEntity(member, itemCategory);
+            return Item.ByNormalItemBuilder()
+                    .classification(Classification.valueOf(classification))
+                    .itemCategory(itemCategoryInfo.toEntity())
+                    .title(title)
+                    .price(price)
+                    .description(description)
+                    .member(member)
+                    .build();
         }
     }
 }
