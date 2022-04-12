@@ -3,6 +3,7 @@ package com.deu.marketplace.web.postComment.dto;
 import com.deu.marketplace.domain.postComment.entity.PostComment;
 import com.deu.marketplace.web.item.dto.MemberShortInfoDto;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ public class PostCommentDto {
     private String content;
     private String createdDate;
 
+    @Builder
     public PostCommentDto(PostComment postComment) {
         this.postCommentId = postComment.getId();
         this.memberInfo = MemberShortInfoDto.builder().member(postComment.getWriter()).build();

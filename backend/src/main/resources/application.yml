@@ -12,10 +12,13 @@ spring:
 
 #  for mysql
   datasource:
-    url: jdbc:mysql://localhost:3306/deuMarketplace?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+    url: jdbc:mysql://localhost:3306/deuMarketplace?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
     username: localDeuMarket
     password: 9999
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      data-source-properties:
+        rewriteBatchedStatements: true
 
   jpa:
     hibernate:
@@ -32,7 +35,9 @@ spring:
 app:
   auth:
     tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
-    accessTokenExpirationMsec: 600000 # 10min
+#    accessTokenExpirationMsec: 600000 # 10min
+    accessTokenExpirationMsec: 6000000 # 10min
+#    refreshTokenExpirationMsec: 10800000 # 3H
     refreshTokenExpirationMsec: 10800000 # 3H
   oauth2:
     authorizedRedirectUris:

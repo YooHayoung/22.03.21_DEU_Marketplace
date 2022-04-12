@@ -96,6 +96,7 @@ public class ChatController {
                                                  sort = "lastModifiedDate",
                                                  direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("Get ChatLogs Page");
+        log.info(enterTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(enterTime.replace("_", " "), formatter);
         Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, dateTime, pageable);

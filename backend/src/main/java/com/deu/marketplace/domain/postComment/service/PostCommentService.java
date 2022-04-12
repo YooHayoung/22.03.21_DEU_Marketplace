@@ -21,6 +21,7 @@ public class PostCommentService {
         return postCommentRepository.findByPostId(postId, pageable);
     }
 
+    @Transactional
     public void deletePostComment(Long postCommentId, Long memberId) throws ValidationException {
         PostComment postComment = postCommentRepository.findById(postCommentId).orElseThrow();
         postComment.validWriterIdAndMemberId(memberId);

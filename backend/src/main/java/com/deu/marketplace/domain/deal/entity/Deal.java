@@ -1,6 +1,7 @@
 package com.deu.marketplace.domain.deal.entity;
 
 import com.deu.marketplace.domain.BaseTimeEntity;
+import com.deu.marketplace.domain.chatRoom.entity.ChatRoom;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.member.entity.Member;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.xml.bind.ValidationException;
 import java.time.LocalDateTime;
 
 @Entity @Getter
@@ -47,15 +49,29 @@ public class Deal extends BaseTimeEntity {
         appointmentDeal();
     }
 
+    @Builder(builderClassName = "dtoToEntityBuilder", builderMethodName = "dtoToEntityBuilder")
+    public Deal(ChatRoom chatRoom, LocalDateTime appointmentDateTime, String meetingPlace) {
+        this.item = chatRoom.getItem();
+        this.targetMember = chatRoom.getRequestedMember();
+        this.appointmentDateTime = appointmentDateTime;
+        this.meetingPlace = meetingPlace;
+        appointmentDeal();
+    }
+
     public void completeDeal(){
         this.dealState = DealState.COMPLETE;
     }
 
-//    public void cancelDeal() {
-//        this.dealState = DealState.CANCEL;
-//    }
+    public void cancelDeal() {
+        this.dealState = DealState.CANCEL;
+    }
 
     public void appointmentDeal() {
         this.dealState = DealState.APPOINTMENT;
+    }
+
+    public void validMemberId(Long memberId) throws ValidationException {
+        if (this.item.getMember().getId() != memberId)
+            throw new ValidationException("Member is not the same as writer");
     }
 }

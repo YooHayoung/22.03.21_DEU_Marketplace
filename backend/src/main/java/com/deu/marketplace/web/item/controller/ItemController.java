@@ -113,7 +113,7 @@ public class ItemController {
         Item item = requestInfoToEntities(requestDto, memberId);
         item = itemService.saveItem(item);
 
-        return ApiResponse.success("result", item);
+        return ApiResponse.success("result", item.getId());
     }
 
     private Item requestInfoToEntities(@RequestBody ItemSaveRequestDto requestDto,
@@ -132,8 +132,8 @@ public class ItemController {
             for (ItemImgRequestDto dto : dtos) {
                 itemImgs.add(ItemImg.builder()
                         .item(item)
-                        .imgFile(dto.getImgFile())
-                        .imgSeq(dto.getImgSeq())
+                        .imgFile(dto.getItemImgFile())
+                        .imgSeq(dto.getItemImgSeq())
                         .build());
             }
         }

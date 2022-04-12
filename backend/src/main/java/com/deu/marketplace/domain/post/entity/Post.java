@@ -55,6 +55,12 @@ public class Post extends BaseTimeEntity {
         this.content = content;
     }
 
+    public void updatePost(Post post) {
+        this.postCategory = post.getPostCategory();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+    }
+
     public void clearPostImgs() {
         this.postImgs.clear();
     }

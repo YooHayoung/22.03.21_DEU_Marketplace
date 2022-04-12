@@ -33,6 +33,10 @@ public class WishItemController {
 
         Optional<WishItem> wishItem = wishItemService.updateWishItem(item, member);
 
-        return ApiResponse.success("result", wishItem.orElse(null).getId());
+        if (wishItem.isPresent()) {
+            return ApiResponse.success("result", wishItem.orElse(null).getId());
+        } else {
+            return ApiResponse.success("result", null);
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.item.repository.ItemRepository;
 import com.deu.marketplace.domain.item.service.ItemService;
+import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.ValidationException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,11 @@ public class ItemServiceImpl implements ItemService {
         Item findItem = itemRepository.findItemFetchJoinByMemberId(itemId).orElseThrow();
         findItem.validWriterIdAndMemberId(memberId);
         findItem.clearItemImgs();
+        item.getItemImgs().stream().map(itemImg -> ItemImg.builder()
+                .item(findItem)
+                .imgFile(itemImg.getImgFile())
+                .imgSeq(itemImg.getImgSeq())
+                .build()).collect(Collectors.toList());
         findItem.updateItem(item);
         return findItem;
     }

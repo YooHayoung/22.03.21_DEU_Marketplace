@@ -51,7 +51,10 @@ public class PostCommentController {
                                        @AuthenticationPrincipal Long memberId) {
         PostComment postComment =
                 postCommentService.savePostComment(requestInfoToEntity(postCommentSaveDto, memberId));
-        return ApiResponse.success("result", postComment);
+        PostCommentDto postCommentDto = PostCommentDto.builder()
+                .postComment(postComment)
+                .build();
+        return ApiResponse.success("result", postCommentDto);
     }
 
     @DeleteMapping("/{postCommentId}")

@@ -35,7 +35,7 @@ public class LectureInfoRepository {
                         lecture
                 ))
                 .from(lecture)
-                .where(lectureNameEq(lectureName), professorNameEq(professorName))
+                .where(lectureNameContains(lectureName), professorNameContains(professorName))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -43,16 +43,16 @@ public class LectureInfoRepository {
         JPAQuery<Long> countQuery = queryFactory
                 .select(lecture.count())
                 .from(lecture)
-                .where(lectureNameEq(lectureName), professorNameEq(professorName));
+                .where(lectureNameContains(lectureName), professorNameContains(professorName));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression lectureNameEq(String lectureName) {
-        return isEmpty(lectureName) ? null : lecture.lectureName.eq(lectureName);
+    private BooleanExpression lectureNameContains(String lectureName) {
+        return isEmpty(lectureName) ? null : lecture.lectureName.contains(lectureName);
     }
 
-    private BooleanExpression professorNameEq(String professorName) {
-        return isEmpty(professorName) ? null : lecture.professorName.eq(professorName);
+    private BooleanExpression professorNameContains(String professorName) {
+        return isEmpty(professorName) ? null : lecture.professorName.contains(professorName);
     }
 }

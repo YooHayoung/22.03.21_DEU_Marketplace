@@ -2,10 +2,12 @@ package com.deu.marketplace.domain.item.service;
 
 import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.item.entity.Item;
+import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.xml.bind.ValidationException;
+import java.util.List;
 import java.util.Optional;
 
 public interface ItemService {

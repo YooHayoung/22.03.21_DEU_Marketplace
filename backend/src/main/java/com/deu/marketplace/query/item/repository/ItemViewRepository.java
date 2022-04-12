@@ -65,7 +65,9 @@ public class ItemViewRepository {
                 .leftJoin(wishItem).on(item.eq(wishItem.item).and(wishItem.wishedMember.id.eq(memberId)))
                 .fetchJoin()
                 .where((itemImg.imgSeq.eq(1).or(itemImg.imgSeq.isNull()))
-                        .and((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name())).or(deal.dealState.isNull()))),
+                        .and(((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name()))
+                                .and(deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))) // ..
+                                .or(deal.dealState.isNull()))),
                         classificationEq(cond.getClassification()),
                         itemCategoryEq(cond.getItemCategoryId()),
                         itemTitleContains(cond.getTitle()),
@@ -81,7 +83,9 @@ public class ItemViewRepository {
                 .select(item.count())
                 .from(item)
                 .leftJoin(deal).on(item.eq(deal.item))
-                .where((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name())).or(deal.dealState.isNull())),
+                .where(((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name()))
+                                .and(deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name()))))//
+                                .or(deal.dealState.isNull())),
                         classificationEq(cond.getClassification()),
                         itemCategoryEq(cond.getItemCategoryId()),
                         itemTitleContains(cond.getTitle()),
@@ -111,7 +115,9 @@ public class ItemViewRepository {
                 .leftJoin(deal).on(item.eq(deal.item))
                 .leftJoin(wishItem).on(item.eq(wishItem.item).and(wishItem.wishedMember.id.eq(memberId)))
                 .where((itemImg.imgSeq.eq(1).or(itemImg.imgSeq.isNull()))
-                                .and((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name())).or(deal.dealState.isNull()))),
+                                .and(((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name()))
+                                        .and(deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name()))))
+                                        .or(deal.dealState.isNull()))),
                         classificationEq(cond.getClassification()),
                         itemCategoryEq(cond.getItemCategoryId()),
                         itemTitleContains(cond.getTitle()),
@@ -127,7 +133,9 @@ public class ItemViewRepository {
                 .select(item.count())
                 .from(item)
                 .leftJoin(deal).on(item.eq(deal.item))
-                .where((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name())).or(deal.dealState.isNull())),
+                .where(((deal.dealState.ne(DealState.valueOf(DealState.COMPLETE.name())))
+                                .and(deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))
+                                .or(deal.dealState.isNull())),
                         classificationEq(cond.getClassification()),
                         itemCategoryEq(cond.getItemCategoryId()),
                         itemTitleContains(cond.getTitle()),

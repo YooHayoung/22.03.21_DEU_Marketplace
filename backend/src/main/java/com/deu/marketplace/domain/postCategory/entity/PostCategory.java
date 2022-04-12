@@ -24,4 +24,10 @@ public class PostCategory {
         Assert.notNull(categoryName, "categoryName must not be null");
         this.categoryName = categoryName;
     }
+
+    @Builder(builderClassName = "dtoToEntityBuilder", builderMethodName = "dtoToEntityBuilder")
+    public PostCategory(Long id, String categoryName) {
+        this.id = id;
+        this.categoryName = categoryName;
+    }
 }

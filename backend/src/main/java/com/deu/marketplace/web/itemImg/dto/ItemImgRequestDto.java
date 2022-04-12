@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemImgRequestDto {
-    private String imgFile;
-    private int imgSeq;
+    private String itemImgFile;
+    private int itemImgSeq;
 }

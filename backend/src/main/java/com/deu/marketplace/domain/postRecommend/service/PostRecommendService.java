@@ -18,6 +18,7 @@ public class PostRecommendService {
 
     private final PostRecommendRepository postRecommendRepository;
 
+    @Transactional
     public Optional<PostRecommend> updatePostRecommend(Post post, Member member) {
         Optional<PostRecommend> postRecommend = postRecommendRepository.findByInfo(post.getId(), member.getId());
         if (postRecommend.isPresent()) {

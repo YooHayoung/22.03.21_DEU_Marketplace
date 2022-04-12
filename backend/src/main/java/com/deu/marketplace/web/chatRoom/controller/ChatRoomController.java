@@ -115,17 +115,13 @@ public class ChatRoomController {
 
     @GetMapping("/{chatRoomId}")
     public ApiResponse enterChatRoom(@PathVariable("chatRoomId") Long chatRoomId,
-                                           @AuthenticationPrincipal Long memberId) throws URISyntaxException {
+                                     @AuthenticationPrincipal Long memberId) {
         log.info("Enter ChatRoom. Member : " + memberId + ", Room : " + chatRoomId);
         ChatRoomInfoDto chatRoomInfoDto =
                 chatRoomViewRepository.getChatRoomInfo(chatRoomId, memberId).orElseThrow();
         chatRoomInfoDto.setMyId(memberId);
         LocalDateTime now = LocalDateTime.now();
 
-//        URI redirectUri = new URI("http://localhost:8080/api/v1/chat/" + chatRoomInfoDto.getChatRoomId());
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setLocation(redirectUri);
-//        return new ResponseEntity<>(chatRoomInfoDto, httpHeaders, HttpStatus.SEE_OTHER);
         Pageable pageable = PageRequest.of(0, 2, Sort.by("lastModifiedDate").descending());
         chatLogService.bulkUpdateRead(chatRoomId, memberId, now);
         Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, now, pageable);

@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum DealState {
-    APPOINTMENT, COMPLETE;
+    APPOINTMENT, COMPLETE, CANCEL;
 
 }

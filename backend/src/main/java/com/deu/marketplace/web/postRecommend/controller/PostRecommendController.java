@@ -30,6 +30,10 @@ public class PostRecommendController {
                 postRecommendService.updatePostRecommend(postService.getOnePostByPostId(postId).orElseThrow(),
                     memberService.getMemberById(memberId).orElseThrow());
 
-        return ApiResponse.success("result", postRecommend.orElse(null).getId());
+        if (postRecommend.isPresent()) {
+            return ApiResponse.success("result", postRecommend.orElse(null).getId());
+        } else {
+            return ApiResponse.success("result", null);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.deu.marketplace.query.chatRoom.repository;
 
+import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.member.entity.QMember;
 import com.deu.marketplace.query.chatRoom.dto.ChatRoomInfoDto;
 import com.deu.marketplace.query.chatRoom.dto.ChatRoomViewDto;
@@ -84,7 +85,8 @@ public class ChatRoomViewRepository {
                         .and(chatLog.lastModifiedDate.in(JPAExpressions
                                 .select(chatLog.lastModifiedDate.max())
                                 .from(chatLog)
-                                .groupBy(chatLog.chatRoom))))
+                                .groupBy(chatLog.chatRoom))),
+                        (deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))) // complete or appointment or null
                 .orderBy(chatLog.lastModifiedDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -152,7 +154,8 @@ public class ChatRoomViewRepository {
                 .where(chatRoom.requestedMember.id.eq(memberId)
                                 .or(chatRoom.item.member.id.eq(memberId)),
                         (itemImg.imgSeq.eq(1).or(itemImg.imgSeq.isNull())),
-                        chatRoom.id.eq(chatRoomId))
+                        chatRoom.id.eq(chatRoomId),
+                        deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))
                 .fetchOne());
     }
 }
