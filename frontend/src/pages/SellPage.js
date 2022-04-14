@@ -2,12 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "../../node_modules/react-router-dom/index";
 import jwt_decode from "jwt-decode";
 import axios from "../../node_modules/axios/index";
-import { doLogoutFromNaver, doLogoutFromServer, getNewAccessToken, getTokensFromNaver } from "../api/Api";
+import { doLogoutFromNaver, doLogoutFromServer, getItemPage, getNewAccessToken, getTokensFromNaver } from "../api/Api";
 import { UseApi } from "../api/UseApi";
+import ItemListComponent from "../components/contents/item/ItemListComponent";
 
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
    let navigate = useNavigate();
+   const [searchCond, setSearchCond] = useState(
+      {
+         classification: 'SELL',
+         itemCategoryId: '',
+         lectureName: '',
+         professorName: '',
+         title: '',
+         priceGoe: '',
+         priceLoe: '',
+      });
+   const [page, setPage] = useState(0);
+   const [contents, setContents] = useState([]);
 
    useEffect(() => {
       console.log(token);
@@ -18,6 +31,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
                   if (error.response.status === 307) {
                      console.log(error.response.headers.authorization);
                      setToken(error.response.headers.authorization);
+                     getPages();
                      // return Promise.reject(error);
                   } else if (error.response.status === 401) {
                      console.log(error.response.status);
@@ -30,8 +44,39 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          console.log(jwt_decode(token))
          console.log(jwt_decode(token).exp)
          console.log(Date.now() / 1000);
+         getPages();
       }
    }, [])
+
+
+   const afterGetPage = (res) => {
+      if (res.data.body.result.totalPages !== page){
+         // console.log(res.data.body.result);
+         setContents([...contents, ...res.data.body.result.content]);
+         setPage(page+1);
+      }
+   };
+
+   const getPages = () => {
+      (async () => {
+         UseApi(getItemPage, token, setToken, afterGetPage, {
+            classification: searchCond.classification,
+            itemCategoryId: searchCond.itemCategoryId,
+            professorName: searchCond.professorName,
+            lectureName: searchCond.lectureName,
+            title: searchCond.title,
+            priceGoe: searchCond.priceGoe,
+            priceLoe: searchCond.priceLoe,
+            page: page
+         });
+         console.log(contents);
+         console.log(page);
+      })();
+   }
+
+   // useEffect(() => {
+   //    getPages();
+   // }, []);
 
    const work = (res) => {
       if (res.status === 200) {
@@ -58,8 +103,10 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
       })();
    }
 
+   const renderItemList = contents.map((content) => (<ItemListComponent content={content} token={token} setToken={setToken} key={content.itemId} />));
+
    return (
-      <div>
+      <div className="contents">
          <h1>Sell Page</h1>
          {/* 로그인하러가는버튼은 임시 */}
          <Link to={{
@@ -70,6 +117,10 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          </Link>
          {/* 로그아웃 버튼은 나중에 헤더쪽으로 보냄 */}
          <button onClick={doLogout}>로그아웃</button>
+         <div className="itemList">
+         {renderItemList}
+         </div>
+         <button onClick={getPages}>물품목록불러오기</button>
       </div>
    );
 };

@@ -34,7 +34,7 @@ public class WishItemController {
         Optional<WishItem> wishItem = wishItemService.updateWishItem(item, member);
 
         if (wishItem.isPresent()) {
-            return ApiResponse.success("result", wishItem.orElse(null).getId());
+            return ApiResponse.success("result", wishItem.orElse(null).getWishedMember().getId());
         } else {
             return ApiResponse.success("result", null);
         }

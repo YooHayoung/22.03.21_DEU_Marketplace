@@ -3,6 +3,7 @@ import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from "../OAuth";
 import client from "./client";
 
 const CHATLOG_PAGE_SIZE = 2;
+const ITEM_PAGE_SIZE = 2;
 
 export const getTokensFromNaver = ({ code, state }) => {
    return axios.get(`https://nid.naver.com/oauth2.0/token?client_id=${NAVER_CLIENT_ID}&client_secret=${NAVER_CLIENT_SECRET}&grant_type=authorization_code&state=${state}&code=${code}`, { headers: { "Access-Control-Allow-Origin": "*" } })
@@ -34,16 +35,23 @@ export const getChatRoom = (token, object) => {
 
 // 채팅 로그 가져오기 - 페이징
 export const getChatPage = (token, object) => {
-   return client.get("api/v1/chat/" + object.chatRoomId + "?size=" + CHATLOG_PAGE_SIZE + "&page=" + object.page + "&enterTime=" + object.enterTime, { headers: { Authorization: `Bearer ${token}` } })
+   return client.get("/api/v1/chat/" + object.chatRoomId + "?size=" + CHATLOG_PAGE_SIZE + "&page=" + object.page + "&enterTime=" + object.enterTime, { headers: { Authorization: `Bearer ${token}` } })
 }
 
-
-const getItemPage = () => {
-
+// 물품 목록 가져오기 - 페이징.
+export const getItemPage = (token, object) => {
+   return client.get("/api/v1/items?classification=" + object.classification + "&itemCategoryId=" + object.itemCategoryId
+                        + "&lectureName=" + object.lectureName    + "&professorName=" + object.professorName + "&title=" + object.title
+                        + "&priceGoe=" + object.priceGoe + "&priceLoe=" + object.priceLoe
+                        + "&size=" + ITEM_PAGE_SIZE + "&page=" + object.page, {headers: {Authorization: `Bearer ${token}`}})
 }
 
 const getItemDetail = () => {
 
+}
+
+export const setWishItem = (token, object) => {
+   return client.get("/api/v1/wishItem/"+object.itemId, { headers: { Authorization: `Bearer ${token}` } });
 }
 
 
