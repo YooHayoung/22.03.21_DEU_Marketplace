@@ -14,4 +14,6 @@ public interface ItemImgService {
     List<ItemImg> saveAll(List<ItemImg> itemImgs);
 
     List<ItemImg> getAllByItemId(Long itemId);
+
+    void deleteAllByItemId(Long itemId);
 }

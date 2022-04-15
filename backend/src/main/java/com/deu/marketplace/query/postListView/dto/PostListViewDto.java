@@ -54,4 +54,14 @@ public class PostListViewDto {
         this.recommendCount = recommendCount;
         this.commentCount = commentCount;
     }
+
+    public boolean isImgExist() {
+        if (this.firstImg == null)
+            return false;
+        else return true;
+    }
+
+    public void imgFileToImgUrl(String imgUrl) {
+        this.firstImg = imgUrl;
+    }
 }

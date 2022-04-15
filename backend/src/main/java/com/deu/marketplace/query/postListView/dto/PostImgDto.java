@@ -19,4 +19,8 @@ public class PostImgDto {
         this.imgFile = postImg.getImgFile();
         this.seq = postImg.getImgSeq();
     }
+
+    public void imgToImgUrl(String imgUrl) {
+        this.imgFile = imgUrl;
+    }
 }

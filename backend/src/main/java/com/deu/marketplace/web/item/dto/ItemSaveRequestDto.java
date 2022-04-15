@@ -28,7 +28,7 @@ public class ItemSaveRequestDto {
     private BookState bookStateInfo;
     private int price;
     private String description;
-    private List<ItemImgRequestDto> itemImgs;
+//    private List<ItemImgRequestDto> itemImgs;
 
     public Item toItemEntity(Member member) {
         if (itemCategoryInfo.getItemCategoryName().equals("대학 교재")) {

@@ -44,13 +44,13 @@ public class PostService {
     public Post updatePost(Long postId, Post post, Long memberId) throws ValidationException {
         Post findPost = postRepository.findById(postId).orElseThrow();
         findPost.validWriterIdAndMemberId(memberId);
-        findPost.clearPostImgs();
-        post.getPostImgs().stream().map(postImg -> PostImg.builder()
-                .post(findPost)
-                .imgFile(postImg.getImgFile())
-                .imgSeq(postImg.getImgSeq())
-                .build()).collect(Collectors.toList());
-        System.out.println(findPost.getPostImgs().size());
+//        findPost.clearPostImgs();
+//        post.getPostImgs().stream().map(postImg -> PostImg.builder()
+//                .post(findPost)
+//                .imgFile(postImg.getImgFile())
+//                .imgSeq(postImg.getImgSeq())
+//                .build()).collect(Collectors.toList());
+//        System.out.println(findPost.getPostImgs().size());
         findPost.updatePost(post);
         return findPost;
     }

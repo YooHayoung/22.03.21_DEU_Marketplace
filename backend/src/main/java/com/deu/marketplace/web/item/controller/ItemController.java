@@ -19,9 +19,11 @@ import com.deu.marketplace.domain.wishItem.service.WishItemService;
 import com.deu.marketplace.query.item.dto.BuyItemDto;
 import com.deu.marketplace.query.item.dto.SellItemDto;
 import com.deu.marketplace.query.item.repository.ItemViewRepository;
+import com.deu.marketplace.s3.S3Uploader;
 import com.deu.marketplace.web.item.dto.ItemDetailResponseDto;
 import com.deu.marketplace.web.item.dto.ItemSaveRequestDto;
 import com.deu.marketplace.web.itemImg.dto.ItemImgRequestDto;
+import com.deu.marketplace.web.itemImg.dto.ItemImgResponseDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -50,6 +53,7 @@ public class ItemController {
     private final DealService dealService;
     private final WishItemService wishItemService;
     private final ChatRoomService chatRoomService;
+    private final S3Uploader s3Uploader;
 
     private final ItemViewRepository itemViewRepository;
 
@@ -61,9 +65,17 @@ public class ItemController {
                                    @AuthenticationPrincipal Long memberId) {
         if (cond.getClassification().equals(Classification.SELL.name())) {
             Page<SellItemDto> sellItemPages = itemViewRepository.getSellItemPages(cond, pageable, memberId);
+            for (SellItemDto sellItemPage : sellItemPages) {
+                if (sellItemPage.isItemImgFile())
+                    sellItemPage.imgFileToImgUrl(s3Uploader.toUrl(sellItemPage.getItemImgFile()));
+            }
             return ApiResponse.success("result", sellItemPages);
         } else {
             Page<BuyItemDto> buyItemPages = itemViewRepository.getBuyItemPages(cond, pageable, memberId);
+            for (BuyItemDto buyItemPage : buyItemPages) {
+                if (buyItemPage.isItemImgFile())
+                    buyItemPage.imgFileToImgUrl(s3Uploader.toUrl(buyItemPage.getItemImgFile()));
+            }
             return ApiResponse.success("result", buyItemPages);
         }
     }
@@ -86,6 +98,11 @@ public class ItemController {
                         .chatRoom(chatRoom)
                         .itemImgs(findItemImgs)
                         .build();
+
+        for (ItemImgResponseDto itemImgResponseDto : itemDetailResponseDto.getImgList()) {
+            itemImgResponseDto.imgToImgUrl(s3Uploader.toUrl(itemImgResponseDto.getImg()));
+        }
+
         return ApiResponse.success("result", itemDetailResponseDto);
     }
 
@@ -99,6 +116,7 @@ public class ItemController {
         return ApiResponse.success("result", updateItem.getId());
     }
 
+    // TODO 삭제 수정 예정
     @DeleteMapping("/{itemId}")
     public ApiResponse deleteOneItem(@PathVariable("itemId") Long itemId,
                                            @AuthenticationPrincipal Long memberId) throws ValidationException {
@@ -121,7 +139,7 @@ public class ItemController {
         Member member = memberService.getMemberById(memberId).orElseThrow(NoResultException::new);
 
         Item item = requestDto.toItemEntity(member);
-        List<ItemImg> itemImgs = itemImgDtosToEntity(requestDto.getItemImgs(), item);
+//        List<ItemImg> itemImgs = itemImgDtosToEntity(requestDto.getItemImgs(), item);
 
         return item;
     }

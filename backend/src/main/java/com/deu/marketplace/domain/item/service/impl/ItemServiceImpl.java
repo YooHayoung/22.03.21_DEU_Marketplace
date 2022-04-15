@@ -49,12 +49,12 @@ public class ItemServiceImpl implements ItemService {
     public Item updateItem(Long itemId, Item item, Long memberId) throws ValidationException {
         Item findItem = itemRepository.findItemFetchJoinByMemberId(itemId).orElseThrow();
         findItem.validWriterIdAndMemberId(memberId);
-        findItem.clearItemImgs();
-        item.getItemImgs().stream().map(itemImg -> ItemImg.builder()
-                .item(findItem)
-                .imgFile(itemImg.getImgFile())
-                .imgSeq(itemImg.getImgSeq())
-                .build()).collect(Collectors.toList());
+//        findItem.clearItemImgs();
+//        item.getItemImgs().stream().map(itemImg -> ItemImg.builder()
+//                .item(findItem)
+//                .imgFile(itemImg.getImgFile())
+//                .imgSeq(itemImg.getImgSeq())
+//                .build()).collect(Collectors.toList());
         findItem.updateItem(item);
         return findItem;
     }

@@ -40,4 +40,14 @@ public class SellItemDto {
         this.dealState = dealState;
         this.wishedMemberId = wishedMemberId;
     }
+
+    public void imgFileToImgUrl(String imgUrl) {
+        this.itemImgFile = imgUrl;
+    }
+
+    public boolean isItemImgFile() {
+        if (this.itemImgFile == null)
+            return false;
+        else return true;
+    }
 }

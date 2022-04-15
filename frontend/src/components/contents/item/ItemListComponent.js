@@ -45,7 +45,7 @@ const ItemListComponent = (props) => {
     return(
         <ul className="itemListCompo">
             {/* <li className="">{props.content.classification}</li> */}
-            <li className="itemImg">{content.itemImgFile===null? '이미지없음' : content.itemImgFile}</li>
+            <li className="itemImg">{content.itemImgFile===null? '이미지없음' : <img src={content.itemImgFile} />}</li>
             <li className="itemTitle">{content.title}</li>
             {renderItemCategory(content.itemCategoryName)}
             {renderLecture(content.lectureName)}

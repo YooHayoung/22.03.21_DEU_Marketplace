@@ -34,4 +34,11 @@ public class ItemImgServiceImpl implements ItemImgService {
     public List<ItemImg> getAllByItemId(Long itemId) {
         return itemImgRepository.findAllByItemId(itemId);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllByItemId(Long itemId) {
+        List<ItemImg> findItemImgs = itemImgRepository.findAllByItemId(itemId);
+        itemImgRepository.deleteInBatch(findItemImgs);
+    }
 }

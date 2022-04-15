@@ -32,6 +32,12 @@ spring:
   profiles:
     include: oauth
 
+  # file upload max size (파일 업로드 크기 설정)
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
 app:
   auth:
     tokenSecret: HrqO4UjEEvMUgDHyn4CFy6F8eY7ujJfj
@@ -49,3 +55,19 @@ logging.level:
 
   org.springframework.security: debug
   # org.hibernate.type: trace
+
+
+# AWS Account Credentials (AWS 접근 키)
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIA4IJIHFWPLVEMT4EQ
+      secretKey: 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
+  
+# AWS S3 bucket Info (S3 버킷정보)
+    s3:
+      bucket: deumarket-img
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

@@ -18,4 +18,8 @@ public class ItemImgResponseDto {
         this.img = itemImg.getImgFile();
         this.seq = itemImg.getImgSeq();
     }
+
+    public void imgToImgUrl(String imgUrl) {
+        this.img = imgUrl;
+    }
 }
