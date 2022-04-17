@@ -10,6 +10,8 @@ import SellContainer from "./containers/SellContainer";
 import ChatRoomListContainer from "./containers/ChatRoomListContainer";
 import ChatRoomContainer from "./containers/ChatRoomContainer";
 import HeaderContainer from "./containers/HeaderContainer";
+import ItemDetailPage from "./pages/ItemDetailPage";
+import ItemDetailContainer from "./containers/ItemDetailContainer";
 
 
 
@@ -21,6 +23,7 @@ function App() {
         <HeaderContainer />
         <Routes>
           <Route path="/" element={<SellContainer />} />
+          <Route path="/item/:itemId" element={<ItemDetailContainer/>} />
           <Route path="/oauth" element={<LoginContainer />} />
           <Route path="/oauth/redirect/*" element={<LoginContainer />} />
           <Route path="/chatRooms" element={<ChatRoomListContainer />} />

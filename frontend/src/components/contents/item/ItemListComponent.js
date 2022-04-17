@@ -5,6 +5,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import "./ItemListComponent.scss";
 import { UseApi } from "../../../api/UseApi";
 import { setWishItem } from "../../../api/Api";
+import { Link } from "../../../../node_modules/react-router-dom/index";
 
 const ItemListComponent = (props) => {
     const [content, setContent] = useState(props.content);
@@ -43,7 +44,10 @@ const ItemListComponent = (props) => {
       };
 
     return(
-        <ul className="itemListCompo">
+        <Link to={{
+            pathname: `/item/${content.itemId}`
+        }}>
+        <ul className="itemListCompo" >
             {/* <li className="">{props.content.classification}</li> */}
             <li className="itemImg">{content.itemImgFile===null? '이미지없음' : <img src={content.itemImgFile} />}</li>
             <li className="itemTitle">{content.title}</li>
@@ -56,6 +60,7 @@ const ItemListComponent = (props) => {
             <Checkbox className="itemWishedMember" icon={<FavoriteBorder />} checkedIcon={<Favorite />} 
                 checked={content.wishedMemberId===null?false:true} onChange={handleChange} />
         </ul>
+        </Link>
     );
 };
 

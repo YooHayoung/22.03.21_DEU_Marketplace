@@ -1,0 +1,85 @@
+ul{
+    list-style:none;
+    padding-left:0px;
+    }
+ 
+
+.itemListCompo {
+    //max-width: 22rem;
+    border: 0.1px solid #444444;
+    font-size: small;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow: hidden;
+    background-color: yellow;
+    display: grid;
+    grid-template-columns: 1.8fr 0.5fr 2.2fr 0.5fr 0.8fr 0.5fr;
+    grid-template-rows: 0.2fr 0.5fr 0.2fr 0.5fr 0.5fr 0.6fr;
+    
+    .itemImg {
+        margin-left: 5px;
+        margin-right: 5px;
+        border: 0.1px solid #444444;
+        grid-column: 1;
+        grid-row: 1/7;
+
+        img {
+            display:block;
+	        width:100%;
+	        height:100%;
+        }
+    }
+    
+    .itemTitle {
+        text-align: left;
+        font-size: large;
+        margin-left: 5px;
+        grid-column: 2/5;
+        grid-row: 1/3;
+    }
+    
+    .itemCategory {
+        border: 1px solid #444444;
+        grid-column: 2;
+        grid-row: 4;
+    }
+
+    .itemLecture {
+        margin-left: 5px;
+        text-align: left;
+        grid-column: 3;
+        grid-row: 4;
+    }
+
+    .itemProfessor {
+        margin-left: 5px;
+        text-align: left;
+        grid-column: 3;
+        grid-row: 5;
+    }
+
+    .itemPrice {
+        margin-left: 5px;
+        text-align: left;
+        font-size: medium;
+        grid-column: 2/4;
+        grid-row: 6;
+    }
+
+    .itemLastModifiedDate {
+        margin-left: 5px;
+        grid-column: 4/7;
+        grid-row: 6;
+    }
+
+    .itemDealState {
+        border: 1px solid #444444;
+        grid-column: 5;
+        grid-row: 2;
+    }
+
+    .itemWishedMember {
+        grid-column: 6;
+        grid-row: 1/3;
+    }
+ }

@@ -51,7 +51,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
 
    const afterGetPage = (res) => {
       if (res.data.body.result.totalPages !== page){
-         // console.log(res.data.body.result);
+         console.log(res.data.body.result);
          setContents([...contents, ...res.data.body.result.content]);
          setPage(page+1);
       }
