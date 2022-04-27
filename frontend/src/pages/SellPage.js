@@ -5,6 +5,8 @@ import axios from "../../node_modules/axios/index";
 import { doLogoutFromNaver, doLogoutFromServer, getItemPage, getNewAccessToken, getTokensFromNaver } from "../api/Api";
 import { UseApi } from "../api/UseApi";
 import ItemListComponent from "../components/contents/item/ItemListComponent";
+import HeaderContainer from "../containers/HeaderContainer";
+import BottomNav from "../components/nav/bottom/BottomNav";
 
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
@@ -107,20 +109,19 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
 
    return (
       <div className="contents">
-         <h1>Sell Page</h1>
-         {/* 로그인하러가는버튼은 임시 */}
-         <Link to={{
+         <HeaderContainer pageName={"팝니다"}/>
+         {/* <Link to={{
             pathname: `/oauth`,
-            state: {},
+            state: {},  
          }}>
             <button>로그인하기</button>
          </Link>
-         {/* 로그아웃 버튼은 나중에 헤더쪽으로 보냄 */}
-         <button onClick={doLogout}>로그아웃</button>
+         <button onClick={doLogout}>로그아웃</button> */}
          <div className="itemList">
          {renderItemList}
          </div>
          <button onClick={getPages}>물품목록불러오기</button>
+         <BottomNav />
       </div>
    );
 };

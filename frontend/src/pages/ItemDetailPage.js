@@ -9,6 +9,8 @@ import ItemDetailLectureInfo from "../components/contents/itemDetail/ItemDetailL
 import ItemDetailMemberInfo from "../components/contents/itemDetail/ItemDetailMemberInfo";
 import ItemDetailPrice from "../components/contents/itemDetail/ItemDetailPrice";
 import ItemDetailTitle from "../components/contents/itemDetail/ItemDetailTitle";
+import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
+import HeaderContainer from "../containers/HeaderContainer";
 
 const ItemDetailPage = ({token, setToken}) => {
     const params = useParams('localhost:3000/item/:itemId');
@@ -100,6 +102,8 @@ const ItemDetailPage = ({token, setToken}) => {
 
     return (
         <div>
+            {/* <BarWithBackOnTop /> */}
+            <HeaderContainer pageName={"상품 상세"} />
             {renderItemImgs()}
             {/* <ItemDetailTitle title={content.itemDetailDto.title} />
             <ItemDetailPrice price={content.itemDetailDto.price} />

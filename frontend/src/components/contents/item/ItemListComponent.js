@@ -6,6 +6,7 @@ import "./ItemListComponent.scss";
 import { UseApi } from "../../../api/UseApi";
 import { setWishItem } from "../../../api/Api";
 import { Link } from "../../../../node_modules/react-router-dom/index";
+import noImg from "/Users/hayoungyoo/yoo_dev/22.03.21_DEU_Marketplace/frontend/src/noImg.png";
 
 const ItemListComponent = (props) => {
     const [content, setContent] = useState(props.content);
@@ -39,6 +40,7 @@ const ItemListComponent = (props) => {
     }
 
     const handleChange = (event) => {
+        event.stopPropagation();
         UseApi(setWishItem, props.token, props.setToken, work, {itemId: content.itemId})
         console.log(content.wishedMemberId);
       };
@@ -46,10 +48,11 @@ const ItemListComponent = (props) => {
     return(
         <Link to={{
             pathname: `/item/${content.itemId}`
-        }}>
-        <ul className="itemListCompo" >
+        }}
+        style={{ textDecoration: 'none', color: 'black' }}>
+        <ul className="itemListCompo">
             {/* <li className="">{props.content.classification}</li> */}
-            <li className="itemImg">{content.itemImgFile===null? '이미지없음' : <img src={content.itemImgFile} />}</li>
+            <li className="itemImg">{content.itemImgFile===null? <img src={noImg} />: <img src={content.itemImgFile} />}</li>
             <li className="itemTitle">{content.title}</li>
             {renderItemCategory(content.itemCategoryName)}
             {renderLecture(content.lectureName)}
@@ -58,7 +61,7 @@ const ItemListComponent = (props) => {
             <li className="itemLastModifiedDate">{content.lastModifiedDate}</li>
             {renderDealState(content.dealState)}
             <Checkbox className="itemWishedMember" icon={<FavoriteBorder />} checkedIcon={<Favorite />} 
-                checked={content.wishedMemberId===null?false:true} onChange={handleChange} />
+                checked={content.wishedMemberId===null?false:true}  onClick={handleChange}/>
         </ul>
         </Link>
     );

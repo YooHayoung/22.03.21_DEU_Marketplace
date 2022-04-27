@@ -1,10 +1,13 @@
 .header {
     display: flex;
+    /* flex-grow: 1 10 1 1 1; */
     background-color: black;
-    height: 60px;
+    height: 3rem;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     justify-content: space-between;
 }
@@ -14,10 +17,20 @@
     padding: 8px 5px;
 }
 
+.header_pageName {
+    flex-grow: 1;
+    background-color: black;
+    color: whitesmoke;
+    padding-left: 50px;
+    text-align: left;
+    /* height: 25px; */
+    font-size: larger;
+}
+
 .header_MenuIcon {
     background-color: black;
     color: whitesmoke;
-    padding-left: 0px;
+    padding-left: 10px;
     height: 25px;
 }
 
@@ -75,8 +88,21 @@
     padding: 5px;
     height: 25px;
 }
+.header_notificationIcon {
+    background-color: black;
+    color: whitesmoke;
+    padding: 5px;
+    height: 25px;
+}
 
 .person {
+    background-color: black;
+    color: whitesmoke;
+    padding: 5px;
+    height: 25px;
+}
+
+.header_arrow {
     background-color: black;
     color: whitesmoke;
     padding: 5px;

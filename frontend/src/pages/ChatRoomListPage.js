@@ -7,6 +7,8 @@ import { useCookies } from "../../node_modules/react-cookie/cjs/index";
 import { Cookies } from "../../node_modules/react-cookie/cjs/index";
 import { UseApi } from "../api/UseApi";
 import { getChatRoomPage } from "../api/Api";
+import HeaderContainer from "../containers/HeaderContainer";
+import BottomNav from "../components/nav/bottom/BottomNav";
 
 const ChatRoomListPage = ({ token, setToken }) => {
    const [contents, setContents] = useState([]);
@@ -18,7 +20,7 @@ const ChatRoomListPage = ({ token, setToken }) => {
    // }
 
    const work = (res) => {
-      setContents(res.data.content);
+      setContents(res.data.body.result.content);
    }
 
    useEffect(() => {
@@ -31,8 +33,10 @@ const ChatRoomListPage = ({ token, setToken }) => {
 
    return (
       <div className="div_chatRoomPage">
-         <h1>채팅방</h1>
+         <HeaderContainer pageName={"채팅방 목록"} />
+         {/* <h1>채팅방</h1> */}
          {renderChatRooms}
+         <BottomNav />
       </div>
    );
 };

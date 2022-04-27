@@ -12,6 +12,7 @@ import ChatRoomContainer from "./containers/ChatRoomContainer";
 import HeaderContainer from "./containers/HeaderContainer";
 import ItemDetailPage from "./pages/ItemDetailPage";
 import ItemDetailContainer from "./containers/ItemDetailContainer";
+import NotFound from "./pages/NotFound";
 
 
 
@@ -20,7 +21,6 @@ function App() {
   return (
     <div className="App">
       <CookiesProvider>
-        <HeaderContainer />
         <Routes>
           <Route path="/" element={<SellContainer />} />
           <Route path="/item/:itemId" element={<ItemDetailContainer/>} />
@@ -28,6 +28,7 @@ function App() {
           <Route path="/oauth/redirect/*" element={<LoginContainer />} />
           <Route path="/chatRooms" element={<ChatRoomListContainer />} />
           <Route path="/chatRooms/:chatRoomId" element={<ChatRoomContainer />} />
+          <Route path="/notFound" element={<NotFound />} />
         </Routes>
       </CookiesProvider>
     </div>

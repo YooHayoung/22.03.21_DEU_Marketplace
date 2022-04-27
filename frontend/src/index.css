@@ -8,6 +8,8 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
   word-break: break-all;
+  padding-top: 3rem;
+  padding-bottom: 3.5rem;
 }
 
 code {

@@ -1,14 +1,14 @@
-.div_messageInputOnBottom {
+.div_bottomNav {
    margin-left: auto;
    margin-right: auto;
    overflow: hidden;
+   display: flex;
+   background: darkgrey;
    position: fixed;
+   // position: sticky;
    left: 0;
    right: 0;
    bottom: 0;
-
-   display: flex;
-   background: darkgrey;
    height: 3.5rem;
 
    input {
@@ -36,4 +36,45 @@
       padding-right: 1.5rem;
    }
 
+}
+
+.mainBottomNav {
+   button{
+      background: none;
+      outline: none;
+      border: none;
+      padding-left: 0;
+      padding-right: 0;
+   }
+
+   width: 100%;
+   display: grid;
+   
+   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
+   .btn_sell {
+      grid-column: 1;
+      width: 100%;
+      height: 100%;
+   }
+   .btn_buy {
+      grid-column: 2;
+      width: 100%;
+      height: 100%;
+   }
+   .btn_regist {
+      grid-column: 3;
+      width: 100%;
+      height: 100%;
+   }
+   .btn_board {
+      grid-column: 4;
+      width: 100%;
+      height: 100%;
+   }
+   .btn_chat {
+      grid-column: 5;
+      width: 100%;
+      height: 100%;
+   }
 }

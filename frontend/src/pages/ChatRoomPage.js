@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "../../node_modules/axios/index";
 import { useMatch, useParams } from "../../node_modules/react-router-dom/index";
 import ChatLogs from "../components/contents/chatRoom/ChatLogs";
@@ -25,6 +25,9 @@ import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
 import './ChatRoomPage.scss'
 import { getChatPage, getChatRoom } from "../api/Api";
 import { UseApi } from "../api/UseApi";
+import BottomNav from "../components/nav/bottom/BottomNav";
+import HeaderContainer from "../containers/HeaderContainer";
+import { useSelector } from "react-redux";
 
 // var sock = SockJS("/stomp/chat");
 // var client = null;
@@ -42,6 +45,7 @@ const ChatRoomPage = ({ token, setToken }) => {
       },
    });
    const [chats, setChats] = useState([]);
+   const [isChatsLast, setIsChatsLast] = useState(false);
    const [newChats, setNewChats] = useState([]);
    const [chatPage, setChatPage] = useState(0);
    const [message, setMessage] = useState('');
@@ -55,9 +59,10 @@ const ChatRoomPage = ({ token, setToken }) => {
    });
 
    const getRoomInfoAndChatLogs = (res) => {
-      setRoomInfo(res.data.chatRoomInfoDto);
-      setChatPage(res.data.chatLogDtoPage.pageable.pageNumber);
-      setChats(chats.concat(res.data.chatLogDtoPage.content));
+      setRoomInfo(res.data.body.result.chatRoomInfo);
+      setChatPage(res.data.body.result.chatLogInfos.pageable.pageNumber);
+      setChats(chats.concat(res.data.body.result.chatLogInfos.content));
+      setIsChatsLast(res.data.body.result.chatLogInfos.last);
    }
 
    useEffect(() => {
@@ -67,8 +72,8 @@ const ChatRoomPage = ({ token, setToken }) => {
    //////////////////////////////////////
 
    const getChatLogs = (res) => {
-      setChatPage(res.data.pageable.pageNumber);
-      setChats(chats.concat(res.data.content));
+      setChatPage(res.data.body.result.pageable.pageNumber);
+      setChats(chats.concat(res.data.body.result.content));
    }
 
    const getChatPageApiObject = {
@@ -184,16 +189,55 @@ const ChatRoomPage = ({ token, setToken }) => {
       setMessage("");
    };
 
+   const scrollRef = useRef();
+   const scrollToBottom = () => {
+      console.log(scrollRef.current);
+      if (scrollRef.current) {
+         // scrollRef.current.scrollTop = scrollRef.current.scrollHeight + 68;
+         // console.log(scrollRef.current.scrollHeight);
+         // console.log(document.body.scrollHeight);
+         // scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' });
+         document.body.scrollIntoView(false);
+      }
+   };
 
+   const scrollToTop = () => {
+      console.log(scrollRef.current);
+      if (scrollRef.current) {
+         scrollRef.current.scrollTop = scrollRef.current.scrollHeight + 68;
+         console.log(scrollRef.current.scrollHeight);
+         console.log(document.body.scrollHeight);
+         scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'end' });
+         // document.body.scrollIntoView(true);
+      }
+   };
+
+   // useEffect(() => {
+   //    scrollToBottom();
+   // }, [chats]);
+   useEffect(() => {
+      scrollToBottom();
+   }, [newChats]);
+
+   const onScrollTop = () => {
+      if (!isChatsLast) {
+         // getChats();
+         // 여기 부터 코드 작성
+         // 스크롤 올리면 데이터 가져오기 실행
+      }
+   }
 
    return (
       <div className="div_chatRoomPage">
-         <BarWithBackOnTop />
-         <div className="div_contents">
-            <button onClick={getChats}>불러오기</button>
+         <HeaderContainer pageName={"채팅내역"}/>
+         <div className="div_contents" ref={scrollRef}>
             <ItemInfo itemInfo={roomInfo.itemInfo} />
+            {onScrollTop()}
+            <div className="div_chatLogs">
+            <button onClick={getChats}>불러오기</button>
             {renderChatLogs(chats)}
             {renderNewChatLogs(newChats)}
+            </div>
          </div>
          {/* <div>
             {chatMessages && chatMessages.length > 0 && (
@@ -214,7 +258,7 @@ const ChatRoomPage = ({ token, setToken }) => {
                <button onClick={() => publish(message)}>send</button>
             </div>
          </div> */}
-         <MessageInputOnBottom onClick={publish} />
+         <BottomNav onClick={publish} />
       </div>
    );
 };

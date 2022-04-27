@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import './BottomNav.scss'
 
-
-
 const MessageInputOnBottom = (props) => {
    const [message, setMessage] = useState('');
 
@@ -28,7 +26,7 @@ const MessageInputOnBottom = (props) => {
    }
 
    return (
-      <div className="div_messageInputOnBottom">
+      <div className="div_bottomNav">
          <input type={'text'} value={message} onChange={onChange} onKeyPress={enterKeyEventHandler} placeholder="채팅을 입력하세요" />
          <button onClick={onClick}>
             전송
