@@ -1,10 +1,13 @@
 import React from "react";
+import { Paper } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemDetailTitle = (props) => {
     return (
-        <div>
-            {props.title}
-        </div>
+        // <div className="div_class">
+        <Paper className="div_class">
+            <div className="label">제목</div><div className="content">{props.title}</div>
+        </Paper>
+        // </div>
     );
 };
 

@@ -28,7 +28,7 @@ const Header = (props) => {
             return (
             <>
             <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
-            <div className='header_pageName'>{pageName}</div>
+            <div className='header_pageName'><b>{pageName}</b></div>
             <SearchIcon className="header_searchIcon" fontSize={"large"} />
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
             <Person className="person" fontSize={"large"}/>

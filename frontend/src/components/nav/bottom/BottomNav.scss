@@ -40,11 +40,19 @@
 
 .mainBottomNav {
    button{
+      margin: auto;
       background: none;
+      background-color: white;
       outline: none;
       border: none;
       padding-left: 0;
       padding-right: 0;
+      border: 0.3px solid black;
+      // border-radius: 100%;
+      width: 100%;
+      height: 100%;
+      font-size: small;
+      font-weight: bolder;
    }
 
    width: 100%;
@@ -54,27 +62,18 @@
 
    .btn_sell {
       grid-column: 1;
-      width: 100%;
-      height: 100%;
    }
    .btn_buy {
       grid-column: 2;
-      width: 100%;
-      height: 100%;
    }
    .btn_regist {
       grid-column: 3;
-      width: 100%;
-      height: 100%;
    }
    .btn_board {
       grid-column: 4;
-      width: 100%;
-      height: 100%;
    }
    .btn_chat {
       grid-column: 5;
-      width: 100%;
-      height: 100%;
+      
    }
 }

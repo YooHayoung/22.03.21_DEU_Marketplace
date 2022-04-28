@@ -14,7 +14,7 @@ ul{
     padding-top: 5px;
     padding-bottom: 5px;
     overflow: hidden;
-    background-color: yellow;
+    // background-color: yellow;
     display: grid;
     grid-template-columns: 1.8fr 0.5fr 2.2fr 0.5fr 0.8fr 0.5fr;
     grid-template-rows: 0.2fr 0.3fr 0.2fr 0.5fr 0.5fr 0.6fr;
@@ -83,7 +83,9 @@ ul{
     }
 
     .itemDealState {
+        // width: 80%;
         border: 1px solid #444444;
+        box-sizing: content-box;
         grid-column: 5;
         grid-row: 2;
     }

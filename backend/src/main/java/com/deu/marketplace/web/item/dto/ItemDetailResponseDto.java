@@ -32,6 +32,11 @@ public class ItemDetailResponseDto {
                     .wishCount(tuple.get(1, Long.class))
                     .myWish(tuple.get(2, Boolean.class))
                     .build();
+        } else {
+            this.wishInfo = ItemWishInfo.builder()
+                    .wishCount(0)
+                    .myWish(false)
+                    .build();
         }
         if (deal.isPresent()) {
             this.dealState = deal.orElseThrow().getDealState();

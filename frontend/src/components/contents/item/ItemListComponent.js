@@ -43,7 +43,7 @@ const ItemListComponent = (props) => {
         event.stopPropagation();
         UseApi(setWishItem, props.token, props.setToken, work, {itemId: content.itemId})
         console.log(content.wishedMemberId);
-      };
+    };
 
     return(
         <Link to={{
@@ -53,7 +53,7 @@ const ItemListComponent = (props) => {
         <ul className="itemListCompo">
             {/* <li className="">{props.content.classification}</li> */}
             <li className="itemImg">{content.itemImgFile===null? <img src={noImg} />: <img src={content.itemImgFile} />}</li>
-            <li className="itemTitle">{content.title}</li>
+            <li className="itemTitle"><b>{content.title}</b></li>
             {renderItemCategory(content.itemCategoryName)}
             {renderLecture(content.lectureName)}
             {renderProfessor(content.professorName)}
@@ -61,7 +61,7 @@ const ItemListComponent = (props) => {
             <li className="itemLastModifiedDate">{content.lastModifiedDate}</li>
             {renderDealState(content.dealState)}
             <Checkbox className="itemWishedMember" icon={<FavoriteBorder />} checkedIcon={<Favorite />} 
-                checked={content.wishedMemberId===null?false:true}  onClick={handleChange}/>
+                checked={content.wishedMemberId===null?false:true} onClick={handleChange}/>
         </ul>
         </Link>
     );
