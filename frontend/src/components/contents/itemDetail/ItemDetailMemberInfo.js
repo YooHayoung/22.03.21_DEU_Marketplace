@@ -30,7 +30,7 @@ const ItemDetailMemberInfo = (props) => {
           },
           children: `${name.substr(0,1)}`,
         };
-      }
+    }
 
     return (
         <Paper className="div_memInfo">
