@@ -61,5 +61,9 @@ public class ChatRoomInfoDto {
             this.price = price;
             this.dealState = dealState;
         }
+
+        public void imgToImgUrl(String url) {
+            this.itemImg = url;
+        }
     }
 }

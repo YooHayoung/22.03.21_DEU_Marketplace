@@ -1,16 +1,30 @@
 import React from "react";
 
 import './css/ItemInfo.scss'
+import noImg from '../../../noImg.png'
+import { Button, Card } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemInfo = (props) => {
+   const renderDealState = (dealState) => {
+      if (dealState === 'APPOINTMENT') return "예약중";
+      else if (dealState === 'COMPLETE') return "거래완료";
+      else return null;
+   }
+
    return (
-      <div className="div_itemInfo">
-         <div className="itemImg">{props.itemInfo.itemImg === null ? '이미지 없음' : props.itemInfo.itemImg}</div>
+      <Card className="div_itemInfo">
+         {/* <div className="itemImg">{props.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.itemInfo.itemImg} />}</div>
          <div className="title">{props.itemInfo.title}</div>
-         <div className="price">{props.itemInfo.price}</div>
-         <div className="dealState">{props.itemInfo.dealState}</div>
-         <div className="btn_stateChange">상태변경</div>
-      </div>
+         <div className="price">{props.itemInfo.price.toLocaleString()}원</div>
+         <div className="dealState">{renderDealState(props.itemInfo.dealState)}</div>
+         <Button className="btn_stateChange" variant="contained" size="small">{props.itemInfo.dealState?'상태변경':'예약하기'}</Button> */}
+
+<div className="itemImg">{props.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.itemInfo.itemImg} />}</div>
+         <div className="title">제목제목 제목제ㄱㅁ고좀롭ㄷㄹㅂㄷㅍㅂㅈㄷㄹ</div>
+         <div className="price">{(999999999).toLocaleString()}원</div>
+         <div className="dealState">{renderDealState(props.itemInfo.dealState)}</div>
+         <Button className="btn_stateChange" variant="contained" size="small">{props.itemInfo.dealState?'상태변경':'예약하기'}</Button>
+      </Card>
    );
 };
 

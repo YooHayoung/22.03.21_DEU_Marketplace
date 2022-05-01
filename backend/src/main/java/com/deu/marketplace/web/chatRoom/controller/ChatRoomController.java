@@ -12,6 +12,7 @@ import com.deu.marketplace.domain.member.service.MemberService;
 import com.deu.marketplace.query.chatRoom.dto.ChatRoomInfoDto;
 import com.deu.marketplace.query.chatRoom.dto.ChatRoomViewDto;
 import com.deu.marketplace.query.chatRoom.repository.ChatRoomViewRepository;
+import com.deu.marketplace.s3.S3Uploader;
 import com.deu.marketplace.web.chat.dto.ChatLogDto;
 import com.deu.marketplace.web.chatRoom.dto.ChatRoomListDto;
 import com.deu.marketplace.web.chatRoom.dto.EnterChatRoomDto;
@@ -48,6 +49,7 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatLogService chatLogService;
     private final ChatRoomViewRepository chatRoomViewRepository;
+    private final S3Uploader s3Uploader;
 //    private final ChatLogService chatLogService;
 
     @PostMapping("/new")
@@ -85,6 +87,7 @@ public class ChatRoomController {
                 chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
         for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
             chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
+            chatRoomViewDto.imgToImgUrl(s3Uploader.toUrl(chatRoomViewDto.getItemInfo().getItemImg()));
         }
 
         return ApiResponse.success("result", chatRoomListDtos);
@@ -120,6 +123,7 @@ public class ChatRoomController {
         ChatRoomInfoDto chatRoomInfoDto =
                 chatRoomViewRepository.getChatRoomInfo(chatRoomId, memberId).orElseThrow();
         chatRoomInfoDto.setMyId(memberId);
+        chatRoomInfoDto.getItemInfo().imgToImgUrl(s3Uploader.toUrl(chatRoomInfoDto.getItemInfo().getItemImg()));
         LocalDateTime now = LocalDateTime.now();
 
         Pageable pageable = PageRequest.of(0, 2, Sort.by("lastModifiedDate").descending());

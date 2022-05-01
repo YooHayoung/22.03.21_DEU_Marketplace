@@ -1,15 +1,67 @@
-.div_chatRoomPage {
+.div_contents {
    margin-left: auto;
    margin-right: auto;
    overflow: hidden;
-   background-color: white;
+   // background-color: rgb(206, 226, 255);
 }
 
 .div_itemInfo {
    position: fixed;
-   height: 9rem;
+   z-index: 9;
+   // height: 9rem;
 }
 
 .div_chatLogs {
-   padding-top: 9rem;
+   padding-top: 5rem;
+   margin-bottom: 0.8rem;
+}
+
+
+.btn_getChats {
+   width: 100%;
+   .MuiButton-label {
+      font-size: x-small;
+      color: gray;
+   }
+   .MuiButtonBase-root {
+      position: inherit;
+   }
+}
+// .MuiButtonBase-root {
+//    position: inherit;
+// }
+
+.contents {
+   width: fit-content;
+   height: fit-content;
+   // border: 0.5px solid black;
+   border-radius: 20px;
+   // background-color: rgb(255, 255, 79);
+   font-size: 0.9rem;
+}
+
+.sendTime {
+   font-size: 0.5rem;
+   width: fit-content;
+   height: fit-content;
+}
+.isRead {
+   width: fit-content;
+   height: fit-content;
+}
+
+.chatDate {
+   border: 1px solid black;
+   border-radius: 30px;
+   background-color: white;
+   font-size: 0.7rem;
+   width: fit-content;
+   padding-left: 7px;
+   padding-right: 7px;
+   padding-top: 2px;
+   padding-bottom: 2px;
+   margin-top: 8px;
+   margin-bottom: 8px;
+   margin-left: auto;
+   margin-right: auto;
 }

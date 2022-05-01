@@ -45,4 +45,8 @@ public class ChatRoomViewDto {
                 .lastModifiedDate(lastModifiedTime)
                 .build();
     }
+
+    public void imgToImgUrl(String url) {
+        this.itemInfo.imgToImgUrl(url);
+    }
 }

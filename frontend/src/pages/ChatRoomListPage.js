@@ -32,12 +32,15 @@ const ChatRoomListPage = ({ token, setToken }) => {
    const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));
 
    return (
-      <div className="div_chatRoomPage">
+      <>
+      <div className="div_contents">
          <HeaderContainer pageName={"채팅방 목록"} />
          {/* <h1>채팅방</h1> */}
          {renderChatRooms}
-         <BottomNav />
+         {renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}
       </div>
+      <BottomNav />
+      </>
    );
 };
 

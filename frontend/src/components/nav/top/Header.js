@@ -24,11 +24,19 @@ const Header = (props) => {
     */
     const selectHeader = (pageName) => {
         // if(type === 'main'){
-        if (url == '/' || url == '/chatRooms') {
+        let pageTitle;
+        if (pageName == 'SELL') {
+            pageTitle = '팝니다';
+        } else if (pageName == 'BUY') {
+            pageTitle = '삽니다';
+        } else {
+            pageTitle = pageName;
+        }
+        if (url == '/' || url == '/chatRooms' || url == '/buy' || url == '/sell') {
             return (
             <>
             <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
-            <div className='header_pageName'><b>{pageName}</b></div>
+            <div className='header_pageName'><b>{pageTitle}</b></div>
             <SearchIcon className="header_searchIcon" fontSize={"large"} />
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
             <Person className="person" fontSize={"large"}/>
@@ -41,7 +49,7 @@ const Header = (props) => {
             return (
                 <>
                 <ArrowBackIcon className="header_arrow" onClick={() => navigate(-1)} fontSize={"large"} />
-                <div className='header_pageName'>{pageName}</div>
+                <div className='header_pageName'>{pageTitle}</div>
                 </>
             );
         }

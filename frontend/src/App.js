@@ -13,6 +13,7 @@ import HeaderContainer from "./containers/HeaderContainer";
 import ItemDetailPage from "./pages/ItemDetailPage";
 import ItemDetailContainer from "./containers/ItemDetailContainer";
 import NotFound from "./pages/NotFound";
+import BottomNav from "./components/nav/bottom/BottomNav";
 
 
 
@@ -23,6 +24,7 @@ function App() {
       <CookiesProvider>
         <Routes>
           <Route path="/" element={<SellContainer />} />
+          <Route path="/:classification" element={<SellContainer />} />
           <Route path="/item/:itemId" element={<ItemDetailContainer/>} />
           <Route path="/oauth" element={<LoginContainer />} />
           <Route path="/oauth/redirect/*" element={<LoginContainer />} />

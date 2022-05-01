@@ -25,6 +25,7 @@
     text-align: left;
     /* height: 25px; */
     font-size: larger;
+    min-width: 10rem;
 }
 
 .header_MenuIcon {

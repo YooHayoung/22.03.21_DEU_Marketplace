@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "../../node_modules/react-router-dom/index";
+import React, { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "../../node_modules/react-router-dom/index";
 import jwt_decode from "jwt-decode";
 import axios from "../../node_modules/axios/index";
 import { doLogoutFromNaver, doLogoutFromServer, getItemPage, getNewAccessToken, getTokensFromNaver } from "../api/Api";
@@ -11,9 +11,12 @@ import BottomNav from "../components/nav/bottom/BottomNav";
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
    let navigate = useNavigate();
+   const params = useParams('localhost:3000/:classification');
+   const classification = params.classification?params.classification.toUpperCase():'SELL'
+   // console.log(classification);
    const [searchCond, setSearchCond] = useState(
       {
-         classification: 'SELL',
+         classification: classification,
          itemCategoryId: '',
          lectureName: '',
          professorName: '',
@@ -21,6 +24,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          priceGoe: '',
          priceLoe: '',
       });
+   console.log(searchCond.classification);
    const [page, setPage] = useState(0);
    const [contents, setContents] = useState([]);
 
@@ -48,10 +52,11 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          console.log(Date.now() / 1000);
          getPages();
       }
-   }, [])
+   }, [searchCond])
 
 
    const afterGetPage = (res) => {
+      console.log(res);
       if (res.data.body.result.totalPages !== page){
          console.log(res.data.body.result);
          setContents([...contents, ...res.data.body.result.content]);
@@ -105,11 +110,19 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
       })();
    }
 
-   const renderItemList = contents.map((content) => (<ItemListComponent content={content} token={token} setToken={setToken} key={content.itemId} />));
+   const renderItemList = useCallback(() => {
+      return contents.map((content) => (<ItemListComponent content={content} token={token} setToken={setToken} key={content.itemId} />));
+   });
+
+   const afteBottomButtonClick = () => {
+      setPage(0);
+      setContents([]);
+   }
 
    return (
-      <div className="contents">
-         <HeaderContainer pageName={"팝니다"}/>
+      <>
+      <div className="div_contents">
+         <HeaderContainer pageName={searchCond.classification}/>
          {/* <Link to={{
             pathname: `/oauth`,
             state: {},  
@@ -118,11 +131,12 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          </Link>
          <button onClick={doLogout}>로그아웃</button> */}
          <div className="itemList">
-         {renderItemList}
+         {renderItemList()}
          </div>
          <button onClick={getPages}>물품목록불러오기</button>
-         <BottomNav />
       </div>
+      <BottomNav thisPage={searchCond.classification} searchCond={searchCond} setSearchCond={setSearchCond} work={afteBottomButtonClick}/>
+      </>
    );
 };
 

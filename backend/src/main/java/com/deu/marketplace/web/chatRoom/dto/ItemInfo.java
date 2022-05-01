@@ -18,4 +18,6 @@ public class ItemInfo {
         this.title = title;
         this.dealState = dealState;
     }
+
+    public void imgToImgUrl(String url) {this.itemImg = url;}
 }

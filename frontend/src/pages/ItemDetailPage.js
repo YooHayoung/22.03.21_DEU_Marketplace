@@ -18,8 +18,10 @@ import ChatIcon from '@mui/icons-material/Chat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 import './ItemDetailPage.scss'
+import { useNavigate } from "../../node_modules/react-router/index";
 
 const ItemDetailPage = ({token, setToken}) => {
+    let navigate = useNavigate();
     const params = useParams('localhost:3000/item/:itemId');
     const [content, setContent] = useState({wishInfo:{wishCount: 0, myWish: false}}, {imgList:[]});
     const [loading, setLoading] = useState(false);
@@ -149,18 +151,28 @@ const ItemDetailPage = ({token, setToken}) => {
         })();
     };
 
+    const chatRoomBtnClick = () => {
+        if (content.myChatRoomId) {
+            navigate(`/chatRooms/${content.myChatRoomId}`);
+        } else {
+
+        }
+    }
+
     return (
         <div>
             <HeaderContainer pageName={"상품 상세"} />
-            {renderItemImgs()}
-            {renderDetailPage()}
+            <div className="div_contents">
+                {renderItemImgs()}
+                {renderDetailPage()}
+            </div>
             <Divider/>
             <Paper className="footer">
                 <Button className="btn_wish" variant="contained" onClick={handleChange}>
                     <div className="wish_icon">{content.wishInfo.myWish?<FavoriteIcon />:<FavoriteBorderIcon />}</div>
                     <div className="wish_label">{content.wishInfo.myWish?"찜 취소":"찜 하기"}</div>
                 </Button>
-                <Button className="btn_chat" variant="contained">
+                <Button className="btn_chat" variant="contained" onClick={() => chatRoomBtnClick()}>
                     <div className="chat_icon">{content.myChatRoomId?<ChatIcon />:<ChatBubbleOutlineIcon />}</div>
                     <div className="chat_label">채팅하기</div>
                 </Button>

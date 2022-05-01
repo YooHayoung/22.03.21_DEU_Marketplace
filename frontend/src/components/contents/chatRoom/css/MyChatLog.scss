@@ -1,24 +1,41 @@
 .div_myChatLog {
    //max-width: 22rem;
-   padding-top: 10px;
-   padding-bottom: 10px;
+   padding-top: 0.2rem;
+   padding-bottom: 0.1rem;
+   margin-left: auto;
+   width: fit-content;
+   height: fit-content;
    overflow: hidden;
-   background-color: yellow;
    display: grid;
-   grid-template-columns: 1fr 2fr 5fr;
+   grid-template-columns: 1fr;
+   text-align: right;
+   // width: 90%;
    
    .contents {
       grid-column: 3;
       grid-row: 1;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      margin-right: 10px;
+      // margin-bottom: 10px;
+      background-color: rgb(255, 255, 79);
    }
    
    .sendTime {
       grid-column: 2;
       grid-row: 1;
+      // font-size: 0.5rem;
+      margin-right: 0.4rem;
+      // margin-left: auto;
+      margin-top: auto;
+      margin-left: 2rem;
+      margin-bottom: 10px;
    }
    
-   .isRead {
-      grid-column: 1;
-      grid-row: 1;
-   }
+   // .isRead {
+   //    grid-column: 1;
+   //    grid-row: 1;
+   // }
 }

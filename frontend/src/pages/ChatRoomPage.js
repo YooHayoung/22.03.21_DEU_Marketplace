@@ -28,6 +28,7 @@ import { UseApi } from "../api/UseApi";
 import BottomNav from "../components/nav/bottom/BottomNav";
 import HeaderContainer from "../containers/HeaderContainer";
 import { useSelector } from "react-redux";
+import { Button } from "../../node_modules/@material-ui/core/index";
 
 // var sock = SockJS("/stomp/chat");
 // var client = null;
@@ -57,11 +58,13 @@ const ChatRoomPage = ({ token, setToken }) => {
       senderId: 0,
       message: ''
    });
+   const [isLastPage, setIsLastPage] = useState(true);
 
    const getRoomInfoAndChatLogs = (res) => {
       setRoomInfo(res.data.body.result.chatRoomInfo);
       setChatPage(res.data.body.result.chatLogInfos.pageable.pageNumber);
       setChats(chats.concat(res.data.body.result.chatLogInfos.content));
+      // console.log(res.data.body.result.chatLogInfos.last);
       setIsChatsLast(res.data.body.result.chatLogInfos.last);
    }
 
@@ -74,6 +77,8 @@ const ChatRoomPage = ({ token, setToken }) => {
    const getChatLogs = (res) => {
       setChatPage(res.data.body.result.pageable.pageNumber);
       setChats(chats.concat(res.data.body.result.content));
+      console.log(res.data.body.result.last);
+      setIsChatsLast(res.data.body.result.last);
    }
 
    const getChatPageApiObject = {
@@ -83,6 +88,7 @@ const ChatRoomPage = ({ token, setToken }) => {
    }
 
    const getChats = () => {
+      console.log(isChatsLast);
       UseApi(getChatPage, token, setToken, getChatLogs, getChatPageApiObject)
    }
 
@@ -90,45 +96,155 @@ const ChatRoomPage = ({ token, setToken }) => {
    useEffect(() => {
 
    }, [chats])
-   let targetChatCount = 0;
-   const renderChatLogs = (chats) => {
-      return (JSON.parse(JSON.stringify(chats)).reverse().map((chat, idx) => {
-         if (roomInfo.myId === chat.senderId) {
-            targetChatCount = 0;
-            return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
-         } else {
-            if (targetChatCount === 0) {
-               targetChatCount++;
-               return (
-                  <React.Fragment key={'f' + idx}>
-                     <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
-                     <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
-                  </React.Fragment>);
-            } else {
-               return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
-            }
-         }
-      }))
-   }
 
-   const renderNewChatLogs = (chats) => {
-      return (chats.map((chat, idx) => {
-         if (roomInfo.myId === chat.senderId) {
-            targetChatCount = 0;
-            return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+   let targetChatCount = 0;
+   let chatDate = new Date();
+   chatDate.setDate(chatDate.getDate()+10);
+   const renderChatLogs = (chats) => {
+      const result = (JSON.parse(JSON.stringify(chats)).reverse().map((chat, idx) => {
+         const thisChatDate = new Date(Date.parse((chat.lastModifiedDate).replace(' ', 'T')));
+         if (chatDate.getFullYear() == thisChatDate.getFullYear() 
+               && chatDate.getMonth() == thisChatDate.getMonth()
+               && chatDate.getDate() == thisChatDate.getDate()) {
+                  chatDate = thisChatDate;
+                  console.log("nn")
+                  if (roomInfo.myId === chat.senderId) {
+                     targetChatCount = 0;
+                     return (<><MyChatLog chatInfo={chat} key={chat.chatLogId} /></>);
+                  } else {
+                     if (targetChatCount === 0) {
+                        targetChatCount++;
+                        return (
+                           <React.Fragment key={'f' + idx}>
+                              <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                              <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                           </React.Fragment>);
+                     } else {
+                        return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+                     }
+                  }
          } else {
-            if (targetChatCount === 0) {
-               targetChatCount++;
-               return (
-                  <React.Fragment key={'f' + idx}>
-                     <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
-                     <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
-                  </React.Fragment>);
+            chatDate = thisChatDate;
+            console.log("else")
+            if (roomInfo.myId === chat.senderId) {
+               targetChatCount = 0;
+               return (<React.Fragment key={'f' + idx}>{chatDate.getFullYear() == thisChatDate.getFullYear() 
+                  && chatDate.getMonth() == thisChatDate.getMonth()
+                  && chatDate.getDate() == thisChatDate.getDate()?<div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div>:null}<MyChatLog chatInfo={chat} key={chat.chatLogId} /></React.Fragment>);
             } else {
-               return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+               if (targetChatCount === 0) {
+                  targetChatCount++;
+                  return (
+                     <React.Fragment key={'f' + idx}>
+                        {chatDate.getFullYear() == thisChatDate.getFullYear() 
+                  && chatDate.getMonth() == thisChatDate.getMonth()
+                  && chatDate.getDate() == thisChatDate.getDate()?<div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div>:null}
+                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                        <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                     </React.Fragment>);
+               } else {
+                  return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+               }
             }
          }
+      }));
+      return result;
+      // return (JSON.parse(JSON.stringify(chats)).reverse().map((chat, idx) => {
+      //    if (roomInfo.myId === chat.senderId) {
+      //       targetChatCount = 0;
+      //       return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+      //    } else {
+      //       if (targetChatCount === 0) {
+      //          targetChatCount++;
+      //          return (
+      //             <React.Fragment key={'f' + idx}>
+      //                <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+      //                <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+      //             </React.Fragment>);
+      //       } else {
+      //          return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+      //       }
+      //    }
+      // }))
+   }
+   /*
+      1. chat의 젤 위에거랑 비교. 같다면 그냥 출력.
+      2. 날짜가 다르다면 newChat과 비교. 같다면 그냥 출력.
+      3. newChat이 없거나 날짜가 다르다면 찍는다.
+   */
+
+   let newTargetChatCount = 0;
+   let newChatDate;
+   const renderNewChatLogs = (nchats) => {
+      // return null;
+      let origChatDate;
+      if (chats.length!=0) {
+         origChatDate = new Date(Date.parse((chats[0].lastModifiedDate).replace(' ', 'T')));
+         newChatDate = origChatDate;
+         //////////////////
+      return (nchats.map((chat, idx) => {
+         const thisChatDate = new Date(Date.parse((chat.lastModifiedDate).replace(' ', 'T')));
+         if (newChatDate.getFullYear() == thisChatDate.getFullYear()
+            && newChatDate.getMonth() == thisChatDate.getMonth()
+            && newChatDate.getDate() == thisChatDate.getDate()) {
+               if (roomInfo.myId === chat.senderId) {
+                  targetChatCount = 0;
+                  return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+               } else {
+                  if (targetChatCount === 0) {
+                     targetChatCount++;
+                     return (
+                        <React.Fragment key={'f' + idx}>
+                           <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                           <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                        </React.Fragment>);
+                  } else {
+                     return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+                  }
+               }
+         } else {
+            newChatDate = thisChatDate;
+            if (roomInfo.myId === chat.senderId) {
+               newTargetChatCount = 0;
+               return (<React.Fragment key={'f' + idx}><div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div><MyChatLog chatInfo={chat} key={chat.chatLogId} /></React.Fragment>);
+            } else {
+               if (newTargetChatCount === 0) {
+                  newTargetChatCount++;
+                  return (
+                     <React.Fragment key={'f' + idx}>
+                        <div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div>
+                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                        <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+                     </React.Fragment>);
+               } else {
+                  return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+               }
+            }
+            
+         }
+
+
+
+
+         // if (roomInfo.myId === chat.senderId) {
+         //    targetChatCount = 0;
+         //    return (<MyChatLog chatInfo={chat} key={chat.chatLogId} />);
+         // } else {
+         //    if (targetChatCount === 0) {
+         //       targetChatCount++;
+         //       return (
+         //          <React.Fragment key={'f' + idx}>
+         //             <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+         //             <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
+         //          </React.Fragment>);
+         //    } else {
+         //       return (<TargetChatLog chatInfo={chat} key={chat.chatLogId} />);
+         //    }
+         // }
       }))
+   } else {
+      return null;
+   }
    }
 
 
@@ -234,11 +350,52 @@ const ChatRoomPage = ({ token, setToken }) => {
             <ItemInfo itemInfo={roomInfo.itemInfo} />
             {onScrollTop()}
             <div className="div_chatLogs">
-            <button onClick={getChats}>불러오기</button>
-            {renderChatLogs(chats)}
-            {renderNewChatLogs(newChats)}
+               {/* <button onClick={getChats}>불러오기</button> */}
+               {isChatsLast?null:(<Button className="btn_getChats" onClick={getChats}>불러오기</Button>)}
+               {/* {chatDate.getTime()} */}
+               {renderChatLogs(chats)}
+               {renderNewChatLogs(newChats)}
+               {/* <div className="div_myChatLog">
+                <div className="contents">내용내용내용내용내용내용내용</div>
+                <div className="sendTime">2022-04-30 19:28:20</div>
             </div>
-         </div>
+            <div className="div_myChatLog">
+                <div className="contents">내용내용내용내용내용내용내용</div>
+                <div className="sendTime">2022-04-30 19:28:20</div>
+            </div>
+            <div className="div_targetNickname">닉네임</div>
+            <div className="div_targetChatLog">
+                <div className="contents">채팅내용채팅내용채팅내용</div>
+                <div className="sendTime">2022-04-30 19:30:11</div>
+            </div>
+            <div className="div_targetChatLog">
+                <div className="contents">채팅내용채팅내용채팅내용</div>
+                <div className="sendTime">2022-04-30 19:30:11</div>
+            </div>
+            <div className="div_targetChatLog">
+                <div className="contents">채팅내용채팅내용채팅내용</div>
+                <div className="sendTime">2022-04-30 19:30:11</div>
+            </div>
+            <div className="div_myChatLog">
+                <div className="contents">내용내용내용내용내용내용내용</div>
+                <div className="sendTime">2022-04-30 19:28:20</div>
+            </div>
+            <div className="div_targetNickname">닉네임</div>
+            <div className="div_targetChatLog">
+                <div className="contents">채팅내용채팅내용채팅내용</div>
+                <div className="sendTime">2022-04-30 19:30:11</div>
+            </div>
+            <div className="div_myChatLog">
+                <div className="contents">내용내용내용내용내용내용내용</div>
+                <div className="sendTime">2022-04-30 19:28:20</div>
+            </div>
+            <div className="div_targetNickname">닉네임</div>
+            <div className="div_targetChatLog">
+                <div className="contents">채팅내용채팅내용채팅내용</div>
+                <div className="sendTime">2022-04-30 19:30:11</div>
+            </div> */}
+            </div> 
+         </div> 
          {/* <div>
             {chatMessages && chatMessages.length > 0 && (
                <ul>

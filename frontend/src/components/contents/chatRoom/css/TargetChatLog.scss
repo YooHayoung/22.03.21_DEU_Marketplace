@@ -1,17 +1,61 @@
 .div_targetChatLog {
    //max-width: 22rem;
-   padding-top: 10px;
-   padding-bottom: 10px;
+   padding-top: 0.2rem;
+   padding-bottom: 0.1rem;
+   // width: 90%;
+   width: fit-content;
+   height: fit-content;
    overflow: hidden;
-   background-color: goldenrod;
    display: grid;
-   grid-template-columns: 6fr 2fr;
+   // grid-template-columns: 1fr;
+   text-align: left;
+   
+   top: -1rem;
+   position: relative;
+   z-index: 2;
    
    .contents {
       grid-column: 1;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      margin-left: 3.5rem;
+      background-color: rgb(221, 224, 255);
+      
    }
    
    .sendTime {
       grid-column: 2;
+      // margin-right: auto;
+      margin-left: 0.4rem;
+      margin-top: auto;
+      margin-right: 2rem;
+   }
+
+   
+}
+.div_target {
+   display: flex;
+   width: fit-content;
+   position: relative;
+   z-index: 1;
+   margin-top: 10px;
+
+   .div_avatar {
+      margin-top: 10px;
+      margin-left: 12px;
+      margin-right: 5px;
+      grid-column: 1;
+      width: 35px;
+      height: 35px;
+      font-size: 1rem;
+
+   }
+   .div_targetNickname {
+      margin-top: 5px;
+      margin-left: 0.3rem;
+      grid-column: 2;
+      font-size: 0.9rem;
    }
 }
