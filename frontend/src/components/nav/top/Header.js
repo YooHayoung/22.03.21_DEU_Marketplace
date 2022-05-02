@@ -37,14 +37,15 @@ const Header = (props) => {
             <>
             <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
             <div className='header_pageName'><b>{pageTitle}</b></div>
-            <SearchIcon className="header_searchIcon" fontSize={"large"} />
+            <SearchIcon className="header_searchIcon" fontSize={"large"} onClick={() => navigate('/search')}/>
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
             <Person className="person" fontSize={"large"}/>
             </>
             );
         }
         else if ((url.startsWith('/item/') && url.substring('/item/'.length)!='') || 
-                    (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='')) {
+                    (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') ||
+                    (url === '/search')) {
                         console.log(url.substring('/chatRooms/'.length))
             return (
                 <>

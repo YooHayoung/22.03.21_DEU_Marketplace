@@ -31,7 +31,7 @@ public class ItemSaveRequestDto {
 //    private List<ItemImgRequestDto> itemImgs;
 
     public Item toItemEntity(Member member) {
-        if (itemCategoryInfo.getItemCategoryName().equals("대학 교재")) {
+        if (itemCategoryInfo.getCategoryName().equals("대학 교재")) {
             return Item.ByUnivBookBuilder()
                     .classification(Classification.valueOf(classification))
                     .itemCategory(itemCategoryInfo.toEntity())
@@ -42,7 +42,7 @@ public class ItemSaveRequestDto {
                     .description(description)
                     .member(member)
                     .build();
-        } else if (itemCategoryInfo.getItemCategoryName().equals("강의 관련 물품")) {
+        } else if (itemCategoryInfo.getCategoryName().equals("강의 관련 물품")) {
             return Item.ByUnivItemBuilder()
                     .classification(Classification.valueOf(classification))
                     .itemCategory(itemCategoryInfo.toEntity())
@@ -52,7 +52,7 @@ public class ItemSaveRequestDto {
                     .description(description)
                     .member(member)
                     .build();
-        } else if (itemCategoryInfo.getItemCategoryName().equals("서적")) {
+        } else if (itemCategoryInfo.getCategoryName().equals("서적")) {
             return Item.ByBookItemBuilder()
                     .classification(Classification.valueOf(classification))
                     .itemCategory(itemCategoryInfo.toEntity())

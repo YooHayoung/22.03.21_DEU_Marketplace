@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemCategoryDto {
-    private Long itemCategoryId;
-    private String itemCategoryName;
+    private Long categoryId;
+    private String categoryName;
 
     @Builder
     public ItemCategoryDto(ItemCategory itemCategory) {
-        this.itemCategoryId = itemCategory.getId();
-        this.itemCategoryName = itemCategory.getCategoryName();
+        this.categoryId = itemCategory.getId();
+        this.categoryName = itemCategory.getCategoryName();
     }
 
     public ItemCategory toEntity() {
         return ItemCategory.dtoToEntityBuilder()
-                .id(itemCategoryId)
-                .categoryName(itemCategoryName)
+                .id(categoryId)
+                .categoryName(categoryName)
                 .build();
     }
 }

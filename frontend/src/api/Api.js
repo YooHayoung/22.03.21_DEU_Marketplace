@@ -55,4 +55,10 @@ export const setWishItem = (token, object) => {
    return client.get("/api/v1/wishItem/"+object.itemId, { headers: { Authorization: `Bearer ${token}` } });
 }
 
+export const getItemCategory = (token, object) => {
+   return client.get("/api/v1/itemCategory", {headers: {Authorization: `Bearer ${token}`}});
+}
 
+export const getPostCategory = (token, object) => {
+   return client.get("/api/v1/postCategory", {headers: {Authorization: `Bearer ${token}`}});
+}

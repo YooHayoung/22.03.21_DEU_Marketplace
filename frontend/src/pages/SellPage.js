@@ -7,28 +7,30 @@ import { UseApi } from "../api/UseApi";
 import ItemListComponent from "../components/contents/item/ItemListComponent";
 import HeaderContainer from "../containers/HeaderContainer";
 import BottomNav from "../components/nav/bottom/BottomNav";
+import { useLocation } from "../../node_modules/react-router/index";
 
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
    let navigate = useNavigate();
+   const location = useLocation();
    const params = useParams('localhost:3000/:classification');
-   const classification = params.classification?params.classification.toUpperCase():'SELL'
-   // console.log(classification);
-   const [searchCond, setSearchCond] = useState(
-      {
-         classification: classification,
-         itemCategoryId: '',
-         lectureName: '',
-         professorName: '',
-         title: '',
-         priceGoe: '',
-         priceLoe: '',
-      });
+   const classification = params.classification?params.classification.toUpperCase():'SELL';
+   const [searchCond, setSearchCond] = useState({
+      classification: classification,
+      itemCategoryId: (location.state?(location.state.category.categoryId?location.state.category.categoryId:''):''),
+      lectureName: '',
+      professorName: '',
+      title: (location.state?location.state.title:''),
+      priceGoe: (location.state?location.state.priceGoe:''),
+      priceLoe: (location.state?location.state.priceLoe:''),
+   });
+   
    console.log(searchCond.classification);
    const [page, setPage] = useState(0);
    const [contents, setContents] = useState([]);
 
    useEffect(() => {
+      // console.log(location);
       console.log(token);
       if (token === '') {
          (async () => {

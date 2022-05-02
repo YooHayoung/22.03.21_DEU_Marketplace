@@ -9,11 +9,14 @@ import { UseApi } from "../api/UseApi";
 import { getChatRoomPage } from "../api/Api";
 import HeaderContainer from "../containers/HeaderContainer";
 import BottomNav from "../components/nav/bottom/BottomNav";
+import { useLocation } from "../../node_modules/react-router/index";
 
 const ChatRoomListPage = ({ token, setToken }) => {
    const [contents, setContents] = useState([]);
    const [page, setPage] = useState(0);
    const cookies = new Cookies('token');
+   const location = useLocation();
+   console.log(location);
 
    // const work = (res) => {
    //    setContents(res);

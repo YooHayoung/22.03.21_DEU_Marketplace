@@ -1,7 +1,7 @@
 import React from "react";
 import { BottomNavigation, BottomNavigationAction, Box, CssBaseline, Paper } from "../../../../node_modules/@material-ui/core/index";
 import { Link } from "../../../../node_modules/react-router-dom/index";
-import { Navigate, useNavigate, useParams } from "../../../../node_modules/react-router/index"
+import { Navigate, useLocation, useNavigate, useParams } from "../../../../node_modules/react-router/index"
 
 import './BottomNav.scss';
 import MessageInputOnBottom from "./MessageInputOnBottom";
@@ -16,6 +16,7 @@ const BottomNav = (props) => {
     const urlList = ['/', '/chatRooms', '/sell', '/buy'];
     const [value, setValue] = React.useState(0);
     let navigate = useNavigate();
+    const location = useLocation();
 
     const params = useParams('localhost:3000/chatRooms/:chatRoomId');
     const url = window.location.pathname;
@@ -44,14 +45,14 @@ const BottomNav = (props) => {
                         console.log(newValue);
                         setUrl(newValue);
                         if (newValue == '/') {
-                            props.setSearchCond({...props.searchCond, classification: "SELL"}); 
+                            props.setSearchCond({classification: "SELL", itemCategoryId:'', lectureName:'', professorName:'', title:'', priceGoe:'', priceLoe:''}); 
                             props.work();
                         } else if (newValue == '/buy') {
-                            props.setSearchCond({...props.searchCond, classification: "BUY"}); 
+                            props.setSearchCond({classification: "BUY", itemCategoryId:'', lectureName:'', professorName:'', title:'', priceGoe:'', priceLoe:''}); 
                             props.work();
                         }
                     }}
-                    >
+                >
                     <BottomNavigationAction label="팝니다" icon={<SellIcon />} value={('/')} />
                     <BottomNavigationAction label="삽니다" icon={<ShoppingBagIcon />} value={('/buy')} />
                     <BottomNavigationAction label="등록" icon={<AddIcon />} />

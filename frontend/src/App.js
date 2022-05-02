@@ -14,6 +14,8 @@ import ItemDetailPage from "./pages/ItemDetailPage";
 import ItemDetailContainer from "./containers/ItemDetailContainer";
 import NotFound from "./pages/NotFound";
 import BottomNav from "./components/nav/bottom/BottomNav";
+import Story from "./pages/Story";
+import SearchContainer from "./containers/SearchContainer";
 
 
 
@@ -31,6 +33,8 @@ function App() {
           <Route path="/chatRooms" element={<ChatRoomListContainer />} />
           <Route path="/chatRooms/:chatRoomId" element={<ChatRoomContainer />} />
           <Route path="/notFound" element={<NotFound />} />
+          <Route path="/search" element={<SearchContainer />} />
+          <Route path="/post" />
         </Routes>
       </CookiesProvider>
     </div>

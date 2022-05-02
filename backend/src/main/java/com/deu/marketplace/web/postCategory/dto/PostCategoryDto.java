@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostCategoryDto {
-    private Long postCategoryId;
-    private String postCategoryName;
+    private Long categoryId;
+    private String categoryName;
 
     @Builder
     public PostCategoryDto(PostCategory postCategory) {
-        this.postCategoryId = postCategory.getId();
-        this.postCategoryName = postCategory.getCategoryName();
+        this.categoryId = postCategory.getId();
+        this.categoryName = postCategory.getCategoryName();
     }
 
     public PostCategory toEntity() {
         return PostCategory.dtoToEntityBuilder()
-                .id(postCategoryId)
-                .categoryName(postCategoryName)
+                .id(categoryId)
+                .categoryName(categoryName)
                 .build();
     }
 }
