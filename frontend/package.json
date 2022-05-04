@@ -26,6 +26,7 @@
     "react-scripts": "^5.0.0",
     "react-stomp": "^5.1.0",
     "react-talk": "^1.0.0",
+    "react-window": "^1.8.7",
     "reactstrap": "^9.0.2",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",

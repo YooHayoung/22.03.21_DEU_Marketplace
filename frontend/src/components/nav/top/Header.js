@@ -37,7 +37,7 @@ const Header = (props) => {
             <>
             <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
             <div className='header_pageName'><b>{pageTitle}</b></div>
-            <SearchIcon className="header_searchIcon" fontSize={"large"} onClick={() => navigate('/search')}/>
+            <SearchIcon className="header_searchIcon" fontSize={"large"} onClick={() => window.location.pathname="/search"}/>
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
             <Person className="person" fontSize={"large"}/>
             </>

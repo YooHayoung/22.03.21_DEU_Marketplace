@@ -3,8 +3,8 @@ import object from "../../node_modules/sockjs-client/lib/utils/object";
 import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from "../OAuth";
 import client from "./client";
 
-const CHATLOG_PAGE_SIZE = 2;
-const ITEM_PAGE_SIZE = 2;
+const CHATLOG_PAGE_SIZE = 5;
+const ITEM_PAGE_SIZE = 5;
 
 export const getTokensFromNaver = ({ code, state }) => {
    return axios.get(`https://nid.naver.com/oauth2.0/token?client_id=${NAVER_CLIENT_ID}&client_secret=${NAVER_CLIENT_SECRET}&grant_type=authorization_code&state=${state}&code=${code}`, { headers: { "Access-Control-Allow-Origin": "*" } });
@@ -61,4 +61,19 @@ export const getItemCategory = (token, object) => {
 
 export const getPostCategory = (token, object) => {
    return client.get("/api/v1/postCategory", {headers: {Authorization: `Bearer ${token}`}});
+}
+
+export const getLectures = (token, object) => {
+   // ?lectureName=영어&professorName=&page=0
+   return client.get("/api/v1/lecture/search?" + "lectureName=" + object.lectureName 
+      + "&professorName=" + object.professorName + "&page=" + object.page
+      , {headers: {Authorization: `Bearer ${token}`}});
+}
+
+export const saveItem = (token, object) => {
+   return client.post("/api/v1/items/save", object, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+export const saveItemImgs = (token, object) => {
+   return client.post("/api/v1/img/itemImg/upload", object, {headers: {Authorization: `Bearer ${token}`, "content-type": "multipart/form-data"}});
 }

@@ -55,7 +55,7 @@ const BottomNav = (props) => {
                 >
                     <BottomNavigationAction label="팝니다" icon={<SellIcon />} value={('/')} />
                     <BottomNavigationAction label="삽니다" icon={<ShoppingBagIcon />} value={('/buy')} />
-                    <BottomNavigationAction label="등록" icon={<AddIcon />} />
+                    <BottomNavigationAction label="등록" icon={<AddIcon />} value={('/item/save')}/>
                     <BottomNavigationAction label="게시판" icon={<ArticleIcon />} />
                     <BottomNavigationAction label="채팅" icon={<ChatIcon />} value={('/chatRooms')}/>
                 </BottomNavigation>

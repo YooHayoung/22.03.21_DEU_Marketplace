@@ -65,7 +65,7 @@ public class S3Controller {
 
         List<ItemImg> results = itemImgService.saveAll(itemImgs);
 
-        return ApiResponse.success("result", results.size());
+        return ApiResponse.success("result", itemId);
     }
 
     @GetMapping("/itemImg")
@@ -111,7 +111,7 @@ public class S3Controller {
 
         List<PostImg> results = postImgService.saveAll(postImgs);
 
-        return ApiResponse.success("result", results.size());
+        return ApiResponse.success("result", postId);
     }
 
     @GetMapping("/postImg")

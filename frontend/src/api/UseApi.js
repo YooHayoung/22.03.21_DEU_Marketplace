@@ -34,6 +34,7 @@ export const UseApi = (api, accessToken, setToken, work, object) => {
                work(response);
             })
             .catch((error) => {
+               console.log(error);
                if (error.response.status === 401) {
                   window.location.href = "/";
                   // return Promise.reject(error);

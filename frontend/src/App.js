@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import BottomNav from "./components/nav/bottom/BottomNav";
 import Story from "./pages/Story";
 import SearchContainer from "./containers/SearchContainer";
+import InputItemInfoContainer from "./containers/InputItemInfoContainer";
 
 
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/chatRooms/:chatRoomId" element={<ChatRoomContainer />} />
           <Route path="/notFound" element={<NotFound />} />
           <Route path="/search" element={<SearchContainer />} />
+          <Route path="/item/save" element={<InputItemInfoContainer />}/>
           <Route path="/post" />
         </Routes>
       </CookiesProvider>

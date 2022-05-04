@@ -8,6 +8,8 @@ import ItemListComponent from "../components/contents/item/ItemListComponent";
 import HeaderContainer from "../containers/HeaderContainer";
 import BottomNav from "../components/nav/bottom/BottomNav";
 import { useLocation } from "../../node_modules/react-router/index";
+import { Button } from "../../node_modules/@material-ui/core/index";
+import './SellPage.scss';
 
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
@@ -28,9 +30,11 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
    console.log(searchCond.classification);
    const [page, setPage] = useState(0);
    const [contents, setContents] = useState([]);
+   const [isLastPage, setIsLastPage] = useState(false); 
 
    useEffect(() => {
       // console.log(location);
+      setPage(0);
       console.log(token);
       if (token === '') {
          (async () => {
@@ -59,6 +63,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
 
    const afterGetPage = (res) => {
       console.log(res);
+      setIsLastPage(res.data.body.result.last);
       if (res.data.body.result.totalPages !== page){
          console.log(res.data.body.result);
          setContents([...contents, ...res.data.body.result.content]);
@@ -78,6 +83,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
             priceLoe: searchCond.priceLoe,
             page: page
          });
+         console.log(searchCond.itemCategoryId);
          console.log(contents);
          console.log(page);
       })();
@@ -135,9 +141,10 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          <div className="itemList">
          {renderItemList()}
          </div>
-         <button onClick={getPages}>물품목록불러오기</button>
+         {isLastPage?null:(<Button className="btn_getItems" onClick={getPages}>물품 목록 더보기</Button>)}
+         {/* {isChatsLast?null:(<Button className="btn_getChats" onClick={getChats}>불러오기</Button>)} */}
       </div>
-      <BottomNav thisPage={searchCond.classification} searchCond={searchCond} setSearchCond={setSearchCond} work={afteBottomButtonClick}/>
+      {<BottomNav thisPage={searchCond.classification} searchCond={searchCond} setSearchCond={setSearchCond} work={afteBottomButtonClick}/>}
       </>
    );
 };

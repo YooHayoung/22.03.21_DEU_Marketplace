@@ -41,7 +41,7 @@ const ItemDetailPage = ({token, setToken}) => {
         // console.log(content.imgList);
         if (loading === true)
         // if (content.imgList.length !== 0)
-            return <ItemDetailImgs imgList={content.imgList}/>;
+            return <div className="div_imgs"><ItemDetailImgs imgList={content.imgList}/></div>;
         // else return <ItemDetailImgs imgList={[{img:""}]}/>;
     };
 
@@ -61,7 +61,7 @@ const ItemDetailPage = ({token, setToken}) => {
                     </>
                 );
             } else {
-                switch (content.itemDetailDto.itemCategoryInfo.itemCategoryName) {
+                switch (content.itemDetailDto.itemCategoryInfo.categoryName) {
                     case "대학 교재" :
                         result = (
                             <>
@@ -162,7 +162,7 @@ const ItemDetailPage = ({token, setToken}) => {
     return (
         <div>
             <HeaderContainer pageName={"상품 상세"} />
-            <div className="div_contents">
+            <div className="div_contents" style={{"padding-bottom": 0}}>
                 {renderItemImgs()}
                 {renderDetailPage()}
             </div>

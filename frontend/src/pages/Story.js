@@ -19,7 +19,7 @@ import { getItemCategory, getPostCategory } from '../api/Api';
 import { Link } from '../../node_modules/react-router-dom/index';
 
 const Story = ({token, setToken}) => {
-    const [classification, setClassification] = React.useState('');
+    const [classification, setClassification] = React.useState('sell');
     const [selectCategory, setSelectCategory] = React.useState('');
     // const [selectPostCategory, setSelectPostCategory] = React.useState('');
     const [searchWord, setSearchWord] = React.useState('');
@@ -106,12 +106,10 @@ const Story = ({token, setToken}) => {
                     '& > :not(style)': { mt: 0.6, mb: 1}
                 }}>
                 <FormControl className="priceGoe">
-                    <OutlinedInput id="priceGoe" onChange={onPriceGoeHandleChange} endAdornment={<InputAdornment position="end">원</InputAdornment>} />
-                    <FormHelperText>최소금액</FormHelperText>
+                    <TextField label="최소금액" id="priceGoe" onChange={onPriceGoeHandleChange} InputProps={{endAdornment:(<InputAdornment position="end">원</InputAdornment>)}} />
                 </FormControl>
                 <FormControl className="priceLoe">
-                    <OutlinedInput id="priceLoe" onChange={onPriceLoeHandleChange} endAdornment={<InputAdornment position="end">원</InputAdornment>} />
-                    <FormHelperText>최대금액</FormHelperText>
+                    <TextField label="최대금액" id="priceLoe" onChange={onPriceLoeHandleChange} InputProps={{endAdornment:(<InputAdornment position="end">원</InputAdornment>)}} />
                 </FormControl> 
             </Box>
         </>
@@ -121,8 +119,7 @@ const Story = ({token, setToken}) => {
     const renderPostSearch = () => {
         return (
         <>
-        <FormControl>
-                {/* <FormLabel id="trade_name" className='trade_name'>구분</FormLabel> */}
+            <FormControl>
                 <RadioGroup aria-labelledby="trade_name" name="trade" row defaultValue="sell" onChange={setClassHandleChange}>
                     <FormControlLabel value="sell" control={<Radio />} label="팝니다" />
                     <FormControlLabel value="buy" control={<Radio />} label="삽니다" />

@@ -3,6 +3,7 @@ package com.deu.marketplace.query.item.repository;
 import com.deu.marketplace.common.ItemSearchCond;
 import com.deu.marketplace.domain.deal.entity.DealState;
 import com.deu.marketplace.domain.item.entity.Classification;
+import com.deu.marketplace.domain.lecture.entity.QLecture;
 import com.deu.marketplace.query.item.dto.BuyItemDto;
 import com.deu.marketplace.query.item.dto.QBuyItemDto;
 import com.deu.marketplace.query.item.dto.QSellItemDto;
@@ -21,6 +22,7 @@ import java.util.List;
 import static com.deu.marketplace.domain.deal.entity.QDeal.deal;
 import static com.deu.marketplace.domain.item.entity.QItem.item;
 import static com.deu.marketplace.domain.itemImg.entity.QItemImg.itemImg;
+import static com.deu.marketplace.domain.lecture.entity.QLecture.lecture;
 import static com.deu.marketplace.domain.wishItem.entity.QWishItem.wishItem;
 import static org.apache.logging.log4j.util.Strings.isEmpty;
 
@@ -54,12 +56,13 @@ public class ItemViewRepository {
                         item.lastModifiedDate,
                         item.itemCategory.id,
                         item.itemCategory.categoryName,
-                        item.lecture.lectureName,
-                        item.lecture.professorName,
+                        lecture.lectureName,
+                        lecture.professorName,
                         deal.id,
                         deal.dealState,
                         wishItem.wishedMember.id))
                 .from(item)
+                .leftJoin(lecture).on(item.lecture.eq(lecture))
                 .leftJoin(itemImg).on(item.eq(itemImg.item))
                 .leftJoin(deal).on(item.eq(deal.item))
                 .leftJoin(wishItem).on(item.eq(wishItem.item).and(wishItem.wishedMember.id.eq(memberId)))
@@ -75,6 +78,7 @@ public class ItemViewRepository {
                         professorNameContains(cond.getProfessorName()),
                         priceGoe(cond.getPriceGoe()),
                         priceLoe(cond.getPriceLoe()))
+                .orderBy(item.lastModifiedDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -161,6 +165,11 @@ public class ItemViewRepository {
     }
 
     private BooleanExpression lectureNameContains(String lectureName) {
+//        System.out.println("--------------------");
+//        System.out.println(lectureName);
+//        System.out.println(lectureName.length());
+//        System.out.println(isEmpty(lectureName));
+//        System.out.println("--------------------");
         return isEmpty(lectureName) ? null : item.lecture.lectureName.contains(lectureName);
     }
 

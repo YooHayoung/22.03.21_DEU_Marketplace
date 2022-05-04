@@ -40,7 +40,7 @@ const ChatRoomListPage = ({ token, setToken }) => {
          <HeaderContainer pageName={"채팅방 목록"} />
          {/* <h1>채팅방</h1> */}
          {renderChatRooms}
-         {renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}
+         {/* {renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms}{renderChatRooms} */}
       </div>
       <BottomNav />
       </>
