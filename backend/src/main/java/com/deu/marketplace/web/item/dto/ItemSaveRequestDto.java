@@ -31,37 +31,48 @@ public class ItemSaveRequestDto {
 //    private List<ItemImgRequestDto> itemImgs;
 
     public Item toItemEntity(Member member) {
-        if (itemCategoryInfo.getCategoryName().equals("대학 교재")) {
-            return Item.ByUnivBookBuilder()
-                    .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategoryInfo.toEntity())
-                    .lecture(lectureInfo.toEntity())
-                    .bookState(bookStateInfo)
-                    .title(title)
-                    .price(price)
-                    .description(description)
-                    .member(member)
-                    .build();
-        } else if (itemCategoryInfo.getCategoryName().equals("강의 관련 물품")) {
-            return Item.ByUnivItemBuilder()
-                    .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategoryInfo.toEntity())
-                    .lecture(lectureInfo.toEntity())
-                    .title(title)
-                    .price(price)
-                    .description(description)
-                    .member(member)
-                    .build();
-        } else if (itemCategoryInfo.getCategoryName().equals("서적")) {
-            return Item.ByBookItemBuilder()
-                    .classification(Classification.valueOf(classification))
-                    .itemCategory(itemCategoryInfo.toEntity())
-                    .bookState(bookStateInfo)
-                    .title(title)
-                    .price(price)
-                    .description(description)
-                    .member(member)
-                    .build();
+        if (classification.equals(Classification.SELL.name())) {
+            if (itemCategoryInfo.getCategoryName().equals("대학 교재")) {
+                return Item.ByUnivBookBuilder()
+                        .classification(Classification.valueOf(classification))
+                        .itemCategory(itemCategoryInfo.toEntity())
+                        .lecture(lectureInfo.toEntity())
+                        .bookState(bookStateInfo)
+                        .title(title)
+                        .price(price)
+                        .description(description)
+                        .member(member)
+                        .build();
+            } else if (itemCategoryInfo.getCategoryName().equals("강의 관련 물품")) {
+                return Item.ByUnivItemBuilder()
+                        .classification(Classification.valueOf(classification))
+                        .itemCategory(itemCategoryInfo.toEntity())
+                        .lecture(lectureInfo.toEntity())
+                        .title(title)
+                        .price(price)
+                        .description(description)
+                        .member(member)
+                        .build();
+            } else if (itemCategoryInfo.getCategoryName().equals("서적")) {
+                return Item.ByBookItemBuilder()
+                        .classification(Classification.valueOf(classification))
+                        .itemCategory(itemCategoryInfo.toEntity())
+                        .bookState(bookStateInfo)
+                        .title(title)
+                        .price(price)
+                        .description(description)
+                        .member(member)
+                        .build();
+            } else {
+                return Item.ByNormalItemBuilder()
+                        .classification(Classification.valueOf(classification))
+                        .itemCategory(itemCategoryInfo.toEntity())
+                        .title(title)
+                        .price(price)
+                        .description(description)
+                        .member(member)
+                        .build();
+            }
         } else {
             return Item.ByNormalItemBuilder()
                     .classification(Classification.valueOf(classification))

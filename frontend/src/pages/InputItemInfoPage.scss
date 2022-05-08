@@ -1,5 +1,6 @@
 .MuiContainer-root {
   padding-top: 3rem;
+  min-width: 16.5rem;
 }
 
 .div_bookStateInfo {
@@ -12,7 +13,7 @@
   #txt_surfaceState {
     grid-column: 2;
   }
-  #txt_origPrice {
+  #txt_regularPrice {
     grid-column: 3;
     text-align: right;
   }
@@ -28,6 +29,30 @@
 }
 #txt_price {
   text-align: right;
+}
+#btn_group {
+  min-width: 16.5rem;
+}
+#btn_tg {
+  height: 3rem;
+  padding: 10px;
+}
+#btn_icon {
+  margin-right: 0.25rem;
+}
+#div_mi {
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.div_loadingBtn {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .div_backAndNext {

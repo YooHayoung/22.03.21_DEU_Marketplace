@@ -2,10 +2,9 @@ package com.deu.marketplace.s3;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.deu.marketplace.utils.FileUtils;
+import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,8 +44,10 @@ public class S3Uploader {
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(file.getContentType());
             try (InputStream inputStream = file.getInputStream()) {
+                System.out.println("bucket = " + bucket);
+                System.out.println("fileName = " + fileName);
                 amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
-                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                        .withCannedAcl(CannedAccessControlList.PublicReadWrite));
                 fileUrls.add(amazonS3Client.getUrl(bucket, fileName).toString());
             } catch (IOException e) {
                 throw new FileUploadFailedException();
@@ -60,7 +61,10 @@ public class S3Uploader {
     public void fileDelete(List<String> fileNames) {
         try {
             for (String fileName : fileNames) {
-                amazonS3Client.deleteObject(bucket, fileName);
+//                fileName = fileName.substring(fileName.indexOf('/') + 1);
+                System.out.println("bucket = " + bucket);
+                System.out.println("fileName = " + fileName);
+                amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
             }
         } catch (AmazonServiceException e) {
             e.printStackTrace();

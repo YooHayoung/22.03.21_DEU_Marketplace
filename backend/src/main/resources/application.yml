@@ -2,6 +2,7 @@
 server:
   port: 8000
 
+
 spring:
 #  for h2
 #  datasource:
@@ -25,6 +26,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
+        default_batch_fetch_size: 100
         # show_sql: true
         format_sql: true
 
@@ -61,8 +63,8 @@ logging.level:
 cloud:
   aws:
     credentials:
-      accessKey: AKIA4IJIHFWPLVEMT4EQ
-      secretKey: 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
+      accessKey: AKIA4IJIHFWPB3Z6EQLF
+      secretKey: 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
   
 # AWS S3 bucket Info (S3 버킷정보)
     s3:

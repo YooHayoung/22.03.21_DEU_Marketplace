@@ -129,6 +129,7 @@ public class ItemViewRepository {
                         professorNameContains(cond.getProfessorName()),
                         priceGoe(cond.getPriceGoe()),
                         priceLoe(cond.getPriceLoe()))
+                .orderBy(item.lastModifiedDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -165,11 +166,6 @@ public class ItemViewRepository {
     }
 
     private BooleanExpression lectureNameContains(String lectureName) {
-//        System.out.println("--------------------");
-//        System.out.println(lectureName);
-//        System.out.println(lectureName.length());
-//        System.out.println(isEmpty(lectureName));
-//        System.out.println("--------------------");
         return isEmpty(lectureName) ? null : item.lecture.lectureName.contains(lectureName);
     }
 

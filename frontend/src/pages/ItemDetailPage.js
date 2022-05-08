@@ -3,6 +3,7 @@ import { Button, Divider, Paper } from "../../node_modules/@material-ui/core/ind
 import { useParams } from "../../node_modules/react-router-dom/index";
 import { getItemDetail, setWishItem } from "../api/Api";
 import { UseApi } from "../api/UseApi";
+import jwt_decode from "jwt-decode";
 import ItemDetailBookStateInfo from "../components/contents/itemDetail/ItemDetailBookStateInfo";
 import ItemDetailDescription from "../components/contents/itemDetail/ItemDetailDescription";
 import ItemDetailImgs from "../components/contents/itemDetail/ItemDetailImgs";
@@ -16,6 +17,9 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatIcon from '@mui/icons-material/Chat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 import './ItemDetailPage.scss'
 import { useNavigate } from "../../node_modules/react-router/index";
@@ -33,6 +37,7 @@ const ItemDetailPage = ({token, setToken}) => {
     }
 
     useEffect(() => {
+        // navigate();
         (async() => {UseApi(getItemDetail, token, setToken, workAfterGet, params);})();
         // return () => setContent({});
     }, []);
@@ -152,18 +157,70 @@ const ItemDetailPage = ({token, setToken}) => {
     };
 
     const chatRoomBtnClick = () => {
-        if (content.myChatRoomId) {
-            navigate(`/chatRooms/${content.myChatRoomId}`);
+        console.log(jwt_decode(token));
+        if (content.itemDetailDto.sellerInfo.memberId == jwt_decode(token).sub) {
+            navigate('/chatRooms');
         } else {
-
+            if (content.myChatRoomId) {
+                navigate(`/chatRooms/${content.myChatRoomId}`);
+            } else {
+    
+            }
         }
-    }
+    };
+
+    const onUpdateBtnClick = () => {
+        console.log("update");
+        navigate('/update', {
+            state: {
+                targetId: content.itemDetailDto.itemId,
+                classification: content.itemDetailDto.classification.toLowerCase(),
+                title: content.itemDetailDto.title,
+                category: content.itemDetailDto.itemCategoryInfo,
+                lecture: content.itemDetailDto.lectureInfo,
+                bookState: content.itemDetailDto.bookStateInfo?{
+                    writeState: content.itemDetailDto.bookStateInfo.writeState?content.itemDetailDto.bookStateInfo.writeState:'',
+                    surfaceState: content.itemDetailDto.bookStateInfo.surfaceState?content.itemDetailDto.bookStateInfo.surfaceState:'',
+                    regularPrice: content.itemDetailDto.bookStateInfo.regularPrice?content.itemDetailDto.bookStateInfo.regularPrice:''
+                }:{
+                    writeState: '',
+                    surfaceState: '',
+                    regularPrice: ''
+                },
+                price: content.itemDetailDto.price,
+                description: content.itemDetailDto.description,
+                imgList: content.imgList
+            }
+        });
+    };
+    const onDeleteBtnClick = () => {
+        console.log("delete");
+    };
+
+    const renderBtns = () => {
+        if (loading) {
+            if (jwt_decode(token).sub == content.itemDetailDto.sellerInfo.memberId) {
+                // return 'same';
+                return (
+                    <>
+                    <Button className="btn_delete" onClick={() => onDeleteBtnClick()}>삭제</Button>
+                    <Button className="btn_update" onClick={() => onUpdateBtnClick()}>수정</Button>
+                    </>
+                );
+            } else {
+                // return 'diff';
+            }
+        }
+    };
 
     return (
         <div>
             <HeaderContainer pageName={"상품 상세"} />
             <div className="div_contents" style={{"padding-bottom": 0}}>
                 {renderItemImgs()}
+                <div className="btn_compo">
+                    {renderBtns()}
+                </div>
                 {renderDetailPage()}
             </div>
             <Divider/>
@@ -172,7 +229,7 @@ const ItemDetailPage = ({token, setToken}) => {
                     <div className="wish_icon">{content.wishInfo.myWish?<FavoriteIcon />:<FavoriteBorderIcon />}</div>
                     <div className="wish_label">{content.wishInfo.myWish?"찜 취소":"찜 하기"}</div>
                 </Button>
-                <Button className="btn_chat" variant="contained" onClick={() => chatRoomBtnClick()}>
+                <Button className="btn_chat" variant="contained" onClick={() => chatRoomBtnClick()} >
                     <div className="chat_icon">{content.myChatRoomId?<ChatIcon />:<ChatBubbleOutlineIcon />}</div>
                     <div className="chat_label">채팅하기</div>
                 </Button>

@@ -19,6 +19,10 @@ const Header = (props) => {
     }
 
     const url = window.location.pathname;
+
+    const onBackBtnClick = () => {
+        navigate(-1);
+    }
     /* 
         type: main || back || backAndSave
     */
@@ -45,11 +49,11 @@ const Header = (props) => {
         }
         else if ((url.startsWith('/item/') && url.substring('/item/'.length)!='') || 
                     (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') ||
-                    (url === '/search')) {
+                    (url === '/search') || (url==='/save') || (url==='/update')) {
                         console.log(url.substring('/chatRooms/'.length))
             return (
                 <>
-                <ArrowBackIcon className="header_arrow" onClick={() => navigate(-1)} fontSize={"large"} />
+                <ArrowBackIcon className="header_arrow" onClick={() => onBackBtnClick()} fontSize={"large"} />
                 <div className='header_pageName'>{pageTitle}</div>
                 </>
             );

@@ -15,5 +15,11 @@ public interface ItemImgService {
 
     List<ItemImg> getAllByItemId(Long itemId);
 
+    List<ItemImg> getByImgIdList(List<Long> imgIdList);
+
+    void deleteByImgIdList(List<ItemImg> imgList);
+
+    List<ItemImg> updateImgSeq(List<ItemImg> itemImgs);
+
     void deleteAllByItemId(Long itemId);
 }

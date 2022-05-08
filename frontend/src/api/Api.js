@@ -4,7 +4,7 @@ import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from "../OAuth";
 import client from "./client";
 
 const CHATLOG_PAGE_SIZE = 5;
-const ITEM_PAGE_SIZE = 5;
+const ITEM_PAGE_SIZE = 20;
 
 export const getTokensFromNaver = ({ code, state }) => {
    return axios.get(`https://nid.naver.com/oauth2.0/token?client_id=${NAVER_CLIENT_ID}&client_secret=${NAVER_CLIENT_SECRET}&grant_type=authorization_code&state=${state}&code=${code}`, { headers: { "Access-Control-Allow-Origin": "*" } });
@@ -25,8 +25,8 @@ export const getNewAccessToken = () => {
 }
 
 // 채팅방 목록 가져오기 - 페이징
-export const getChatRoomPage = (token) => {
-   return client.get("/api/v1/chatRoom", { headers: { Authorization: `Bearer ${token}` } });
+export const getChatRoomPage = (token, object) => {
+   return client.get("/api/v1/chatRoom?page=" + object.page, { headers: { Authorization: `Bearer ${token}` } });
 }
 
 // 채팅방 입장
@@ -76,4 +76,12 @@ export const saveItem = (token, object) => {
 
 export const saveItemImgs = (token, object) => {
    return client.post("/api/v1/img/itemImg/upload", object, {headers: {Authorization: `Bearer ${token}`, "content-type": "multipart/form-data"}});
+}
+
+export const updateItem = (token, object) => {
+   return client.patch("/api/v1/items/" + object.itemId, object.dto, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+export const updateItemImgs = (token, object) => {
+   return client.patch("/api/v1/img/itemImg/upload", object, {headers: {Authorization: `Bearer ${token}`, "content-type": "multipart/form-data"}});
 }

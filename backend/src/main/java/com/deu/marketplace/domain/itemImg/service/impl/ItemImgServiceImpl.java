@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +34,39 @@ public class ItemImgServiceImpl implements ItemImgService {
 
     @Override
     public List<ItemImg> getAllByItemId(Long itemId) {
-        return itemImgRepository.findAllByItemId(itemId);
+        return itemImgRepository.findAllByItemIdOrderByImgSeqAsc(itemId);
+    }
+
+    @Override
+    public List<ItemImg> getByImgIdList(List<Long> imgIdList) {
+        return itemImgRepository.findByIdIn(imgIdList);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByImgIdList(List<ItemImg> imgList) {
+//        itemImgRepository.deleteByIdInBatch(imgIdList);
+        itemImgRepository.deleteInBatch(imgList);
+    }
+
+    @Override
+    @Transactional
+    public List<ItemImg> updateImgSeq(List<ItemImg> itemImgs) {
+        AtomicInteger index = new AtomicInteger();
+        List<ItemImg> updatedItemImgs = itemImgs.stream().map(img -> {
+            img.updateImgSeq(index.getAndIncrement() + 1);
+            return img;
+        }).collect(Collectors.toList());
+//        for (ItemImg itemImg : itemImgs) {
+//            itemImg.updateImgSeq(index.getAndIncrement()+1);
+//        }
+        return updatedItemImgs;
     }
 
     @Override
     @Transactional
     public void deleteAllByItemId(Long itemId) {
-        List<ItemImg> findItemImgs = itemImgRepository.findAllByItemId(itemId);
+        List<ItemImg> findItemImgs = itemImgRepository.findAllByItemIdOrderByImgSeqAsc(itemId);
         itemImgRepository.deleteInBatch(findItemImgs);
     }
 }

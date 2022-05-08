@@ -35,7 +35,8 @@ function App() {
           <Route path="/chatRooms/:chatRoomId" element={<ChatRoomContainer />} />
           <Route path="/notFound" element={<NotFound />} />
           <Route path="/search" element={<SearchContainer />} />
-          <Route path="/item/save" element={<InputItemInfoContainer />}/>
+          <Route path="/save" element={<InputItemInfoContainer />}/>
+          <Route path="/update" element={<InputItemInfoContainer />}/>
           <Route path="/post" />
         </Routes>
       </CookiesProvider>

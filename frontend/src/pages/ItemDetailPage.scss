@@ -2,6 +2,7 @@
 .div_class, .div_lecture, .div_bookState {
     display: grid;
     grid-template-columns: 1fr 5fr;
+    min-width: 20rem;
 }
 
 // .div_lecture, .div_bookState{
@@ -18,7 +19,25 @@
     // padding-left: 10px;
 }
 
+.btn_compo {
+    width: 100%;
+    height: 2rem;
+    // border: 0.5px solid black;
+    text-align: right;
+    min-width: 15rem;
+
+    .btn_update {
+        width: fit-content;
+        height: 2rem;
+    }
+    .btn_delete {
+        width: fit-content;
+        height: 2rem;
+    }
+}
+
 .con_label {
+    min-width: 3.1rem;
     text-align: right;
     padding-left: 2px;
 }
@@ -27,6 +46,7 @@
 }
 
 .label {
+    min-width: 4rem;
     text-align: right;
     font-weight: bolder;
     font-size: smaller;
@@ -59,8 +79,9 @@
     #mem_avatar {
         grid-column: 1;
         grid-row: 2;
-        margin: 0px auto;
-        margin-left: 15px;
+        // margin: 0px auto;
+        margin-right: 0.6rem;
+        margin-left: auto;
         margin-bottom: 10px;
     }
     .content {
@@ -68,6 +89,7 @@
         grid-row: 2;
         padding: 8px;
         padding-left: 10px;
+        min-width: 20rem;
     }
 }
 

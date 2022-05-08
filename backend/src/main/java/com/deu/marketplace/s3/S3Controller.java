@@ -11,6 +11,7 @@ import com.deu.marketplace.domain.post.entity.Post;
 import com.deu.marketplace.domain.post.service.PostService;
 import com.deu.marketplace.domain.postImg.entity.PostImg;
 import com.deu.marketplace.domain.postImg.service.PostImgService;
+import com.deu.marketplace.web.itemImg.dto.ItemImgDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,17 +43,29 @@ public class S3Controller {
     }
 
     @PatchMapping("/itemImg/upload")
-    public ApiResponse updateItemImgs(@RequestParam("itemId") Long itemId,
-                                     @RequestPart(value = "file") List<MultipartFile> multipartFiles,
-                                     @AuthenticationPrincipal Long memberId)
+    public ApiResponse updateItemImgs(ItemImgUpdateRequestDto requestDto,
+                                      @AuthenticationPrincipal Long memberId)
             throws FileUploadFailedException, EmptyFileException {
+        List<ItemImg> itemImgs = itemImgService.getAllByItemId(requestDto.getItemId());
+        List<ItemImg> delImgs = itemImgs.stream().filter(itemImg -> requestDto.getDelImgs().stream()
+                .map(delImg -> delImg.getImgId()).collect(Collectors.toList()).contains(itemImg.getId()))
+                .collect(Collectors.toList());
+        List<ItemImg> origImgs = new ArrayList<>();
+            origImgs = itemImgs.stream().filter(itemImg -> requestDto.getOrigImgs().stream()
+                            .map(origImg -> origImg.getImgId()).collect(Collectors.toList()).contains(itemImg.getId()))
+                    .collect(Collectors.toList());
 
         List<String> findImgFiles =
-                itemImgService.getAllByItemId(itemId).stream().map(ItemImg::getImgFile).collect(Collectors.toList());
+                delImgs.stream().map(ItemImg::getImgFile).collect(Collectors.toList());
         s3Uploader.fileDelete(findImgFiles);
-        itemImgService.deleteAllByItemId(itemId);
+        itemImgService.deleteByImgIdList(delImgs);
+        List<ItemImg> updatedItemImgs = new ArrayList<>();
+        updatedItemImgs = itemImgService.updateImgSeq(origImgs);
 
-        return uploadItemImgFiles(itemId, multipartFiles, memberId);
+
+        return uploadItemImgFiles(requestDto.getItemId(), requestDto.getFiles(), memberId, origImgs.size());
+
+//        return ApiResponse.success("result", requestDto.getItemId());
     }
 
     private ApiResponse uploadItemImgFiles(@RequestParam("itemId") Long itemId,
@@ -62,6 +75,19 @@ public class S3Controller {
         Item item = itemService.getOneItemById(itemId).orElseThrow();
         List<String> imgFileNames = s3Uploader.upload(multipartFiles, "item", itemId, memberId);
         List<ItemImg> itemImgs = toItemImgEntity(imgFileNames, item);
+
+        List<ItemImg> results = itemImgService.saveAll(itemImgs);
+
+        return ApiResponse.success("result", itemId);
+    }
+    private ApiResponse uploadItemImgFiles(@RequestParam("itemId") Long itemId,
+                                           @RequestPart("file") List<MultipartFile> multipartFiles,
+                                           @AuthenticationPrincipal Long memberId,
+                                           int origImgSize)
+            throws FileUploadFailedException, EmptyFileException {
+        Item item = itemService.getOneItemById(itemId).orElseThrow();
+        List<String> imgFileNames = s3Uploader.upload(multipartFiles, "item", itemId, memberId);
+        List<ItemImg> itemImgs = toItemImgEntity(imgFileNames, item, origImgSize);
 
         List<ItemImg> results = itemImgService.saveAll(itemImgs);
 
@@ -129,6 +155,18 @@ public class S3Controller {
     private List<ItemImg> toItemImgEntity(List<String> imgNames, Item item) {
         List<ItemImg> itemImgs = new ArrayList<>();
         int i = 0;
+        for (String imgName : imgNames) {
+            itemImgs.add(ItemImg.builder()
+                    .item(item)
+                    .imgFile(imgName)
+                    .imgSeq(++i)
+                    .build());
+        }
+        return itemImgs;
+    }
+    private List<ItemImg> toItemImgEntity(List<String> imgNames, Item item, int origImgSize) {
+        List<ItemImg> itemImgs = new ArrayList<>();
+        int i = origImgSize;
         for (String imgName : imgNames) {
             itemImgs.add(ItemImg.builder()
                     .item(item)
