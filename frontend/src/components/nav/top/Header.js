@@ -36,7 +36,7 @@ const Header = (props) => {
         } else {
             pageTitle = pageName;
         }
-        if (url == '/' || url == '/chatRooms' || url == '/buy' || url == '/sell') {
+        if (url == '/' || url == '/chatRooms' || url == '/buy' || url == '/sell' || url == '/board') {
             return (
             <>
             <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
@@ -49,7 +49,8 @@ const Header = (props) => {
         }
         else if ((url.startsWith('/item/') && url.substring('/item/'.length)!='') || 
                     (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') ||
-                    (url === '/search') || (url==='/save') || (url==='/update')) {
+                    (url === '/search') || (url==='/save') || (url==='/update') ||
+                    (url.startsWith('/board/') && url.substring('/board/'.length)!='')) {
                         console.log(url.substring('/chatRooms/'.length))
             return (
                 <>

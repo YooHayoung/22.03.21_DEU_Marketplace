@@ -1,0 +1,23 @@
+
+.ty_title {
+    display: grid;
+    justify-content: start;
+    font-size: 1.3rem;
+    margin-bottom: 4;
+    .sp_categoryName {
+        font-size: 1rem;
+        grid-column: 1;
+        width: fit-content;
+        margin-top: 0.15rem;
+    }
+    .sp_title {
+        grid-column: 2;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.bottomBtn {
+    // height: 15rem;
+}

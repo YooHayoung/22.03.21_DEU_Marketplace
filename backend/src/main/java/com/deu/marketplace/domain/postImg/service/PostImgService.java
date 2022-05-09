@@ -8,7 +8,11 @@ public interface PostImgService {
 
     List<PostImg> saveAll(List<PostImg> postImgs);
 
+    void deleteByImgIdList(List<PostImg> imgList);
+
     void deleteAllByPostId(Long postId);
+
+    List<PostImg> updateImgSeq(List<PostImg> postImgs);
 
     List<PostImg> getAllByPostId(Long postId);
 }

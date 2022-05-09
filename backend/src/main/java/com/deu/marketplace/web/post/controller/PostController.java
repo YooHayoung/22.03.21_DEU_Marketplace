@@ -63,7 +63,7 @@ public class PostController {
         PostDetailViewDto postDetailViewDto =
                 postViewRepository.getPostDetail(postId, memberId).orElseThrow();
         for (PostImgDto postImg : postDetailViewDto.getPostImgs()) {
-            postImg.imgToImgUrl(s3Uploader.toUrl(postImg.getImgFile()));
+            postImg.imgToImgUrl(s3Uploader.toUrl(postImg.getImg()));
         }
 
         return ApiResponse.success("result", postDetailViewDto);
@@ -73,9 +73,11 @@ public class PostController {
     public ApiResponse updateOnePost(@PathVariable("postId") Long postId,
                                      @RequestBody PostSaveRequestDto requestDto,
                                      @AuthenticationPrincipal Long memberId) throws ValidationException {
-        Post post = postService.updatePost(postId, requestDto.toEntity(), memberId);
+        Member member = memberService.getMemberById(memberId).orElseThrow();
+        Post post = postService.updatePost(postId, requestDto.toEntity(member), memberId);
 
         return ApiResponse.success("result", post.getId());
+//        return ApiResponse.success("result", null);
     }
 
     @DeleteMapping("/{postId}")

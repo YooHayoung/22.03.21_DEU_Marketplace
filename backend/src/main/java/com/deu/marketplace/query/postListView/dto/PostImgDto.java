@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImgDto {
-    private Long postImgId;
-    private String imgFile;
+    private Long ImgId;
+    private String img;
     private int seq;
 
     @Builder
     public PostImgDto(PostImg postImg) {
-        this.postImgId = postImg.getId();
-        this.imgFile = postImg.getImgFile();
+        this.ImgId = postImg.getId();
+        this.img = postImg.getImgFile();
         this.seq = postImg.getImgSeq();
     }
 
     public void imgToImgUrl(String imgUrl) {
-        this.imgFile = imgUrl;
+        this.img = imgUrl;
     }
 }

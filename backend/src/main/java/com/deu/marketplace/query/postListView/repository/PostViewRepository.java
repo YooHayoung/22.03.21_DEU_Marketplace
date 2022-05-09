@@ -6,6 +6,7 @@ import com.deu.marketplace.query.postListView.dto.PostDetailViewDto;
 import com.deu.marketplace.query.postListView.dto.PostListViewDto;
 import com.deu.marketplace.query.postListView.dto.QPostDetailViewDto;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -21,12 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.deu.marketplace.domain.item.entity.QItem.item;
 import static com.deu.marketplace.domain.member.entity.QMember.member;
 import static com.deu.marketplace.domain.post.entity.QPost.post;
 import static com.deu.marketplace.domain.postCategory.entity.QPostCategory.postCategory;
 import static com.deu.marketplace.domain.postComment.entity.QPostComment.postComment;
 import static com.deu.marketplace.domain.postImg.entity.QPostImg.postImg;
 import static com.deu.marketplace.domain.postRecommend.entity.QPostRecommend.postRecommend;
+import static org.apache.logging.log4j.util.Strings.isEmpty;
 
 @Repository
 public class PostViewRepository {
@@ -63,6 +66,8 @@ public class PostViewRepository {
                 .fetchJoin()
                 .leftJoin(postImg).on(post.eq(postImg.post).and(postImg.imgSeq.eq(1)))
                 .fetchJoin()
+                .where(postCategoryEq(postSearchCond.getPostCategoryId()),
+                        postTitleContains(postSearchCond.getTitle()))
 //                .groupBy(post)
                 .orderBy(post.createdDate.desc(), post.id.desc())
                 .offset(pageable.getOffset())
@@ -73,6 +78,8 @@ public class PostViewRepository {
                 .select(post.id, postRecommend.count())
                 .from(post)
                 .leftJoin(postRecommend).on(post.id.eq(postRecommend.post.id))
+                .where(postCategoryEq(postSearchCond.getPostCategoryId()),
+                        postTitleContains(postSearchCond.getTitle()))
                 .groupBy(post)
                 .orderBy(post.createdDate.desc(), post.id.desc())
                 .offset(pageable.getOffset())
@@ -83,6 +90,8 @@ public class PostViewRepository {
                 .select(post.id, postComment.count())
                 .from(post)
                 .leftJoin(postComment).on(post.id.eq(postComment.post.id))
+                .where(postCategoryEq(postSearchCond.getPostCategoryId()),
+                        postTitleContains(postSearchCond.getTitle()))
                 .groupBy(post)
                 .orderBy(post.createdDate.desc(), post.id.desc())
                 .offset(pageable.getOffset())
@@ -101,6 +110,8 @@ public class PostViewRepository {
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(post.count())
+                .where(postCategoryEq(postSearchCond.getPostCategoryId()),
+                        postTitleContains(postSearchCond.getTitle()))
                 .from(post);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -135,5 +146,13 @@ public class PostViewRepository {
                 .where(post.id.eq(postId))
                 .fetchOne();
         return Optional.ofNullable(postDetailViewDto);
+    }
+
+    private BooleanExpression postCategoryEq(Long postCategoryId) {
+        return postCategoryId == null ? null : post.postCategory.id.eq(postCategoryId);
+    }
+
+    private BooleanExpression postTitleContains(String title) {
+        return isEmpty(title) ? null : post.title.contains(title);
     }
 }

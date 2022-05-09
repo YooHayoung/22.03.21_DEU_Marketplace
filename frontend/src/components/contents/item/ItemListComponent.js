@@ -76,7 +76,7 @@ const ItemListComponent = (props) => {
         } else {
             return (Math.floor(result) + "초 전");
         }
-     }
+    };
 
     return(
         <Link to={{

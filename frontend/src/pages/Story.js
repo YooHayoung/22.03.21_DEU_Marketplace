@@ -59,6 +59,7 @@ const Story = ({token, setToken}) => {
     };
 
     const renderPostCategory = () => {
+        console.log(postCategory);
         if (postCategory.length != 0) {
             return (postCategory.map((category,idx)=> {
                 return <MenuItem key={"mi"+idx} value={category}>{category.categoryName}</MenuItem>
@@ -161,7 +162,7 @@ const Story = ({token, setToken}) => {
                     priceGoe: priceGoe,
                     priceLoe: priceLoe,
                 }}>
-                <Button type="submit" fullWidth variant='contained' sx={{mt:2}} onClick={()=>console.log(priceLoe)} >검색</Button>
+                <Button type="submit" fullWidth variant='contained' sx={{mt:2}} onClick={()=>console.log(selectCategory)} >검색</Button>
             </Link>
         </Container>
         </>

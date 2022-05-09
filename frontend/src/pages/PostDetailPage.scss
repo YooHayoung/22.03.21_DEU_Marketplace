@@ -1,0 +1,126 @@
+
+.div_class, .div_lecture, .div_bookState {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    min-width: 20rem;
+}
+
+.div_content {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    text-align: left;
+    font-size: 1.6ex;
+    padding: 0.5rem;
+}
+
+.btn_compo {
+    width: 100%;
+    height: 2rem;
+    // border: 0.5px solid black;
+    text-align: right;
+    min-width: 15rem;
+
+    .btn_update {
+        width: fit-content;
+        height: 2rem;
+    }
+    .btn_delete {
+        width: fit-content;
+        height: 2rem;
+    }
+}
+
+.con_label {
+    min-width: 3.1rem;
+    text-align: right;
+    padding-left: 2px;
+}
+.con_content {
+    padding-left: 25px;
+}
+
+.label {
+    min-width: 4rem;
+    text-align: right;
+    font-weight: bolder;
+    font-size: smaller;
+    padding: 10px;
+    padding-left: 5px;
+}
+.content {
+    text-align: left;
+    padding: 8px;
+    padding-left: 10px;
+}
+#post_con {
+    font-size: 1.7ex;
+}
+
+.div_memInfo {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 2.2rem 3rem;
+
+    .label {
+        grid-column: 1/2;
+        grid-row: 1;
+        text-align: right;
+        font-weight: bolder;
+        font-size: smaller;
+        padding: 10px;
+        padding-left: 5px;
+    }
+    #mem_avatar {
+        grid-column: 1;
+        grid-row: 2;
+        // margin: 0px auto;
+        margin-right: 0.6rem;
+        margin-left: auto;
+        margin-bottom: 10px;
+    }
+    .content {
+        grid-column: 2;
+        grid-row: 2;
+        padding: 8px;
+        padding-left: 10px;
+        min-width: 20rem;
+    }
+}
+
+
+.div_imgs {
+    width: 100%;
+    height: 23rem;
+    overflow: hidden;
+
+    img {
+        // max-width: 100%; 
+        // max-height: 100%;
+        max-width: 100%;
+        // max-height: 100%;
+        height: 23rem;
+        object-fit: contain;
+        
+    }
+}
+#div_writeComment {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 9fr 1fr;
+
+    #input_comment {
+        grid-column: 1;
+    }
+    #btn_sub {
+        grid-column: 2;
+        width: 4rem;
+        height: 2.3rem;
+        bottom: 0.2rem;
+        margin-top: auto;
+    }
+
+    .MuiOutlinedInput-multiline {
+        padding-top: 0.5rem;
+        padding-bottom: 0.7rem;
+    }
+}

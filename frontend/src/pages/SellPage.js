@@ -58,7 +58,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          console.log(Date.now() / 1000);
          getPages();
       }
-   }, [searchCond])
+   }, [searchCond]);
 
 
    const afterGetPage = (res) => {
@@ -87,7 +87,7 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
          console.log(contents);
          console.log(page);
       })();
-   }
+   };
 
    // useEffect(() => {
    //    getPages();

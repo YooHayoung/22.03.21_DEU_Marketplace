@@ -31,6 +31,76 @@ const rows = [
   createData('하기싫다', '작성자', '2016.21.15'),
   createData('하기싫다', '작성자', '2016.21.15'),
   createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
+  createData('하기싫다', '작성자', '2016.21.15'),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -124,12 +194,12 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('writer');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -151,9 +221,10 @@ export default function EnhancedTable() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+    // <Box id="div_table" sx={{ width: '100%' }}>
+      <Paper id="div_table" sx={{ width: '100%' }}>
         <TableContainer>
           <Table
             sx={{ minWidth: 200 }}
@@ -165,7 +236,7 @@ export default function EnhancedTable() {
               onRequestSort={handleRequestSort}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.contents, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -178,9 +249,9 @@ export default function EnhancedTable() {
                       key={row.name}
                       selected={isItemSelected}
                     >
-                      <TableCell align="left">{row.name}</TableCell>
-                      <TableCell align="right">{row.writer}</TableCell>
-                      <TableCell align="right">{row.story_date}</TableCell>
+                      <TableCell align="left">{row.title}</TableCell>
+                      <TableCell align="right">{row.memberNickname}</TableCell>
+                      <TableCell align="right">{row.createdDate}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -197,15 +268,16 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 15, 20]}
           component="div"
-          count={rows.length}
+          count={props.contents.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          id="div_pagination"
         />
       </Paper>
-    </Box>
+    // </Box>
   );
 }

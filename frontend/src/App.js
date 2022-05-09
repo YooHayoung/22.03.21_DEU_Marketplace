@@ -17,6 +17,8 @@ import BottomNav from "./components/nav/bottom/BottomNav";
 import Story from "./pages/Story";
 import SearchContainer from "./containers/SearchContainer";
 import InputItemInfoContainer from "./containers/InputItemInfoContainer";
+import PostListContainer from "./containers/PostListContainer";
+import PostDetailContainer from "./containers/PostDetailContainer";
 
 
 
@@ -37,7 +39,8 @@ function App() {
           <Route path="/search" element={<SearchContainer />} />
           <Route path="/save" element={<InputItemInfoContainer />}/>
           <Route path="/update" element={<InputItemInfoContainer />}/>
-          <Route path="/post" />
+          <Route path="/board" element={<PostListContainer />} />
+          <Route path="/board/:postId" element={<PostDetailContainer />} />
         </Routes>
       </CookiesProvider>
     </div>

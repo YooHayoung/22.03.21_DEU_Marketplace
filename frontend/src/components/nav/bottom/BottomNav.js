@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ArticleIcon from '@mui/icons-material/Article';
 
 const BottomNav = (props) => {
-    const urlList = ['/', '/chatRooms', '/sell', '/buy'];
+    const urlList = ['/', '/chatRooms', '/sell', '/buy', '/board'];
     const [value, setValue] = React.useState(0);
     let navigate = useNavigate();
     const location = useLocation();
@@ -61,7 +61,7 @@ const BottomNav = (props) => {
                     <BottomNavigationAction label="팝니다" icon={<SellIcon />} value={('/')} />
                     <BottomNavigationAction label="삽니다" icon={<ShoppingBagIcon />} value={('/buy')} />
                     <BottomNavigationAction label="등록" icon={<AddIcon />} value={('/save')}/>
-                    <BottomNavigationAction label="게시판" icon={<ArticleIcon />} />
+                    <BottomNavigationAction label="게시판" icon={<ArticleIcon />} value={('/board')} />
                     <BottomNavigationAction label="채팅" icon={<ChatIcon />} value={('/chatRooms')}/>
                 </BottomNavigation>
                 </Paper>

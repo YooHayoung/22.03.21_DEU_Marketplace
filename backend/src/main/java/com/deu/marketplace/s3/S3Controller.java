@@ -116,24 +116,55 @@ public class S3Controller {
     }
 
     @PatchMapping("/postImg/upload")
-    public ApiResponse updatePostImgs(@RequestParam("postId") Long postId,
-                                      @RequestPart(value = "file") List<MultipartFile> multipartFiles,
-                                      @AuthenticationPrincipal Long memberId) throws FileUploadFailedException, EmptyFileException {
+    public ApiResponse updatePostImgs(PostImgUpdateRequestDto requestDto,
+                                      @AuthenticationPrincipal Long memberId)
+            throws FileUploadFailedException, EmptyFileException {
+
+//        List<String> findImgFiles =
+//                postImgService.getAllByPostId(postId).stream().map(PostImg::getImgFile).collect(Collectors.toList());
+//        s3Uploader.fileDelete(findImgFiles);
+//        postImgService.deleteAllByPostId(postId);
+//
+//        return uploadPostImgFiles(postId, multipartFiles, memberId);
+        List<PostImg> postImgs = postImgService.getAllByPostId(requestDto.getPostId());
+        List<PostImg> delImgs = postImgs.stream().filter(postImg -> requestDto.getDelImgs().stream()
+                        .map(delImg -> delImg.getImgId()).collect(Collectors.toList()).contains(postImg.getId()))
+                .collect(Collectors.toList());
+        List<PostImg> origImgs = new ArrayList<>();
+        origImgs = postImgs.stream().filter(postImg -> requestDto.getOrigImgs().stream()
+                        .map(origImg -> origImg.getImgId()).collect(Collectors.toList()).contains(postImg.getId()))
+                .collect(Collectors.toList());
 
         List<String> findImgFiles =
-                postImgService.getAllByPostId(postId).stream().map(PostImg::getImgFile).collect(Collectors.toList());
+                delImgs.stream().map(PostImg::getImgFile).collect(Collectors.toList());
         s3Uploader.fileDelete(findImgFiles);
-        postImgService.deleteAllByPostId(postId);
+        postImgService.deleteByImgIdList(delImgs);
+        List<PostImg> updatedPostImgs = new ArrayList<>();
+        updatedPostImgs = postImgService.updateImgSeq(origImgs);
 
-        return uploadPostImgFiles(postId, multipartFiles, memberId);
+        return uploadPostImgFiles(requestDto.getPostId(), requestDto.getFiles(), memberId, origImgs.size());
     }
 
     private ApiResponse uploadPostImgFiles(@RequestParam("postId") Long postId,
                                            @RequestPart("file") List<MultipartFile> multipartFiles,
-                                           @AuthenticationPrincipal Long memberId) throws FileUploadFailedException, EmptyFileException {
+                                           @AuthenticationPrincipal Long memberId)
+            throws FileUploadFailedException, EmptyFileException {
         Post post = postService.getOnePostByPostId(postId).orElseThrow();
         List<String> imgFileNames = s3Uploader.upload(multipartFiles, "post", postId, memberId);
         List<PostImg> postImgs = toPostImgEntity(imgFileNames, post);
+
+        List<PostImg> results = postImgService.saveAll(postImgs);
+
+        return ApiResponse.success("result", postId);
+    }
+    private ApiResponse uploadPostImgFiles(@RequestParam("postId") Long postId,
+                                           @RequestPart("file") List<MultipartFile> multipartFiles,
+                                           @AuthenticationPrincipal Long memberId,
+                                           int origImgSize)
+            throws FileUploadFailedException, EmptyFileException {
+        Post post = postService.getOnePostByPostId(postId).orElseThrow();
+        List<String> imgFileNames = s3Uploader.upload(multipartFiles, "post", postId, memberId);
+        List<PostImg> postImgs = toPostImgEntity(imgFileNames, post, origImgSize);
 
         List<PostImg> results = postImgService.saveAll(postImgs);
 
@@ -179,6 +210,18 @@ public class S3Controller {
     private List<PostImg> toPostImgEntity(List<String> imgNames, Post post) {
         List<PostImg> postImgs = new ArrayList<>();
         int i = 0;
+        for (String imgName : imgNames) {
+            postImgs.add(PostImg.builder()
+                    .post(post)
+                    .imgFile(imgName)
+                    .imgSeq(++i)
+                    .build());
+        }
+        return postImgs;
+    }
+    private List<PostImg> toPostImgEntity(List<String> imgNames, Post post, int origImgSize) {
+        List<PostImg> postImgs = new ArrayList<>();
+        int i = origImgSize;
         for (String imgName : imgNames) {
             postImgs.add(PostImg.builder()
                     .post(post)

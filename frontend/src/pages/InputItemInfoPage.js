@@ -21,7 +21,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import ArticleIcon from '@mui/icons-material/Article';
 import { Backdrop, CircularProgress, Fade, FormHelperText, InputAdornment, List, ListItem, ListItemText, OutlinedInput, Snackbar, Typography } from '../../node_modules/@material-ui/core/index';
 import { UseApi } from '../api/UseApi';
-import { getItemCategory, getLectures, getPostCategory, saveItem, saveItemImgs, updateItem, updateItemImgs } from '../api/Api';
+import { getItemCategory, getLectures, getPostCategory, saveItem, saveItemImgs, savePost, savePostImgs, updateItem, updateItemImgs, updatePost, updatePostImgs } from '../api/Api';
 import { Link } from '../../node_modules/react-router-dom/index';
 import Modal from '@mui/material/Modal';
 import { ListItemButton, ToggleButton, ToggleButtonGroup } from "../../node_modules/@mui/material/index";
@@ -281,12 +281,23 @@ const InputItemInfoPage = ({token, setToken}) => {
         formData.append("itemId", itemId);
         Array.from(files).forEach(file => formData.append("file", file));
         // Array.from(imgs).forEach(img => formData.append("file", img));
-        UseApi(saveItemImgs, token, setToken, afterItemImgSaved, formData)
+        UseApi(saveItemImgs, token, setToken, afterItemImgSaved, formData);
     };
     const afterItemImgSaved = (res) => {
         console.log(res);
         window.location.href=`/item/${res.data.body.result}`;
     };
+    const afterPostSaved = (res) => {
+        const postId = res.data.body.result;
+        const formData = new FormData();
+        formData.append("postId", postId);
+        Array.from(files).forEach(file => formData.append("file", file));
+        UseApi(savePostImgs, token, setToken, afterPostImgSaved, formData);
+    };
+    const afterPostImgSaved = (res) => {
+        console.log(res);
+        window.location.href=`/board/${res.data.body.result}`;
+    }
 
     const afterItemUpdate = (res) => {
         const itemId = res.data.body.result;
@@ -325,14 +336,51 @@ const InputItemInfoPage = ({token, setToken}) => {
         console.log(res);
         window.location.href=`/item/${res.data.body.result}`;
     };
+    const afterPostUpdate = (res) => {
+        const itemId = res.data.body.result;
+        if (location.state.imgList == origImgs && files.length==0) {
+            console.log("imgList is same");
+        } else {
+            console.log({
+                postId: itemId,
+                delImgs: delImgs,
+                origImgs: origImgs,
+                files: files
+            });
+            const formData = new FormData();
+            formData.append("postId", itemId);
+            delImgs.forEach((delImg, idx) => {
+                formData.append(`delImgs[${idx}].img`, delImg.img);
+                formData.append(`delImgs[${idx}].imgId`, delImg.imgId);
+                formData.append(`delImgs[${idx}].seq`, delImg.seq);
+                console.log(`delImgs[${idx}].img : ${delImg.img}`)
+                console.log(`delImgs[${idx}].imgId : ${delImg.img}`)
+                console.log(`delImgs[${idx}].seq : ${delImg.seq}`)
+            });
+            origImgs.forEach((origImg, idx) => {
+                formData.append(`origImgs[${idx}].img`, origImg.img);
+                formData.append(`origImgs[${idx}].imgId`, origImg.imgId);
+                formData.append(`origImgs[${idx}].seq`, origImg.seq);
+            });
+            Array.from(files).forEach(file => formData.append("files", file));
+            // (async () => {
+            UseApi(updatePostImgs, token, setToken, afterPostImgUpdate, formData);
+            // })();
+        }
+        // window.location.href=`/item/${itemId}`;
+    };
+    const afterPostImgUpdate = (res) => {
+        console.log(res);
+        window.location.href=`/board/${res.data.body.result}`;
+    };
 
     const [saveOpen, setSaveOpen] = React.useState(false);
     const handleSaveClose = () => {
         setSaveOpen(false);
-      };
-      const handleToggle = () => {
+    };
+    const handleToggle = () => {
         setSaveOpen(!saveOpen);
-      };
+    };
     
     const save = () => {
         let saveDto = {};
@@ -373,22 +421,30 @@ const InputItemInfoPage = ({token, setToken}) => {
                 UseApi(saveItem, token, setToken, afterItemSaved, saveDto);
             })();
         } else if (classification==="board") {
-            console.log("게시물 전송");
+            saveDto = {
+                title: title,
+                content: contents,
+                postCategoryInfo: postCategory.find(getCategoryInfo)
+            };
+            console.log(saveDto);
+            (async () => {
+                UseApi(savePost, token, setToken, afterPostSaved, saveDto);
+            })();
         } else {
             console.log("내용 작성 바람");
         }
         handleSaveClose();
     };
     const onSaveBtnClick = () => {
-        if (classification == "sell") {
-            console.log("sell");
-        } else if (classification == "buy") {
-            console.log("buy");
-        } else {
-            console.log("board");
-        }
-        // setLoading(true);
-        // save();
+        // if (classification == "sell") {
+        //     console.log("sell");
+        // } else if (classification == "buy") {
+        //     console.log("buy");
+        // } else {
+        //     console.log("board");
+        // }
+        setLoading(true);
+        save();
     };
 
     const update = () => {
@@ -432,7 +488,17 @@ const InputItemInfoPage = ({token, setToken}) => {
                 UseApi(updateItem, token, setToken, afterItemUpdate, updateDto);
             })();
         } else if (classification==="board") {
-            console.log("게시물 전송");
+            console.log("게시물 수정");
+            updateDto = {
+                postId: itemId, dto: {
+                    title: title,
+                    content: contents,
+                    postCategoryInfo: postCategory.find(getCategoryInfo)
+                }
+            };
+            (async () => {
+                UseApi(updatePost, token, setToken, afterPostUpdate, updateDto);
+            })();
         } else {
             console.log("내용 작성 바람");
         }
@@ -734,6 +800,7 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderPostInfoFields = () => {
         return (
         <>
+            {renderImgs()}
             {renderTitleField()}
             {renderPostCategory()}
             {renderContentsFeild()}
