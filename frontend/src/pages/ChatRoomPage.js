@@ -37,6 +37,7 @@ const ChatRoomPage = ({ token, setToken }) => {
    const params = useParams('localhost:3000/chatRooms/:chatRoomId');
 
    const [roomInfo, setRoomInfo] = useState({
+      chatRoomId: 0,
       itemInfo: { // 초기화
          itemId: 0,
          itemImg: "",
@@ -44,6 +45,15 @@ const ChatRoomPage = ({ token, setToken }) => {
          price: 0,
          dealState: ""
       },
+      itemSavedMemberInfo: {
+         memberId: 0,
+         nickname: ''
+      },
+      requestedMemberInfo: {
+         memberId: 0,
+         nickname: ''
+      },
+      myId: 0,
    });
    const [chats, setChats] = useState([]);
    const [isChatsLast, setIsChatsLast] = useState(false);
@@ -59,17 +69,21 @@ const ChatRoomPage = ({ token, setToken }) => {
       message: ''
    });
    const [isLastPage, setIsLastPage] = useState(true);
+   const [isFirstRenderComp, setIsFirstRenderComp] = useState(false);
 
    const getRoomInfoAndChatLogs = (res) => {
+      console.log(res.data.body.result);
       setRoomInfo(res.data.body.result.chatRoomInfo);
       setChatPage(res.data.body.result.chatLogInfos.pageable.pageNumber);
       setChats(chats.concat(res.data.body.result.chatLogInfos.content));
       // console.log(res.data.body.result.chatLogInfos.last);
       setIsChatsLast(res.data.body.result.chatLogInfos.last);
-   }
+   };
 
    useEffect(() => {
-      UseApi(getChatRoom, token, setToken, getRoomInfoAndChatLogs, params)
+      (async () => {
+         UseApi(getChatRoom, token, setToken, getRoomInfoAndChatLogs, params);
+      })();
    }, []);
 
    //////////////////////////////////////
@@ -89,7 +103,7 @@ const ChatRoomPage = ({ token, setToken }) => {
 
    const getChats = () => {
       console.log(isChatsLast);
-      UseApi(getChatPage, token, setToken, getChatLogs, getChatPageApiObject)
+      UseApi(getChatPage, token, setToken, getChatLogs, getChatPageApiObject);
    }
 
    // const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));
@@ -307,7 +321,6 @@ const ChatRoomPage = ({ token, setToken }) => {
 
    const scrollRef = useRef();
    const scrollToBottom = () => {
-      console.log(scrollRef.current);
       if (scrollRef.current) {
          // scrollRef.current.scrollTop = scrollRef.current.scrollHeight + 68;
          // console.log(scrollRef.current.scrollHeight);
@@ -347,13 +360,14 @@ const ChatRoomPage = ({ token, setToken }) => {
       <div className="div_chatRoomPage">
          <HeaderContainer pageName={"채팅내역"}/>
          <div className="div_contents" ref={scrollRef}>
-            <ItemInfo itemInfo={roomInfo.itemInfo} />
+            <ItemInfo itemInfo={roomInfo.itemInfo} itemSavedMemberId={roomInfo.itemSavedMemberInfo.memberId} myId={jwt_decode(token).sub} />
             {onScrollTop()}
             <div className="div_chatLogs">
                {/* <button onClick={getChats}>불러오기</button> */}
                {isChatsLast?null:(<Button className="btn_getChats" onClick={getChats}>불러오기</Button>)}
                {/* {chatDate.getTime()} */}
                {renderChatLogs(chats)}
+               {chatPage==0?document.body.scrollIntoView(false):null}
                {renderNewChatLogs(newChats)}
                {/* <div className="div_myChatLog">
                 <div className="contents">내용내용내용내용내용내용내용</div>

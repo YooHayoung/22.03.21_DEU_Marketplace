@@ -12,9 +12,9 @@
 
 .div_content {
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 3rem 5fr;
     text-align: left;
-    font-size: 1.6ex;
+    font-size: 1.6rem;
     padding: 0.5rem;
     // padding-left: 10px;
 }
@@ -37,29 +37,34 @@
 }
 
 .con_label {
-    min-width: 3.1rem;
-    text-align: right;
+    font-size: 0.9rem;
+    min-width: 3.5rem;
+    text-align: left;
+    padding-top: 0.2rem;
     padding-left: 2px;
 }
 .con_content {
-    padding-left: 25px;
+    font-size: 0.9rem;
+    padding-top: 0.2rem;
+    padding-left: 1.3rem;
 }
 
-.label {
-    min-width: 4rem;
+// .label {
+#lb_item_title, #lb_item_price, #lb_item_lecture, #lb_item_bookState, #lb_itemDes, #lb_item_writeTime {
+    min-width: 4.5rem;
     text-align: right;
     font-weight: bolder;
-    font-size: smaller;
+    font-size: 1rem;
     padding: 10px;
     padding-left: 5px;
 }
 .content {
     text-align: left;
-    padding: 8px;
+    padding: 10px;
     padding-left: 10px;
 }
 #item_des {
-    font-size: 1.7ex;
+    font-size: 1rem;
 }
 
 .div_memInfo {
@@ -68,11 +73,12 @@
     grid-template-rows: 2.2rem 3rem;
 
     .label {
+        min-width: 4.5rem;
         grid-column: 1/2;
         grid-row: 1;
         text-align: right;
         font-weight: bolder;
-        font-size: smaller;
+        font-size: 1rem;
         padding: 10px;
         padding-left: 5px;
     }

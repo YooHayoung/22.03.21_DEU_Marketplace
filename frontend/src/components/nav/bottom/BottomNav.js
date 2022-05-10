@@ -67,7 +67,7 @@ const BottomNav = (props) => {
                 </Paper>
             );
         }
-        else if (window.location.pathname == `/chatRooms/${params.chatRoomId}`) {
+        else if (window.location.pathname == `/chatRooms/${params.chatRoomId}` || window.location.pathname == '/chatRooms/new') {
             return (
                 <>
                 <MessageInputOnBottom onClick={props.onClick} />

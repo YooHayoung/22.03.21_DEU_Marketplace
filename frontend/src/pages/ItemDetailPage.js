@@ -23,6 +23,7 @@ import Select from '@mui/material/Select';
 
 import './ItemDetailPage.scss'
 import { useNavigate } from "../../node_modules/react-router/index";
+import ItemDetailDatetime from "../components/contents/itemDetail/ItemDetailDatetime";
 
 const ItemDetailPage = ({token, setToken}) => {
     let navigate = useNavigate();
@@ -56,7 +57,11 @@ const ItemDetailPage = ({token, setToken}) => {
             if (content.itemDetailDto.classification === "BUY") {
                 result = (
                     <>
-                    <ItemDetailTitle title={content.itemDetailDto.title} />
+                    <ItemDetailTitle 
+                        title={content.itemDetailDto.title} 
+                        lastModifiedDate={content.itemDetailDto.lastModifiedDate} 
+                        dealState={content.dealState}
+                    />
                     <Divider />
                     <ItemDetailPrice price={content.itemDetailDto.price} />
                     <Divider />
@@ -70,7 +75,11 @@ const ItemDetailPage = ({token, setToken}) => {
                     case "대학 교재" :
                         result = (
                             <>
-                            <ItemDetailTitle title={content.itemDetailDto.title} />
+                            <ItemDetailTitle 
+                                title={content.itemDetailDto.title} 
+                                lastModifiedDate={content.itemDetailDto.lastModifiedDate} 
+                                dealState={content.dealState}
+                            />
                             <Divider />
                             <ItemDetailPrice price={content.itemDetailDto.price} />
                             <Divider />
@@ -87,7 +96,11 @@ const ItemDetailPage = ({token, setToken}) => {
                     case "강의 관련 물품" :
                         result = (
                             <>
-                            <ItemDetailTitle title={content.itemDetailDto.title} />
+                            <ItemDetailTitle 
+                                title={content.itemDetailDto.title} 
+                                lastModifiedDate={content.itemDetailDto.lastModifiedDate} 
+                                dealState={content.dealState}
+                            />
                             <Divider />
                             <ItemDetailPrice price={content.itemDetailDto.price} />
                             <Divider />
@@ -102,7 +115,11 @@ const ItemDetailPage = ({token, setToken}) => {
                     case "서적" :
                         result = (
                             <>
-                            <ItemDetailTitle title={content.itemDetailDto.title} />
+                            <ItemDetailTitle 
+                                title={content.itemDetailDto.title} 
+                                lastModifiedDate={content.itemDetailDto.lastModifiedDate} 
+                                dealState={content.dealState}
+                            />
                             <Divider />
                             <ItemDetailPrice price={content.itemDetailDto.price} />
                             <Divider />
@@ -117,7 +134,11 @@ const ItemDetailPage = ({token, setToken}) => {
                     default:
                         result = (
                             <>
-                            <ItemDetailTitle title={content.itemDetailDto.title} />
+                            <ItemDetailTitle 
+                                title={content.itemDetailDto.title} 
+                                lastModifiedDate={content.itemDetailDto.lastModifiedDate} 
+                                dealState={content.dealState}
+                            />
                             <Divider />
                             <ItemDetailPrice price={content.itemDetailDto.price} />
                             <Divider />
@@ -164,7 +185,18 @@ const ItemDetailPage = ({token, setToken}) => {
             if (content.myChatRoomId) {
                 navigate(`/chatRooms/${content.myChatRoomId}`);
             } else {
-    
+                navigate('/chatRooms/new', {
+                    state: {
+                        itemInfo: {
+                            itemId: content.itemDetailDto.itemId,
+                            title: content.itemDetailDto.title,
+                            price: content.itemDetailDto.price,
+                            itemImg: content.imgList.length!=0?content.imgList[0].img:null,
+                            dealState: content.dealState
+                        },
+                        itemSavedMemberId: content.itemDetailDto.sellerInfo.memberId
+                    }
+                });
             }
         }
     };

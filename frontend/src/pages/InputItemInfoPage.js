@@ -443,6 +443,7 @@ const InputItemInfoPage = ({token, setToken}) => {
         // } else {
         //     console.log("board");
         // }
+        setOpen(true);
         setLoading(true);
         save();
     };
@@ -504,6 +505,7 @@ const InputItemInfoPage = ({token, setToken}) => {
         }
     };
     const onUpdateBtnClick = () => {
+        setOpen(true);
         setLoading(true);
         update();
     }
@@ -865,6 +867,13 @@ const InputItemInfoPage = ({token, setToken}) => {
             }
         </div>
         </Container>
+        <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={open}
+            onClick={handleClose}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>
         </>
     );
 };

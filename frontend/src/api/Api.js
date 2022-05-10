@@ -4,7 +4,7 @@ import token from "../modules/token";
 import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from "../OAuth";
 import client from "./client";
 
-const CHATLOG_PAGE_SIZE = 5;
+const CHATLOG_PAGE_SIZE = 20;
 const ITEM_PAGE_SIZE = 20;
 
 export const getTokensFromNaver = ({ code, state }) => {
@@ -129,4 +129,24 @@ export const getPostCommentPage = (token, object) => {
 // get 게시물 목록 검색 및 페이징
 export const getPostList = (token, object) => {
    return client.get("/api/v1/posts?page=" + object.page + "&title=" + object.title + "&postCategoryId=" + object.postCategoryId, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// post 댓글 작성
+export const savePostComment = (token, object) => {
+   return client.post("/api/v1/postComments/new", object, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// delete 댓글 삭제
+export const deletePostComment = (token, object) => {
+   return client.delete("/api/v1/postComments/" + object.postCommentId, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// delete 게시물 삭제
+export const deletePost = (token, object) => {
+   return client.delete("/api/v1/posts/" + object.postId, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// post 채팅방 생성
+export const createChatRoom = (token, object) => {
+   return client.post("/api/v1/chatRoom/new", object, {headers: {Authorization: `Bearer ${token}`}});
 }

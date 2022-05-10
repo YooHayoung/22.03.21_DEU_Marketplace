@@ -54,9 +54,9 @@ const renderDealState = (dealState) => {
             <div className="div_itemImg">{props.content.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.content.itemInfo.itemImg} /> }</div>
             <div className="div_targetMemberNick">{props.content.targetMemberInfo.nickname}</div>
             <div className="div_logContent">{props.content.lastLogInfo.content}</div>
-            <div className="div_notReadNum">{props.content.lastLogInfo.notReadNum>99?'99+':props.content.lastLogInfo.notReadNum}</div>
+            {props.content.lastLogInfo.notReadNum!=0?<div className="div_notReadNum">{props.content.lastLogInfo.notReadNum>99?'99+':props.content.lastLogInfo.notReadNum}</div>:null}
             <div className="div_lastDate">{changeDate(props.content.lastLogInfo.lastModifiedDate)}</div>
-            <div className="div_dealState">{renderDealState(props.content.itemInfo.dealState)}</div>
+            {props.content.itemInfo.dealState?<div className="div_dealState">{renderDealState(props.content.itemInfo.dealState)}</div>:null}
 
             {/* <div className="div_itemImg">{props.content.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.content.itemInfo.itemImg} /> }</div>
             <div className="div_targetMemberNick">닉네임닉네ㅁㄴㅇㅁㄴㅇㅁㄴ임닉네임ㅁㄴㅇㅁㄴㅇ</div>

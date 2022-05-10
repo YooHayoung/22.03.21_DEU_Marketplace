@@ -54,15 +54,18 @@ public class ChatRoomController {
 
     @PostMapping("/new")
     public ApiResponse createChatRoom(@AuthenticationPrincipal Long memberId,
-                                      @RequestBody ItemIdDto itemIdDto) throws URISyntaxException {
+                                      @RequestBody CreateChatRoomDto createChatRoomDto) throws URISyntaxException {
         log.info("Create ChatRoom.");
         Member requestedMember = memberService.getMemberById(memberId).orElseThrow();
-        Item targetItem = itemService.getOneItemById(itemIdDto.getItemId()).orElseThrow();
+        Item targetItem = itemService.getOneItemById(createChatRoomDto.getItemId()).orElseThrow();
         ChatRoom chatRoom = ChatRoom.builder()
                 .requestedMember(requestedMember)
                 .item(targetItem)
                 .build();
         ChatRoom createdChatRoom = chatRoomService.createChatRoom(chatRoom);
+
+        chatLogService.saveChatLog(chatRoom, chatRoom.getRequestedMember(),
+                chatRoom.getItem().getMember(), createChatRoomDto.getMessage());
 
         return ApiResponse.success("result", createdChatRoom.getId());
     }
@@ -87,7 +90,9 @@ public class ChatRoomController {
                 chatRoomViewRepository.getNotReadCounts(chatRoomPages.getContent(), memberId);
         for (ChatRoomViewDto chatRoomViewDto : chatRoomPages) {
             chatRoomViewDto.getLastLogInfo().setNotReadNum(notReadCounts.get(chatRoomViewDto.getChatRoomId()));
-            chatRoomViewDto.imgToImgUrl(s3Uploader.toUrl(chatRoomViewDto.getItemInfo().getItemImg()));
+            if (chatRoomViewDto.getItemInfo().getItemImg() != null) {
+                chatRoomViewDto.imgToImgUrl(s3Uploader.toUrl(chatRoomViewDto.getItemInfo().getItemImg()));
+            }
         }
 
         return ApiResponse.success("result", chatRoomListDtos);
@@ -123,10 +128,12 @@ public class ChatRoomController {
         ChatRoomInfoDto chatRoomInfoDto =
                 chatRoomViewRepository.getChatRoomInfo(chatRoomId, memberId).orElseThrow();
         chatRoomInfoDto.setMyId(memberId);
-        chatRoomInfoDto.getItemInfo().imgToImgUrl(s3Uploader.toUrl(chatRoomInfoDto.getItemInfo().getItemImg()));
+        if (chatRoomInfoDto.getItemInfo().getItemImg() != null) {
+            chatRoomInfoDto.getItemInfo().imgToImgUrl(s3Uploader.toUrl(chatRoomInfoDto.getItemInfo().getItemImg()));
+        }
         LocalDateTime now = LocalDateTime.now();
 
-        Pageable pageable = PageRequest.of(0, 2, Sort.by("lastModifiedDate").descending());
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("lastModifiedDate").descending());
         chatLogService.bulkUpdateRead(chatRoomId, memberId, now);
         Page<ChatLog> chatLogPage = chatLogService.getChatLogPage(chatRoomId, now, pageable);
         Page<ChatLogDto> chatLogDtos = chatLogPage.map(chatLog -> {
@@ -157,7 +164,8 @@ public class ChatRoomController {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ItemIdDto {
+    public static class CreateChatRoomDto {
         private Long itemId;
+        private String message;
     }
 }

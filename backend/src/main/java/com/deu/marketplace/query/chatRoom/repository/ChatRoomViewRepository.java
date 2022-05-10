@@ -86,7 +86,8 @@ public class ChatRoomViewRepository {
                                 .select(chatLog.lastModifiedDate.max())
                                 .from(chatLog)
                                 .groupBy(chatLog.chatRoom))),
-                        (deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))) // complete or appointment or null
+                        (deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name()))
+                                .or(deal.isNull()))) // complete or appointment or null
                 .orderBy(chatLog.lastModifiedDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -155,7 +156,9 @@ public class ChatRoomViewRepository {
                                 .or(chatRoom.item.member.id.eq(memberId)),
                         (itemImg.imgSeq.eq(1).or(itemImg.imgSeq.isNull())),
                         chatRoom.id.eq(chatRoomId),
-                        deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name())))
+                        deal.dealState.ne(DealState.valueOf(DealState.CANCEL.name()))
+                                .or(deal.isNull()))
                 .fetchOne());
+
     }
 }

@@ -64,15 +64,12 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
 
     const afterGetPage = (res) => {
         console.log(res);
-        // setIsLastPage(res.data.body.result.last);
-        // if (res.data.body.result.totalPages !== page) {
-            console.log(res.data.body.result);
-            // setContents([...contents, ...res.data.body.result.content]);
-            setContents([...res.data.body.result.content]);
-            setPage(res.data.body.result.number+1);
-            setTotalPage(res.data.body.result.totalPages);
-            setTotalElement(res.data.body.result.totalElement);
-        // }
+        console.log(res.data.body.result);
+        // setContents([...contents, ...res.data.body.result.content]);            
+        setContents([...res.data.body.result.content]);
+        setPage(res.data.body.result.number+1);
+        setTotalPage(res.data.body.result.totalPages);
+        setTotalElement(res.data.body.result.totalElement);
     };
     const getPages = (pageNum) => {
         console.log(pageNum);
@@ -118,7 +115,7 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
             </span>
             </>
             );
-        } else if (dddYear == nowYear && dddMonth == nowMonth && dddDate != nowDate) {
+        } else if (dddYear == nowYear) {
             return (
             <>
             <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>

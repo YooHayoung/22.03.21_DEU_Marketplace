@@ -8,6 +8,8 @@ import com.deu.marketplace.web.lecture.dto.LectureDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class ItemDetailDto {
     private Long itemId;
@@ -19,6 +21,7 @@ public class ItemDetailDto {
     private int price;
     private String description;
     private MemberShortInfoDto sellerInfo;
+    private String lastModifiedDate;
 
     @Builder
     public ItemDetailDto(Item item) {
@@ -41,5 +44,6 @@ public class ItemDetailDto {
         this.price = item.getPrice();
         this.description = item.getDescription();
         this.sellerInfo = MemberShortInfoDto.builder().member(item.getMember()).build();
+        this.lastModifiedDate = item.getLastModifiedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }

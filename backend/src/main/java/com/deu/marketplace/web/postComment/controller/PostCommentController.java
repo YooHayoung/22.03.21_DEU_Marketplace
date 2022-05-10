@@ -9,6 +9,7 @@ import com.deu.marketplace.web.postComment.dto.PostCommentDto;
 import com.deu.marketplace.web.postComment.dto.PostCommentSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -54,7 +55,12 @@ public class PostCommentController {
         PostCommentDto postCommentDto = PostCommentDto.builder()
                 .postComment(postComment)
                 .build();
-        return ApiResponse.success("result", postCommentDto);
+
+        return ApiResponse.success(
+                "result",
+                postCommentService.getPostCommentPage(postCommentSaveDto.getPostId(),
+                        PageRequest.of(0, 20, Sort.Direction.DESC, "createdDate"))
+                        .map(PostCommentDto::new));
     }
 
     @DeleteMapping("/{postCommentId}")

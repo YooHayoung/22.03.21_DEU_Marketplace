@@ -19,6 +19,7 @@ import SearchContainer from "./containers/SearchContainer";
 import InputItemInfoContainer from "./containers/InputItemInfoContainer";
 import PostListContainer from "./containers/PostListContainer";
 import PostDetailContainer from "./containers/PostDetailContainer";
+import NewChatRoomContainer from "./containers/NewChatRoomContainer";
 
 
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/update" element={<InputItemInfoContainer />}/>
           <Route path="/board" element={<PostListContainer />} />
           <Route path="/board/:postId" element={<PostDetailContainer />} />
+          <Route path="/chatRooms/new" element={<NewChatRoomContainer />} />
         </Routes>
       </CookiesProvider>
     </div>
