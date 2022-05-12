@@ -206,11 +206,10 @@ const PostDetailPage = ({token, setToken}) => {
                     {renderComments()}
                     {commentCount!=0?renderPostListBottom():null}
                 </Paper>
-                <FormControl fullWidth id="div_writeComment">
-                    <TextField multiline placeholder="댓글을 입력하세요" id="input_comment" variant="outlined" onChange={onCommentFeildHandleChange} value={commentFeild} />
+                <FormControl fullWidth id="div_writeComment" style={{marginBottom: 30}}>
+                    <TextField multiline placeholder="댓글을 입력하세요" id="input_comment" variant="outlined" onChange={onCommentFeildHandleChange} value={commentFeild} style={{padding: 0}} />
                     <Button variant="contained" id="btn_sub" onClick={onCommentSubmitBtnClick}>작성</Button>
                 </FormControl>
-                <Button onClick={() => {console.log(comments);console.log(commentPage);console.log(commentCount);}}>asd</Button>
                 </>
             );
         };

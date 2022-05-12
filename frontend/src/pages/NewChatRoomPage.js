@@ -45,7 +45,11 @@ const NewChatRoomPage = ({ token, setToken }) => {
         <div className="div_chatRoomPage">
             <HeaderContainer pageName={"새 채팅"}/>
             <div className="div_contents">
-                <ItemInfo itemInfo={itemInfo} itemSavedMemberId={location.state.itemSavedMemberId} myId={jwt_decode(token).sub} />
+                <ItemInfo newChatRoomInfo={
+                    {itemInfo: itemInfo,
+                    itemSavedMemberId: location.state.itemSavedMemberId,
+                    myId: jwt_decode(token).sub}
+                } />
             </div> 
             <BottomNav onClick={onChatSubmitBtnClick} />
         </div>

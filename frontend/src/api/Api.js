@@ -150,3 +150,23 @@ export const deletePost = (token, object) => {
 export const createChatRoom = (token, object) => {
    return client.post("/api/v1/chatRoom/new", object, {headers: {Authorization: `Bearer ${token}`}});
 }
+
+// post 거래 예약
+export const createDeal = (token, object) => {
+   return client.post("/api/v1/deal/new", object, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// patch 거래정보 변경
+export const updateDealInfo = (token, object) => {
+   return client.patch(`/api/v1/deal/${object.dealId}/update`, object.requestDto, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// patch 거래완료
+export const completeDeal = (token, object) => {
+   return client.patch(`/api/v1/deal/${object.dealId}/complete`, null, {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// delete 거래 취소
+export const cancelDeal = (token, object) => {
+   return client.delete(`/api/v1/deal/${object.dealId}`, {headers: {Authorization: `Bearer ${token}`}});
+}

@@ -23,6 +23,17 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
+    @Transactional
+    public Optional<Deal> updateDeal(Long dealId, String meetingPlace, String appointmentDate) {
+        Optional<Deal> deal = dealRepository.findById(dealId);
+        if (deal.isPresent()) {
+            deal.orElseThrow().updateDealInfo(meetingPlace, appointmentDate);
+        }
+        return deal;
+    }
+
+    @Override
+    @Transactional
     public Deal saveDeal(Deal deal) {
         return dealRepository.save(deal);
     }

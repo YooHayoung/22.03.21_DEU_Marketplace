@@ -23,7 +23,7 @@ import BarWithBackOnTop from "../components/nav/top/BarWithBackOnTop";
 // import jwt_decode from "jwt-decode";
 
 import './ChatRoomPage.scss'
-import { getChatPage, getChatRoom } from "../api/Api";
+import { cancelDeal, completeDeal, createDeal, getChatPage, getChatRoom, updateDealInfo } from "../api/Api";
 import { UseApi } from "../api/UseApi";
 import BottomNav from "../components/nav/bottom/BottomNav";
 import HeaderContainer from "../containers/HeaderContainer";
@@ -53,6 +53,7 @@ const ChatRoomPage = ({ token, setToken }) => {
          memberId: 0,
          nickname: ''
       },
+      dealInfo: {},
       myId: 0,
    });
    const [chats, setChats] = useState([]);
@@ -354,13 +355,105 @@ const ChatRoomPage = ({ token, setToken }) => {
          // 여기 부터 코드 작성
          // 스크롤 올리면 데이터 가져오기 실행
       }
-   }
+   };
+
+   
+   const afterCreateDeal = (res) => {
+      console.log(res.data.body.result);
+      setRoomInfo((prev) => ({
+         ...prev,
+         itemInfo: {
+            ...prev.itemInfo,
+            dealState: res.data.body.result.dealState
+         },
+         dealInfo: res.data.body.result.dealInfo
+      }));
+   };
+   const onCreateDealBtnClick = (appointmentDate, meetingPlace) => {
+      (async () => {
+         UseApi(createDeal, token, setToken, afterCreateDeal, {
+            chatRoomId: params.chatRoomId,
+            appointmentDate: appointmentDate,
+            meetingPlace: meetingPlace
+         })
+      })();
+   };
+
+   const afterUpdateDeal = (res) => {
+      console.log(res.data.body.result);
+      setRoomInfo((prev) => ({
+         ...prev,
+         itemInfo: {
+            ...prev.itemInfo,
+            dealState: res.data.body.result.dealState
+         },
+         dealInfo: {
+            ...prev.dealInfo,
+            appointmentDate: res.data.body.result.appointmentDate,
+            meetingPlace: res.data.body.result.meetingPlace
+         }
+      }));
+   };
+   const onUpdateDealBtnClick = (appointmentDate, meetingPlace) => {
+      (async () => {
+         UseApi(updateDealInfo, token, setToken, afterUpdateDeal, {
+            dealId: roomInfo.dealInfo.dealId,
+            requestDto: {
+               appointmentDate: appointmentDate,
+               meetingPlace: meetingPlace
+            }
+         });
+      })();
+   };
+   
+   const afterCompleteDeal = (res) => {
+      console.log(res.data.body.result);
+      setRoomInfo((prev) => ({
+         ...prev,
+         itemInfo: {
+            ...prev.itemInfo,
+            dealState: res.data.body.result.dealState
+         },
+      }));
+   };
+   const onCompleteDealBtnClick = () => {
+      (async () => {
+         UseApi(completeDeal, token, setToken, afterCompleteDeal, {dealId: roomInfo.dealInfo.dealId});
+      })();
+   };
+
+   const afterCancelDeal = (res) => {
+      console.log(res.data.body.result);
+      setRoomInfo((prev) => ({
+         ...prev,
+         itemInfo: {
+            ...prev.itemInfo,
+            dealState: null
+         },
+         dealInfo: null
+      }));
+   };
+   const onCancelDealBtnClick = () => {
+      (async () => {
+         UseApi(cancelDeal, token, setToken, afterCancelDeal, {dealId: roomInfo.dealInfo.dealId});
+      })();
+   };
 
    return (
       <div className="div_chatRoomPage">
          <HeaderContainer pageName={"채팅내역"}/>
          <div className="div_contents" ref={scrollRef}>
-            <ItemInfo itemInfo={roomInfo.itemInfo} itemSavedMemberId={roomInfo.itemSavedMemberInfo.memberId} myId={jwt_decode(token).sub} />
+            {/* {console.log(token)} */}
+            {(roomInfo.dealInfo!=null?Object.keys(roomInfo.dealInfo).length:1)!=0?
+               <ItemInfo 
+                  roomInfo={roomInfo} 
+                  myId={token?jwt_decode(token).sub:null} 
+                  onBtnClick={onCreateDealBtnClick} 
+                  onUpdateBtnClick={onUpdateDealBtnClick}
+                  onCompleteBtnClick={onCompleteDealBtnClick}
+                  onCancelBtnClick={onCancelDealBtnClick}
+               />
+            :null}
             {onScrollTop()}
             <div className="div_chatLogs">
                {/* <button onClick={getChats}>불러오기</button> */}
@@ -369,66 +462,8 @@ const ChatRoomPage = ({ token, setToken }) => {
                {renderChatLogs(chats)}
                {chatPage==0?document.body.scrollIntoView(false):null}
                {renderNewChatLogs(newChats)}
-               {/* <div className="div_myChatLog">
-                <div className="contents">내용내용내용내용내용내용내용</div>
-                <div className="sendTime">2022-04-30 19:28:20</div>
-            </div>
-            <div className="div_myChatLog">
-                <div className="contents">내용내용내용내용내용내용내용</div>
-                <div className="sendTime">2022-04-30 19:28:20</div>
-            </div>
-            <div className="div_targetNickname">닉네임</div>
-            <div className="div_targetChatLog">
-                <div className="contents">채팅내용채팅내용채팅내용</div>
-                <div className="sendTime">2022-04-30 19:30:11</div>
-            </div>
-            <div className="div_targetChatLog">
-                <div className="contents">채팅내용채팅내용채팅내용</div>
-                <div className="sendTime">2022-04-30 19:30:11</div>
-            </div>
-            <div className="div_targetChatLog">
-                <div className="contents">채팅내용채팅내용채팅내용</div>
-                <div className="sendTime">2022-04-30 19:30:11</div>
-            </div>
-            <div className="div_myChatLog">
-                <div className="contents">내용내용내용내용내용내용내용</div>
-                <div className="sendTime">2022-04-30 19:28:20</div>
-            </div>
-            <div className="div_targetNickname">닉네임</div>
-            <div className="div_targetChatLog">
-                <div className="contents">채팅내용채팅내용채팅내용</div>
-                <div className="sendTime">2022-04-30 19:30:11</div>
-            </div>
-            <div className="div_myChatLog">
-                <div className="contents">내용내용내용내용내용내용내용</div>
-                <div className="sendTime">2022-04-30 19:28:20</div>
-            </div>
-            <div className="div_targetNickname">닉네임</div>
-            <div className="div_targetChatLog">
-                <div className="contents">채팅내용채팅내용채팅내용</div>
-                <div className="sendTime">2022-04-30 19:30:11</div>
-            </div> */}
             </div> 
          </div> 
-         {/* <div>
-            {chatMessages && chatMessages.length > 0 && (
-               <ul>
-                  {chatMessages.map((_chatMessage, index) => (
-                     <li key={index}>{_chatMessage.message}</li>
-                  ))}
-               </ul>
-            )}
-            <div>
-               <input
-                  type={"text"}
-                  placeholder={"message"}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={(e) => e.which === 13 && publish(message)}
-               />
-               <button onClick={() => publish(message)}>send</button>
-            </div>
-         </div> */}
          <BottomNav onClick={publish} />
       </div>
    );

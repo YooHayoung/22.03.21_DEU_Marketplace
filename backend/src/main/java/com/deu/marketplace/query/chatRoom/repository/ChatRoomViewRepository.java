@@ -69,7 +69,8 @@ public class ChatRoomViewRepository {
                         chatRoom.requestedMember.id,
                         chatRoom.requestedMember.nickname,
                         chatLog.content,
-                        chatLog.lastModifiedDate
+                        chatLog.lastModifiedDate,
+                        deal
                 ))
                 .from(chatRoom)
                 .leftJoin(chatRoom.requestedMember, new QMember("requestedMember"))
@@ -115,9 +116,10 @@ public class ChatRoomViewRepository {
                         chatLog.id.count())
                 .from(chatRoom)
                 .leftJoin(chatLog).on(chatLog.chatRoom.eq(chatRoom).and(chatLog.isRead.eq(false)))
-                .where(chatRoom.id.in(chatRoomIds))
+                .where(chatRoom.id.in(chatRoomIds).and(chatLog.recipient.id.eq(memberId)))
                 .groupBy(chatRoom.id)
                 .fetch();
+        System.out.println("memberId = " + memberId);
 
         Map<Long, Long> map = new HashMap<>();
         for (Tuple tuple : result) {
@@ -143,7 +145,8 @@ public class ChatRoomViewRepository {
                         item.member.id,
                         item.member.nickname,
                         chatRoom.requestedMember.id,
-                        chatRoom.requestedMember.nickname
+                        chatRoom.requestedMember.nickname,
+                        deal
                 ))
                 .from(chatRoom)
                 .leftJoin(chatRoom.requestedMember, new QMember("requestedMember"))

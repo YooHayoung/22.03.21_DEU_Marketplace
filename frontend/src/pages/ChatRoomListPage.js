@@ -11,6 +11,7 @@ import HeaderContainer from "../containers/HeaderContainer";
 import BottomNav from "../components/nav/bottom/BottomNav";
 import { useLocation } from "../../node_modules/react-router/index";
 import { Button } from "../../node_modules/@material-ui/core/index";
+import jwt_decode from "jwt-decode";
 
 
 const ChatRoomListPage = ({ token, setToken }) => {
@@ -53,7 +54,7 @@ const ChatRoomListPage = ({ token, setToken }) => {
       })();
    }
 
-   const renderChatRooms = contents.map((content) => (<ChatRoom content={content} key={content.chatRoomId} />));
+   const renderChatRooms = contents.map((content) => (<ChatRoom content={content} myId={jwt_decode(token).sub} key={content.chatRoomId} />));
 
    return (
       <>

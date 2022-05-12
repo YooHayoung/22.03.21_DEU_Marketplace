@@ -84,6 +84,7 @@ public class ChatRoomController {
                             chatRoomViewDto.getSavedItemMemberInfo(),
                             chatRoomViewDto.getRequestedMemberInfo()))
                     .lastLogInfo(chatRoomViewDto.getLastLogInfo())
+                    .dealInfo(chatRoomViewDto.getDealInfo())
                     .build();
         });
         Map<Long, Long> notReadCounts =
