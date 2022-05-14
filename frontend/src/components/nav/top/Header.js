@@ -24,7 +24,7 @@ const Header = (props) => {
         navigate(-1);
     }
     /* 
-        type: main || back || backAndSave
+        type: main || back 
     */
     const selectHeader = (pageName) => {
         // if(type === 'main'){
@@ -43,14 +43,15 @@ const Header = (props) => {
             <div className='header_pageName'><b>{pageTitle}</b></div>
             <SearchIcon className="header_searchIcon" fontSize={"large"} onClick={() => window.location.pathname="/search"}/>
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
-            <Person className="person" fontSize={"large"}/>
+            <Person className="person" fontSize={"large"} onClick={() => window.location.pathname="/myPage"} />
             </>
             );
         }
         else if ((url.startsWith('/item/') && url.substring('/item/'.length)!='') || 
                     (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') ||
                     (url === '/search') || (url==='/save') || (url==='/update') ||
-                    (url.startsWith('/board/') && url.substring('/board/'.length)!='')) {
+                    (url.startsWith('/board/') && url.substring('/board/'.length)!='') ||
+                    (url === '/myPage')) {
                         console.log(url.substring('/chatRooms/'.length))
             return (
                 <>

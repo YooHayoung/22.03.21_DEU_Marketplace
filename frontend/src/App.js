@@ -20,6 +20,7 @@ import InputItemInfoContainer from "./containers/InputItemInfoContainer";
 import PostListContainer from "./containers/PostListContainer";
 import PostDetailContainer from "./containers/PostDetailContainer";
 import NewChatRoomContainer from "./containers/NewChatRoomContainer";
+import MyPageContainer from "./containers/MyPageContainer";
 
 
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/chatRooms/:chatRoomId" element={<ChatRoomContainer />} />
           <Route path="/notFound" element={<NotFound />} />
           <Route path="/search" element={<SearchContainer />} />
+          <Route path="/myPage" element={<MyPageContainer />} />
           <Route path="/save" element={<InputItemInfoContainer />}/>
           <Route path="/update" element={<InputItemInfoContainer />}/>
           <Route path="/board" element={<PostListContainer />} />

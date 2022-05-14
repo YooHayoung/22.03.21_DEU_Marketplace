@@ -155,7 +155,7 @@ const Story = ({token, setToken}) => {
             >
                 {classification==='board'?renderPostSearch():renderItemSearch()}
             </Box>
-            <Link to={`/${classification}`} 
+            <Link to={classification=='sell'?'/':`/${classification}`} 
                 state= {{
                     category: selectCategory,
                     title: searchWord,

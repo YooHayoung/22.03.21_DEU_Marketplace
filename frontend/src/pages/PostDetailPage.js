@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Backdrop, Button, CircularProgress, Divider, FormControl, Grid, IconButton, Paper, TextField, Typography } from "../../node_modules/@material-ui/core/index";
+import { Backdrop, Box, Button, CircularProgress, Divider, FormControl, Grid, IconButton, Paper, TextField, Typography } from "../../node_modules/@material-ui/core/index";
 import { useNavigate, useParams } from "../../node_modules/react-router/index";
 import { deletePost, deletePostComment, getPostCommentPage, getPostDetail, savePostComment } from "../api/Api";
 import { UseApi } from "../api/UseApi";
@@ -21,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './PostDetailPage.scss';
 import PostDetailCommentList from "../components/contents/postDetail/PostDetailCommentList";
 import { Stack } from "../../node_modules/@mui/material/index";
+import RCarousel from "../components/contents/itemDetail/RCarousel";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -184,6 +185,14 @@ const PostDetailPage = ({token, setToken}) => {
         }
     };
 
+    const renderPostImgs = () => {
+        // console.log(content.imgList);
+        if (loading === true && content.postImgs.length!=0)
+        // if (content.imgList.length !== 0)
+            // return <div className="div_imgs"><ItemDetailImgs imgList={content.imgList}/></div>;
+            return <div className="div_imgs"><RCarousel imgList={content.postImgs}/></div>;
+        // else return <ItemDetailImgs imgList={[{img:""}]}/>;
+    };
 
     const renderCon = () => {
         if (loading === true) {
@@ -195,17 +204,20 @@ const PostDetailPage = ({token, setToken}) => {
                 <PostDetailTitle title={content.postInfo.title} createdDate={content.postInfo.createdDate} category={content.postInfo.postCategoryInfo} />
                 <Divider />
                 <PostDetailContent content={content.postInfo.content} />
+                {renderPostImgs()}
                 <Divider />
                 <PostDetailMemberInfo memberInfo={content.postInfo.memberShortInfo} />
                 <Divider />
                 {/* <PostDetailCommentList commentCount={commentCount} comments={comments} /> */}
-                <Paper className="div_paper">
+                <Box className="div_paper">
                     <div className="div_class">
                         <div className="label">댓글</div><div className="content">{commentCount}개</div>
                     </div>
+                    <Divider/>
                     {renderComments()}
                     {commentCount!=0?renderPostListBottom():null}
-                </Paper>
+                </Box>
+                <Divider/>
                 <FormControl fullWidth id="div_writeComment" style={{marginBottom: 30}}>
                     <TextField multiline placeholder="댓글을 입력하세요" id="input_comment" variant="outlined" onChange={onCommentFeildHandleChange} value={commentFeild} style={{padding: 0}} />
                     <Button variant="contained" id="btn_sub" onClick={onCommentSubmitBtnClick}>작성</Button>
@@ -273,7 +285,7 @@ const PostDetailPage = ({token, setToken}) => {
         return (comments.map((comment, idx) => {
             return (
                 <>
-                <Paper
+                <Box
                 sx={{
                     p: 1,
                     margin: 'auto',
@@ -309,8 +321,8 @@ const PostDetailPage = ({token, setToken}) => {
                         </Grid>
                     </Grid>
                 </Grid>
-                </Paper>
-                {/* <Divider /> */}
+                </Box>
+                <Divider />
                 </>
             );
         }));

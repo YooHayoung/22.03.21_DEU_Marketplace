@@ -107,15 +107,12 @@
 
 .div_imgs {
     width: 100%;
-    height: 23rem;
+    // height: 23rem;
     overflow: hidden;
 
     img {
-        // max-width: 100%; 
-        // max-height: 100%;
         max-width: 100%;
-        // max-height: 100%;
-        height: 23rem;
+        max-height: 17rem;
         object-fit: contain;
         
     }
@@ -124,6 +121,17 @@
     margin-top: 1rem;
     display: grid;
     grid-template-columns: 9fr 1fr;
+
+    // .css-1o2jng6-MuiOutlinedInput-notchedOutline{
+    //     text-align:left;
+    //     position:absolute;
+    //     bottom:0;
+    //     right:0;
+    //     top:0;
+    //     left:0;
+    //     margin:0;
+    //     padding:0 8px;
+    //     pointer-events:none;border-radius:inherit;border-style:solid;border-width:1px;overflow:hidden;min-width:0%;border-color:rgba(0, 0, 0, 0.23);}
 
     #input_comment {
         grid-column: 1;
@@ -136,9 +144,13 @@
         margin-top: auto;
     }
 
-    .MuiOutlinedInput-multiline {
-        padding-top: 0.5rem;
-        padding-bottom: 0.7rem;
+    // .MuiOutlinedInput-multiline {
+    //     padding-top: 0.5rem;
+    //     padding-bottom: 0.7rem;
+    // }
+    .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root {
+        padding: 0;
+        padding: 0.5rem;
     }
 }
 }

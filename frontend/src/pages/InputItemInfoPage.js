@@ -29,6 +29,8 @@ import { FixedSizeList } from 'react-window';
 import { Delete } from "../../node_modules/@material-ui/icons/index";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useLocation, useNavigate } from "../../node_modules/react-router/index";
+import NumberFormat from 'react-number-format';
+import PropTypes from 'prop-types';
 
 const style = {
     position: 'absolute',
@@ -40,6 +42,33 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+  };
+
+  const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
+    const { onChange, ...other } = props;
+  
+    return (
+      <NumberFormat
+        {...other}
+        getInputRef={ref}
+        onValueChange={(values) => {
+          onChange({
+            target: {
+              name: props.name,
+              value: values.value,
+            },
+          });
+        }}
+        thousandSeparator
+        isNumericString
+        // prefix="$"
+      />
+    );
+  });
+  
+  NumberFormatCustom.propTypes = {
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
 const InputItemInfoPage = ({token, setToken}) => {
@@ -80,9 +109,33 @@ const InputItemInfoPage = ({token, setToken}) => {
     const [description, setDescription] = useState(location.state?location.state.description:'');
     const [contents, setContents] = useState(location.state?location.state.contents:'');
     const [loading, setLoading] = React.useState(false);
+
+    const [titleFieldError, setTitleFieldError] = React.useState(false);
+    const [categoryFieldError, setCategoryFieldError] = React.useState(false);
+    const [priceFieldError, setPriceFieldError] = React.useState(false);
+    const [descriptionFieldError, setDescriptionFieldError] = React.useState(false);
+    const [lectureFieldError, setLectureFieldError] = React.useState(false);
+    const [writeStateFieldError, setWriteStateFieldError] = React.useState(false);
+    const [surfaceStateFieldError, setSurfaceStateFieldError] = React.useState(false);
+    const [regularPriceFieldError, setRegularPriceFieldError] = React.useState(false);
+    const [postContentFieldError, setPostContentFieldError] = React.useState(false);
+    const [priceFieldWarn, setPriceFieldWarn] = React.useState(false);
+
+    const setAllFieldError = (value) => {
+        setTitleFieldError(value);
+        setCategoryFieldError(value);
+        setPriceFieldError(value);
+        setDescriptionFieldError(value);
+        setLectureFieldError(value);
+        setWriteStateFieldError(value);
+        setSurfaceStateFieldError(value);
+        setRegularPriceFieldError(value);
+        setPostContentFieldError(value);
+    };
+
     function handleClick() {
       setLoading(true);
-    }
+    };
     const [alertOpen, setAlertOpen] = React.useState({
         open: false,
         Transition: Fade,
@@ -150,7 +203,7 @@ const InputItemInfoPage = ({token, setToken}) => {
             ...alertOpen,
             open: false,
         });
-    }
+    };
 
     const imgPlusButton = () => {
         return (
@@ -191,12 +244,12 @@ const InputItemInfoPage = ({token, setToken}) => {
                     {/* {imgs.length>=10?null:(imgPlusButton())} */}
                 </div>
                 <Snackbar 
-                        open={alertOpen.open}
-                        onClose={alertOpenHandleClose}
-                        TransitionComponent={alertOpen.Transition}
-                        message="이미지는 최대 10개 까지만 업로드 가능합니다."
-                        key={alertOpen.Transition.name}
-                    />
+                    open={alertOpen.open}
+                    onClose={alertOpenHandleClose}
+                    TransitionComponent={alertOpen.Transition}
+                    message="이미지는 최대 10개 까지만 업로드 가능합니다."
+                    key={alertOpen.Transition.name}
+                />
             </div>
             </>
         );
@@ -204,14 +257,23 @@ const InputItemInfoPage = ({token, setToken}) => {
 
     function getCategoryInfo(element)  {
         if(element.categoryName === selectCategorName)  {
-          return element;
+            return element;
         }
-      }
+    };
     
     const setClassHandleChange = (event, value) => {
+        setAllFieldError(false);
         setClassification(value?value:classification);
+        if (((value?value:classification)=="sell"||(value?value:classification)=="buy")&&(classification=="board")) {
+            setSelectCategoryName('');
+        } else if (((value?value:classification)=="board")&&(classification=="sell"||classification=="buy")) {
+            setSelectCategoryName('');
+        }
     };
     const selectCategorNameHandleChange = (event) => {
+        if (categoryFieldError) { //
+            setCategoryFieldError(false);
+        }
         setSelectCategoryName(event.target.value);
     };
 
@@ -222,18 +284,38 @@ const InputItemInfoPage = ({token, setToken}) => {
         setPostCategory(res.data.body.result);
     };
     const onTitledHandleChange = (e) => {
+        if (titleFieldError) {
+            setTitleFieldError(false);
+        }
         setTitle(e.target.value);
     };
     const onPriceHandleChange = (event) => {
+        // let checkNum = /[0-9]{0,9}$/;
+        // let checkDigit = /{0,9}/;
+        // 최대 999,999,999
+        // 숫자만 입력하세요.
+
+        if (priceFieldError) {
+            setPriceFieldError(false);
+        }
         setPrice(event.target.value);
     };
     const onDescriptionHandleChange = (e) => {
+        if (descriptionFieldError) {
+            setDescriptionFieldError(false);
+        }
         setDescription(e.target.value);
     };
     const onContentsHandleChange = (e) => {
+        if (postContentFieldError) {
+            setPostContentFieldError(false);
+        }
         setContents(e.target.value);
     };
     const onWriteStateHandleChange = (e) => {
+        if (writeStateFieldError) {
+            setWriteStateFieldError(false);
+        }
         setBookState((prevState) => {
             return {
                 ...prevState,
@@ -242,6 +324,9 @@ const InputItemInfoPage = ({token, setToken}) => {
         });
     };
     const onSurfaceStateHandleChange = (e) => {
+        if (surfaceStateFieldError) {
+            setSurfaceStateFieldError(false);
+        }
         setBookState((prevState) => {
             return {
                 ...prevState,
@@ -250,6 +335,9 @@ const InputItemInfoPage = ({token, setToken}) => {
         });
     };
     const onregularPriceHandleChange = (e) => {
+        if (regularPriceFieldError) { // 
+            setRegularPriceFieldError(false);
+        }
         setBookState((prevState) => {
             return {
                 ...prevState,
@@ -297,12 +385,13 @@ const InputItemInfoPage = ({token, setToken}) => {
     const afterPostImgSaved = (res) => {
         console.log(res);
         window.location.href=`/board/${res.data.body.result}`;
-    }
+    };
 
     const afterItemUpdate = (res) => {
         const itemId = res.data.body.result;
         if (location.state.imgList == origImgs && files.length==0) {
             console.log("imgList is same");
+            window.location.href=`/item/${res.data.body.result}`;
         } else {
             console.log({
                 itemId: itemId,
@@ -337,18 +426,18 @@ const InputItemInfoPage = ({token, setToken}) => {
         window.location.href=`/item/${res.data.body.result}`;
     };
     const afterPostUpdate = (res) => {
-        const itemId = res.data.body.result;
+        const postId = res.data.body.result;
         if (location.state.imgList == origImgs && files.length==0) {
-            console.log("imgList is same");
+            window.location.href=`/board/${res.data.body.result}`;
         } else {
             console.log({
-                postId: itemId,
+                postId: postId,
                 delImgs: delImgs,
                 origImgs: origImgs,
                 files: files
             });
             const formData = new FormData();
-            formData.append("postId", itemId);
+            formData.append("postId", postId);
             delImgs.forEach((delImg, idx) => {
                 formData.append(`delImgs[${idx}].img`, delImg.img);
                 formData.append(`delImgs[${idx}].imgId`, delImg.imgId);
@@ -363,11 +452,8 @@ const InputItemInfoPage = ({token, setToken}) => {
                 formData.append(`origImgs[${idx}].seq`, origImg.seq);
             });
             Array.from(files).forEach(file => formData.append("files", file));
-            // (async () => {
             UseApi(updatePostImgs, token, setToken, afterPostImgUpdate, formData);
-            // })();
         }
-        // window.location.href=`/item/${itemId}`;
     };
     const afterPostImgUpdate = (res) => {
         console.log(res);
@@ -401,7 +487,7 @@ const InputItemInfoPage = ({token, setToken}) => {
                 bookStateInfo: {
                     writeState: bookState.writeState,
                     surfaceState: bookState.surfaceState,
-                    regularPrice: bookState.regularPrice
+                    regularPrice: bookState.regularPrice==""?0:bookState.regularPrice
                 },
                 price: price,
                 description: description
@@ -436,16 +522,106 @@ const InputItemInfoPage = ({token, setToken}) => {
         handleSaveClose();
     };
     const onSaveBtnClick = () => {
-        // if (classification == "sell") {
-        //     console.log("sell");
-        // } else if (classification == "buy") {
-        //     console.log("buy");
-        // } else {
-        //     console.log("board");
-        // }
-        setOpen(true);
-        setLoading(true);
-        save();
+        let cond = true;
+        if (classification == "sell") {
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (description == '') {
+                cond = false;
+                setDescriptionFieldError(true);
+            }
+            if (!(/^[0-9]{0,8}$/.test(price))) {
+                // console.log(price);
+                // console.log(/^[0-9]{0,8}$/.test(price));
+                cond = false;
+                setPriceFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            } else {
+                if (selectCategorName == "대학 교재") {
+                    if (bookState.writeState == "") {
+                        cond = false;
+                        setWriteStateFieldError(true);
+                    }
+                    if (bookState.surfaceState == "") {
+                        cond = false;
+                        setSurfaceStateFieldError(true);
+                    }
+                    if (!(/^[0-9]{0,8}$/.test(bookState.regularPrice))) {
+                        // console.log(bookState.regularPrice);
+                        cond = false;
+                        setRegularPriceFieldError(true);
+                    }
+                    if (lecture.lectureId == "") {
+                        cond = false;
+                        setLectureFieldError(true);
+                    }
+                } else if (selectCategorName == "강의 관련 물품") {
+                    if (lecture.lectureId == "") {
+                        cond = false;
+                        setLectureFieldError(true);
+                    }
+                } else if (selectCategorName == "서적") {
+                    if (bookState.writeState == "") {
+                        cond = false;
+                        setWriteStateFieldError(true);
+                    }
+                    if (bookState.surfaceState == "") {
+                        cond = false;
+                        setSurfaceStateFieldError(true);
+                    }
+                    if (!(/^[0-9]{0,8}$/.test(bookState.regularPrice))) {
+                        // console.log(bookState.regularPrice);
+                        cond = false;
+                        setRegularPriceFieldError(true);
+                    }
+                }
+            }
+        } else if (classification == "buy") {
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (description == '') {
+                cond = false;
+                setDescriptionFieldError(true);
+            }
+            if (!(/^[0-9]{0,8}$/.test(price))) {
+                // console.log(price);
+                // console.log(/^[0-9]{0,8}$/.test(price));
+                cond = false;
+                setPriceFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            }
+        } else { // 게시판
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (contents == '') {
+                cond = false;
+                setPostContentFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            }
+        }
+
+        if (cond) {
+            setOpen(true);
+            setLoading(true);
+            save();
+            // console.log("데이터 전송");
+        }
+        // setAllFieldError(true);
     };
 
     const update = () => {
@@ -505,9 +681,63 @@ const InputItemInfoPage = ({token, setToken}) => {
         }
     };
     const onUpdateBtnClick = () => {
-        setOpen(true);
-        setLoading(true);
-        update();
+        let cond = false;
+        if (classification == "sell") {
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (description == '') {
+                cond = false;
+                setDescriptionFieldError(true);
+            }
+            if (!(/^[0-9]{0,8}$/.test(price))) {
+                cond = false;
+                setPriceFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            }
+        } else if (classification == "buy") {
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (description == '') {
+                cond = false;
+                setDescriptionFieldError(true);
+            }
+            if (!(/^[0-9]{0,8}$/.test(price))) {
+                // console.log(price);
+                // console.log(/^[0-9]{0,8}$/.test(price));
+                cond = false;
+                setPriceFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            }
+        } else { // 게시판
+            if (title == '') {
+                cond = false;
+                setTitleFieldError(true);
+            }
+            if (contents == '') {
+                cond = false;
+                setPostContentFieldError(true);
+            }
+            if (selectCategorName == '') {
+                cond = false;
+                setCategoryFieldError(true);
+            }
+        }
+
+        if (cond) {
+            setOpen(true);
+            setLoading(true);
+            update();
+        }
     }
 
     const getLectureList = (pageNum) => {
@@ -549,7 +779,10 @@ const InputItemInfoPage = ({token, setToken}) => {
     };
 
     const selectLecture = (index) => {
-        console.log(lectureList[index]);
+        if (lectureFieldError) {
+            setLectureFieldError(false);
+        }
+        // console.log(lectureList[index]);
         setLecture({
             lectureId: lectureList[index].lectureId,
             lectureName: lectureList[index].lectureName,
@@ -582,12 +815,12 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderModal = () => {
         return (
             <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         강의 검색
                     </Typography>
@@ -599,25 +832,25 @@ const InputItemInfoPage = ({token, setToken}) => {
                             <TextField label="교수명" className='search_professorName' id="search_professorName" onChange={onModalProfessorNameHandleChange}/>
                         </FormControl>
                         <div id="btn_search">
-                        <Button onClick={onSearchLectureClick}>검색</Button>
+                            <Button onClick={onSearchLectureClick}>검색</Button>
                         </div>
                         <Box
-                        sx={{ width: '100%', height: 330, bgcolor: 'background.paper' }}
+                            sx={{ width: '100%', height: 330, bgcolor: 'background.paper' }}
                         >
-                        <FixedSizeList
-                            height={300}
-                            width={'100%'}
-                            itemSize={40}
-                            itemCount={lectureList.length}
-                            overscanCount={5}
-                        >
-                            {renderRow}
-                        </FixedSizeList>
+                            <FixedSizeList
+                                height={300}
+                                width={'100%'}
+                                itemSize={40}
+                                itemCount={lectureList.length}
+                                overscanCount={5}
+                            >
+                                {renderRow}
+                            </FixedSizeList>
                         </Box>
                     </Typography>
                     {lectureList.length!==0?renderPageControlButton():null}
-                    </Box>
-                </Modal>
+                </Box>
+            </Modal>
         );
     };
 
@@ -635,14 +868,6 @@ const InputItemInfoPage = ({token, setToken}) => {
                 <ToggleButton id="btn_tg" value="buy"><ShoppingBagIcon id="btn_icon" />삽니다</ToggleButton>
                 <ToggleButton id="btn_tg" value="board"><ArticleIcon id="btn_icon" />게시판</ToggleButton>
             </ToggleButtonGroup>
-            // <FormControl>
-            //     {/* <FormLabel id="trade_name" className='trade_name'>구분</FormLabel> */}
-            //     <RadioGroup aria-labelledby="trade_name" name="trade" row defaultValue="sell" onChange={setClassHandleChange}>
-            //         <FormControlLabel value="sell" control={<Radio />} label="팝니다" />
-            //         <FormControlLabel value="buy" control={<Radio />} label="삽니다" />
-            //         <FormControlLabel value="board" control={<Radio />} label="게시판" />
-            //     </RadioGroup>
-            // </FormControl>
         );
     }
 
@@ -659,11 +884,15 @@ const InputItemInfoPage = ({token, setToken}) => {
                         value={lecture.lectureName} 
                         InputProps={{
                             readOnly: true,
-                        }} InputLabelProps={{
+                        }} 
+                        InputLabelProps={{
                             shrink: true,
-                        }} sx={{
+                        }} 
+                        sx={{
                             '& > :not(style)': { mb: 1}
-                    }}/>
+                        }}
+                        error={lectureFieldError}
+                    />
                 </FormControl>
                 <FormControl fullWidth onClick={handleOpen}>
                     <TextField 
@@ -676,7 +905,10 @@ const InputItemInfoPage = ({token, setToken}) => {
                         }} 
                         InputLabelProps={{
                             shrink: true,
-                    }}/>
+                        }}
+                        error={lectureFieldError}
+                        helperText={lectureFieldError?"강의를 선택해주세요.":null}
+                    />
                 </FormControl>
             </div>
             </>
@@ -688,24 +920,39 @@ const InputItemInfoPage = ({token, setToken}) => {
             <Box className="div_bookStateInfo" fullWidth sx={{
                     '& > :not(style)': { mt: 0.6, mb: 1}
             }}>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={writeStateFieldError}>
                 <InputLabel id="wirteState_label">필기상태</InputLabel>
                 <Select labelId="wirteState_label" id="txt_writeState" value={bookState.writeState} label="writeState" onChange={onWriteStateHandleChange}>
                     <MenuItem key={"mi"+1} value={"좋음"}>좋음</MenuItem>
                     <MenuItem key={"mi"+2} value={"보통"}>보통</MenuItem>
                     <MenuItem key={"mi"+3} value={"나쁨"}>나쁨</MenuItem>
                 </Select>
+                {writeStateFieldError?<FormHelperText style={{color: "#d32f2f"}}>상태를 선택하세요.</FormHelperText>:null}
                 </FormControl>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={surfaceStateFieldError}>
                 <InputLabel id="surfaceState_label">외관상태</InputLabel>
                 <Select labelId="surfaceState_label" id="txt_writeState" value={bookState.surfaceState} label="surfaceState" onChange={onSurfaceStateHandleChange}>
                     <MenuItem key={"mi"+4} value={"좋음"}>좋음</MenuItem>
                     <MenuItem key={"mi"+5} value={"보통"}>보통</MenuItem>
                     <MenuItem key={"mi"+6} value={"나쁨"}>나쁨</MenuItem>
                 </Select>
+                {surfaceStateFieldError?<FormHelperText style={{color: "#d32f2f"}}>상태를 선택하세요.</FormHelperText>:null}
                 </FormControl>
                 <FormControl fullWidth>
-                <TextField  label="정가" className='txt_regularPrice' id="txt_regularPrice" defaultValue={bookState.regularPrice} onChange={onregularPriceHandleChange} InputProps={{endAdornment:(<InputAdornment position="end">원</InputAdornment>)}} />
+                    <TextField 
+                        label="정가" 
+                        className='txt_regularPrice' 
+                        id="txt_regularPrice" 
+                        defaultValue={bookState.regularPrice} 
+                        onChange={onregularPriceHandleChange} 
+                        InputProps={{
+                            endAdornment:(<InputAdornment position="end" style={{marginLeft: 2}}>원</InputAdornment>),
+                            style:{paddingRight: 10},
+                            inputComponent: NumberFormatCustom,
+                        }} 
+                        error={regularPriceFieldError}
+                        helperText={regularPriceFieldError?"최대 99,999,999원":null}
+                    />
                 </FormControl>
             </Box>
         </>
@@ -723,29 +970,53 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderTitleField = () => {
         return (
             <FormControl fullWidth>
-            <TextField label="제목" className='txt_title' id="txt_title" defaultValue={title} onChange={onTitledHandleChange}/>
+                <TextField 
+                    label="제목" 
+                    className='txt_title' 
+                    id="txt_title" 
+                    defaultValue={title} 
+                    onChange={onTitledHandleChange}
+                    error={titleFieldError}
+                    helperText={titleFieldError?"제목을 입력하세요.":null}
+                />
             </FormControl>
         );
     };
 
     const renderItemCategory = () => {
         return (
-            <FormControl fullWidth >
+            <FormControl fullWidth error={categoryFieldError}>
                 <InputLabel id="category_label">카테고리</InputLabel>
-                <Select defaultValue={selectCategorName} labelId="category_label" id="category_select" value={selectCategorName} label="category" onChange={selectCategorNameHandleChange}>
+                <Select 
+                    defaultValue={selectCategorName} 
+                    labelId="category_label" 
+                    id="category_select" 
+                    value={selectCategorName} 
+                    label="category" 
+                    onChange={selectCategorNameHandleChange}
+                >
                     {renderItemCategoryList()}
                 </Select>
+                {categoryFieldError?<FormHelperText style={{color: "#d32f2f", marginLeft: 14, marginRight: 14}}>카테고리를 선택하세요.</FormHelperText>:null}
             </FormControl>
         );
     };
 
     const renderPostCategory = () => {
         return (
-            <FormControl fullWidth >
+            <FormControl fullWidth error={categoryFieldError}>
                 <InputLabel id="category_label">카테고리</InputLabel>
-                <Select defaultValue={selectCategorName} labelId="category_label" id="category_select" value={selectCategorName} label="category" onChange={selectCategorNameHandleChange}>
+                <Select 
+                    defaultValue={selectCategorName} 
+                    labelId="category_label" 
+                    id="category_select" 
+                    value={selectCategorName} 
+                    label="category" 
+                    onChange={selectCategorNameHandleChange}
+                >
                     {renderPostCategoryList()}
                 </Select>
+                {categoryFieldError?<FormHelperText style={{color: "#d32f2f", marginLeft: 14, marginRight: 14}}>카테고리를 선택하세요.</FormHelperText>:null}
             </FormControl>
         );
     };
@@ -753,7 +1024,20 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderPriceField = () => {
         return (
             <FormControl fullWidth>
-                <TextField label="희망가격" id="txt_price" defaultValue={price} onChange={onPriceHandleChange} InputProps={{endAdornment:(<InputAdornment position="end">원</InputAdornment>)}} />
+                <TextField 
+                    label="희망가격" 
+                    id="txt_price" 
+                    defaultValue={price} 
+                    onChange={onPriceHandleChange} 
+                    InputProps={{
+                        endAdornment:(<InputAdornment position="end" style={{marginLeft: 2}}>원</InputAdornment>),
+                        style:{paddingRight: 10},
+                        inputMode: 'numeric', pattern: '[0-9]*',
+                        inputComponent: NumberFormatCustom,
+                    }} 
+                    error={priceFieldError}
+                    helperText={priceFieldError?"최대 99,999,999원":null}
+                />
             </FormControl>
         );
     };
@@ -761,7 +1045,17 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderDescriptionFeild = () => {
         return (
             <FormControl fullWidth>
-                <TextField multiline label="설명" className='txt_description' id="txt_description" defaultValue={description} onChange={onDescriptionHandleChange} rows={10}/>
+                <TextField 
+                    multiline 
+                    label="설명" 
+                    className='txt_description' 
+                    id="txt_description" 
+                    defaultValue={description} 
+                    onChange={onDescriptionHandleChange} 
+                    rows={10}
+                    error={descriptionFieldError}
+                    helperText={descriptionFieldError?"물품에 대해 설명해주세요.":null}
+                />
             </FormControl>
         );
     };
@@ -769,7 +1063,17 @@ const InputItemInfoPage = ({token, setToken}) => {
     const renderContentsFeild = () => {
         return (
             <FormControl fullWidth>
-                <TextField multiline label="내용" className='txt_contents' id="txt_contents" defaultValue={contents} onChange={onContentsHandleChange} rows={10}/>
+                <TextField 
+                    multiline 
+                    label="내용" 
+                    className='txt_contents' 
+                    id="txt_contents" 
+                    defaultValue={contents} 
+                    onChange={onContentsHandleChange} 
+                    rows={10}
+                    error={postContentFieldError}
+                    helperText={postContentFieldError?"게시물 내용을 입력해주세요.":null}
+                />
             </FormControl>
         );
     };
@@ -817,17 +1121,6 @@ const InputItemInfoPage = ({token, setToken}) => {
         
     }, []);
 
-    // 1개는 되는데 2개이상 실패
-    // cors 정책...
-    const convertURLtoFile = async (url) => {
-        const response = await fetch(url);
-        const data = await response.blob();
-        const ext = url.split(".").pop();
-        const filename = url.split("/").pop();
-        const metadata = { type: `image/${ext}` };
-        return new File([data], filename, metadata);
-    };
-
     return (
         <>
         <HeaderContainer pageName={itemId==0?(classification==="sell"?"판매 물품 작성":(classification==="buy"?"구매 물품 작성":"게시물 작성")):(classification==="sell"?"판매 물품 수정":(classification==="buy"?"구매 물품 수정":"게시물 수정"))} />
@@ -853,7 +1146,7 @@ const InputItemInfoPage = ({token, setToken}) => {
                     variant="contained"
                     onClick={() => onSaveBtnClick()}
                 >
-                        저장
+                    저장
                 </LoadingButton>
                 :<LoadingButton 
                     loading={loading}
@@ -862,7 +1155,7 @@ const InputItemInfoPage = ({token, setToken}) => {
                     variant="contained"
                     onClick={() => onUpdateBtnClick()}
                 >
-                        수정
+                    수정
                 </LoadingButton>
             }
         </div>

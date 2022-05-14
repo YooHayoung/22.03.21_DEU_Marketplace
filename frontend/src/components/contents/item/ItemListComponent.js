@@ -7,29 +7,33 @@ import { UseApi } from "../../../api/UseApi";
 import { setWishItem } from "../../../api/Api";
 import { Link } from "../../../../node_modules/react-router-dom/index";
 import noImg from "/Users/hayoungyoo/yoo_dev/22.03.21_DEU_Marketplace/frontend/src/noImg.png";
-import { Card } from "../../../../node_modules/@material-ui/core/index";
+import { Card, Chip } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemListComponent = (props) => {
     const [content, setContent] = useState(props.content);
 
     const renderDealState = (dealState) => {
-        if (dealState === 'APPOINTMENT') return <div className="itemDealState">예약중</div>;
-        else if (dealState === 'COMPLETE') return <div className="itemDealState">거래완료</div>;
+        if (dealState === 'APPOINTMENT') return <Chip className="itemDealState" label="예약중" size="small" color="default" />;
+        else if (dealState === 'COMPLETE') return <Chip className="itemDealState" label="거래완료" size="small" color="default" />;
         else return null;
     }
 
+    // Chip으로 변경
     const renderItemCategory = (itemCategoryName) => {
         if (itemCategoryName=='강의 관련 물품' || itemCategoryName=='대학 교재') {
-            return <div className="itemCategory">대학</div>;
+            return <Chip className="itemCategory" label="대학" size="small" />;
         }
     }
 
-    const renderLecture = (lectureName) => {
-        if (lectureName) return <div className="itemLecture">{lectureName}</div>
-    }
+    // const renderLecture = (lectureName) => {
+    //     if (lectureName) return <span className="itemLecture">{lectureName}</span>
+    // }
 
-    const renderProfessor = (professorName) => {
-        if (professorName) return <div className="itemProfessor">{professorName}</div>
+    // const renderProfessor = (professorName) => {
+    //     if (professorName) return <span className="itemProfessor">{professorName}</span>
+    // }
+    const renderLecture = (lectureName, professorName) => {
+        if (lectureName) return <div className="itemLecture"><span className="lectureName">{`${lectureName}`}</span><span className="professorName">{`/ ${professorName}`}</span></div>
     }
 
     const work = (res) => {
@@ -85,25 +89,15 @@ const ItemListComponent = (props) => {
         style={{ textDecoration: 'none', color: 'black' }}>
         <Card className="itemListCompo">
             <div className="itemImg">{content.itemImgFile===null? <img src={noImg} />: <img src={content.itemImgFile} />}</div>
-            <div className="itemTitle"><b>{content.title}</b></div>
+            <div className="itemTitle">{content.title}</div>
             {renderItemCategory(content.itemCategoryName)}
-            {renderLecture(content.lectureName)}
-            {renderProfessor(content.professorName)}
+            {renderLecture(content.lectureName, content.professorName)}
+            {/* {renderProfessor(content.professorName)} */}
             <div className="itemPrice">{content.price.toLocaleString()}원</div>
             <div className="itemLastModifiedDate">{changeDate(content.lastModifiedDate)}</div>
             {renderDealState(content.dealState)}
             <Checkbox className="itemWishedMember" icon={<FavoriteBorder />} checkedIcon={<Favorite />} 
                 checked={content.wishedMemberId===null?false:true} onClick={handleChange}/>
-            {/* <div className="itemImg">{content.itemImgFile===null? <img src={noImg} />: <img src={content.itemImgFile} />}</div>
-            <div className="itemTitle"><b>제목제목제목제목제목제목제목제목제목제목</b></div>
-            {renderItemCategory(content.itemCategoryName)}
-            {renderLecture('강의명강의명강의명강의명')}
-            {renderProfessor('교수명교수명교수명교수명')}
-            <div className="itemPrice">{(999999999).toLocaleString()}원</div>
-            <div className="itemLastModifiedDate">2022년 12월 22일</div>
-            {renderDealState(content.dealState)}
-            <Checkbox className="itemWishedMember" icon={<FavoriteBorder />} checkedIcon={<Favorite />} 
-                checked={content.wishedMemberId===null?false:true} onClick={handleChange}/> */}
         </Card>
         </Link>
     );

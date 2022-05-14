@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Paper } from "../../../../node_modules/@material-ui/core/index";
+import { Avatar, Box, Paper } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemDetailMemberInfo = (props) => {
 
@@ -33,11 +33,11 @@ const ItemDetailMemberInfo = (props) => {
     }
 
     return (
-        <Paper className="div_memInfo">
+        <Box className="div_memInfo">
             <div className="label">판매자</div>
             <Avatar {...stringAvatar(props.memberInfo.nickname)} id="mem_avatar" />
             <div className="content">{props.memberInfo.nickname}</div>
-        </Paper>
+        </Box>
     );
 };
 

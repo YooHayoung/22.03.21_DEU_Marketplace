@@ -68,7 +68,7 @@ CREATE TABLE item (
 	item_id BIGINT NOT NULL AUTO_INCREMENT,
 	member_id BIGINT NOT NULL,
 	item_category_id BIGINT NOT NULL,
-	title VARCHAR(50) NOT NULL,
+	title VARCHAR(255) NOT NULL,
 	lecture_id BIGINT,
 	write_state VARCHAR(30),
 	surface_state VARCHAR(30),

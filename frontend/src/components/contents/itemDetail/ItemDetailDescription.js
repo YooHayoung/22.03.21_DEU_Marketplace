@@ -1,12 +1,12 @@
 import React from "react";
-import { Paper } from "../../../../node_modules/@material-ui/core/index";
+import { Box, Paper } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemDetailDescription = (props) => {
     return (
-        <Paper className="div_class">
+        <Box className="div_class">
             <div className="label" id="lb_itemDes">내용</div>
             <div className="content" id="item_des" style={{whiteSpace: "pre-wrap"}}>{props.description}</div>
-        </Paper>
+        </Box>
     );
 };
 

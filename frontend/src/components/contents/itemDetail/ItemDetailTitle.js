@@ -1,5 +1,5 @@
 import React from "react";
-import { Chip, Paper } from "../../../../node_modules/@material-ui/core/index";
+import { Box, Chip, Paper } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemDetailTitle = (props) => {
 
@@ -11,14 +11,14 @@ const ItemDetailTitle = (props) => {
 
     return (
         // <div className="div_class">
-        <Paper className="div_class">
+        <Box className="div_class">
             <div className="label" id="lb_item_title">제목</div>
             <div className="content">
                 {renderDealState(props.dealState)} {props.title}<br/>
                 <span style={{fontSize: "0.7rem", color: "gray"}}>{props.lastModifiedDate} UPDATE</span>
                 {/* {props.dealState} */}
             </div>
-        </Paper>
+        </Box>
         // </div>
     );
 };

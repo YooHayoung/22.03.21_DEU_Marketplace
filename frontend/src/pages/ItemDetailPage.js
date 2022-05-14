@@ -24,6 +24,7 @@ import Select from '@mui/material/Select';
 import './ItemDetailPage.scss'
 import { useNavigate } from "../../node_modules/react-router/index";
 import ItemDetailDatetime from "../components/contents/itemDetail/ItemDetailDatetime";
+import RCarousel from "../components/contents/itemDetail/RCarousel";
 
 const ItemDetailPage = ({token, setToken}) => {
     let navigate = useNavigate();
@@ -47,7 +48,8 @@ const ItemDetailPage = ({token, setToken}) => {
         // console.log(content.imgList);
         if (loading === true)
         // if (content.imgList.length !== 0)
-            return <div className="div_imgs"><ItemDetailImgs imgList={content.imgList}/></div>;
+            // return <div className="div_imgs"><ItemDetailImgs imgList={content.imgList}/></div>;
+            return <div className="div_imgs"><RCarousel imgList={content.imgList}/></div>;
         // else return <ItemDetailImgs imgList={[{img:""}]}/>;
     };
 
@@ -230,19 +232,19 @@ const ItemDetailPage = ({token, setToken}) => {
     };
 
     const renderBtns = () => {
-        if (loading) {
-            if (jwt_decode(token).sub == content.itemDetailDto.sellerInfo.memberId) {
-                // return 'same';
+        // if (loading) {
+            // if (jwt_decode(token).sub == content.itemDetailDto.sellerInfo.memberId) {
+            //     // return 'same';
                 return (
-                    <>
+                    <div className="btn_compo">
                     <Button className="btn_delete" onClick={() => onDeleteBtnClick()}>삭제</Button>
                     <Button className="btn_update" onClick={() => onUpdateBtnClick()}>수정</Button>
-                    </>
+                    </div>
                 );
-            } else {
-                // return 'diff';
-            }
-        }
+            // } else {
+            //     // return 'diff';
+            // }
+        // }
     };
 
     return (
@@ -250,9 +252,12 @@ const ItemDetailPage = ({token, setToken}) => {
             <HeaderContainer pageName={"상품 상세"} />
             <div className="div_contents" style={{"padding-bottom": 0}}>
                 {renderItemImgs()}
-                <div className="btn_compo">
+                <Divider />
+                {loading?(jwt_decode(token).sub == content.itemDetailDto.sellerInfo.memberId?renderBtns():null):null}
+                <Divider />
+                {/* <div className="btn_compo">
                     {renderBtns()}
-                </div>
+                </div> */}
                 {renderDetailPage()}
             </div>
             <Divider/>

@@ -4,6 +4,7 @@ import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.config.auth.SessionMember;
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.service.MemberService;
+import com.deu.marketplace.web.member.dto.MemberInfoResponseDto;
 import com.deu.marketplace.web.member.dto.SignUpRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,22 +24,12 @@ public class MemberController {
 
     private final MemberService memberService;
 
-//    @GetMapping
-//    public ResponseEntity<?> getAllMember() {
-//        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-//        Long memberId = member.getMemberId();
-//        if (member != null) {
-//            return ResponseEntity.ok().body(memberId);
-//        }
-//        return null;
-//    }
-
-//    @PostMapping("/signup")
-//    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto requestDto) {
-//        Member signUpMember = requestDto.toEntity();
-//        Member resultMember = memberService.saveMember(signUpMember);
-//        return ResponseEntity.ok().body(resultMember);
-//    }
+    @GetMapping
+    public ApiResponse getMemberInfo(@AuthenticationPrincipal Long memberId) {
+        return ApiResponse.success("result", MemberInfoResponseDto.builder()
+                .member(memberService.getMemberById(memberId).orElseThrow())
+                .build());
+    }
 
     @PatchMapping("/update/nickname")
     public ApiResponse updateNickname(@RequestBody MemberNicknameDto nickname,
@@ -47,8 +38,7 @@ public class MemberController {
         return ApiResponse.success("result", updateMember.getNickname());
     }
 
-//    @DeleteMapping("/{memberId}")
-//    public ResponseEntity<?> deleteOneMember(@PathVariable("memberId") Long memberId) {}
+
 
     @Getter
     @NoArgsConstructor

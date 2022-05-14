@@ -170,3 +170,13 @@ export const completeDeal = (token, object) => {
 export const cancelDeal = (token, object) => {
    return client.delete(`/api/v1/deal/${object.dealId}`, {headers: {Authorization: `Bearer ${token}`}});
 }
+
+// get 내정보
+export const getMyInfo = (token) => {
+   return client.get('/api/v1/member', {headers: {Authorization: `Bearer ${token}`}});
+}
+
+// patch 닉네임 수정
+export const updateMyNickname = (token, object) => {
+   return client.patch('api/v1/member/update/nickname', object, {headers: {Authorization: `Bearer ${token}`}});
+}
