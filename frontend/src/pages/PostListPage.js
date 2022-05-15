@@ -1,7 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "../../node_modules/react-router/index";
 import { getPostList } from "../api/Api";
-import EnhancedTable from "../components/contents/Test";
 import BottomNav from "../components/nav/bottom/BottomNav";
 import HeaderContainer from "../containers/HeaderContainer";
 import jwt_decode from "jwt-decode";
@@ -20,6 +19,8 @@ import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Button, ButtonBase, Divider, IconButton, Typography } from "../../node_modules/@material-ui/core/index";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import CommentIcon from '@mui/icons-material/Comment';
 
 const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
     let navigate = useNavigate();
@@ -107,32 +108,32 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
         if (dddYear == nowYear && dddMonth == nowMonth && dddDate == nowDate) {
             return (
             <>
-            <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                <AccessTimeIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-            </span>
-            <span>
+            <div className="div_icon">
+                <AccessTimeIcon sx={{fontSize: "1rem"}} />
+            </div>
+            <div className="div_time">
                 {dddTime}
-            </span>
+            </div>
             </>
             );
         } else if (dddYear == nowYear) {
             return (
             <>
-            <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                <CalendarMonthIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-            </span>
-            <span>
+            <div className="div_icon">
+                <CalendarMonthIcon sx={{fontSize:"1rem"}}/>
+            </div>
+            <div className="div_time">
                 {`${dddMonth.toString().padStart(2,'0')}-${dddDate.toString().padStart(2,'0')}`}
-            </span></>);
+            </div></>);
         } else {
             return (
                 <>
-                <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                    <CalendarMonthIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-                </span>
-                <span>
+                <div classNam="div_icon">
+                    <CalendarMonthIcon sx={{fontSize:"1rem"}}/>
+                </div>
+                <div className="div_time">
                     {`${dddYear}-${dddMonth}-${dddDate}`}
-                </span>
+                </div>
                 </>
             );
         }
@@ -141,6 +142,7 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
     const onPaperClick = (postId) => {
         navigate('/board/' + postId);
     };
+    
     const renderPostListMain = () => {
         return contents.map((content, idx) => {
             return (
@@ -148,6 +150,7 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
                 <Paper
                 sx={{
                     p: 1,
+                    pt: 0.5,
                     margin: 'auto',
                     maxWidth: "100%",
                     flexGrow: 1,
@@ -160,18 +163,30 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
                     <Grid item xs container direction="column" spacing={0} style={{paddingLeft: "0.7rem", textAlign: "left"}}>
                         <Grid item xs>
                         <Typography className="ty_title" component="div" style={{fontSize: "1.3rem", marginBottom: 4}}>
-                            <span className="sp_categoryName" style={{fontSize: "1rem"}}>{`[${content.postCategoryName}]`}&nbsp;</span>
-                            <span className="sp_title" style={{
-                                // display: 'block',
-                                // alignItems: 'center',
-                                // overflow:'hidden',
-                                // textOverflow:'ellipsis',
-                                // whiteSpace:'nowrap'
-                                }}>{`${content.title}`}</span>
+                            <span className="sp_categoryName" style={{fontSize: "0.9rem", verticalAlign: "middle"}}>{`[${content.postCategoryName}]`}&nbsp;</span>
+                            <span className="sp_title" >
+                                {`${content.title}`}
+                            </span>
+                            <span className="sp_shortInfo">
+                                {(content.commentCount!=0)?(
+                                <>
+                                    <CommentIcon sx={{fontSize: "0.7rem", marginLeft: "0.8rem", color: "gray", marginRight: "0.2rem"}}/>
+                                    <span style={{fontSize: "0.8rem", color: "gray", fontWeight: 500, verticalAlign: "middle"}}>
+                                        {content.commentCount}
+                                    </span>
+                                </>):null}
+                                {(content.recommendCount!=0)?(
+                                <>
+                                    <ThumbUpIcon sx={{fontSize: "0.7rem", marginLeft: "0.3rem", color: "gray", marginRight: "0.2rem"}}/>
+                                    <span style={{fontSize: "0.8rem", color: "gray", fontWeight: 500, verticalAlign: "middle"}}>
+                                        {content.recommendCount}
+                                    </span>
+                                </>):null}
+                            </span>
                         </Typography>
-                        <Typography className="ty_nick" component="div" style={{fontSize: "0.8rem", overflow: "hidden", whiteSpace: "nowrap"}}>
-                            {`${content.memberNickname} `}{changeDate(content.createdDate)}
-                        </Typography>
+                        <div className="ty_nick">
+                            <div className="div_nickname">{`${content.memberNickname} `}</div>{changeDate(content.createdDate)}
+                        </div>
                         </Grid>
                     </Grid>
                 </Grid>

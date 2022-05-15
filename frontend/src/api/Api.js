@@ -180,3 +180,8 @@ export const getMyInfo = (token) => {
 export const updateMyNickname = (token, object) => {
    return client.patch('api/v1/member/update/nickname', object, {headers: {Authorization: `Bearer ${token}`}});
 }
+
+// get 게시물 추천
+export const setPostRecommend = (token, object) => {
+   return client.get("/api/v1/postRecommend/" + object.postId, { headers: { Authorization: `Bearer ${token}` } });
+}

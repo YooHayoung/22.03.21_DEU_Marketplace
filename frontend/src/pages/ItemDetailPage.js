@@ -6,7 +6,7 @@ import { UseApi } from "../api/UseApi";
 import jwt_decode from "jwt-decode";
 import ItemDetailBookStateInfo from "../components/contents/itemDetail/ItemDetailBookStateInfo";
 import ItemDetailDescription from "../components/contents/itemDetail/ItemDetailDescription";
-import ItemDetailImgs from "../components/contents/itemDetail/ItemDetailImgs";
+// import ItemDetailImgs from "../components/contents/itemDetail/ItemDetailImgs";
 import ItemDetailLectureInfo from "../components/contents/itemDetail/ItemDetailLectureInfo";
 import ItemDetailMemberInfo from "../components/contents/itemDetail/ItemDetailMemberInfo";
 import ItemDetailPrice from "../components/contents/itemDetail/ItemDetailPrice";

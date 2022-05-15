@@ -1,7 +1,7 @@
 import React from "react";
 
 import './css/ItemInfo.scss'
-import noImg from '../../../noImg.png'
+import noImg from '../../../image/noImg.png'
 import { Box, Button, Card, Chip, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "../../../../node_modules/@material-ui/core/index";
 import { DateTimePicker, LocalizationProvider } from "../../../../node_modules/@mui/lab/index";
 import { Stack } from "../../../../node_modules/@mui/material/index";

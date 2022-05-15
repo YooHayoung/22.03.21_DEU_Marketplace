@@ -6,7 +6,7 @@ import "./ItemListComponent.scss";
 import { UseApi } from "../../../api/UseApi";
 import { setWishItem } from "../../../api/Api";
 import { Link } from "../../../../node_modules/react-router-dom/index";
-import noImg from "/Users/hayoungyoo/yoo_dev/22.03.21_DEU_Marketplace/frontend/src/noImg.png";
+import noImg from "../../../image/noImg.png";
 import { Card, Chip } from "../../../../node_modules/@material-ui/core/index";
 
 const ItemListComponent = (props) => {

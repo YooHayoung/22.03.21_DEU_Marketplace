@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardMedia, Chip } from "../../../../node_modules/@material-ui/core/index";
 import { Link } from "../../../../node_modules/react-router-dom/index";
-import noImg from '../../../noImg.png';
+import noImg from '../../../image/noImg.png';
 
 import './ChatRoom.scss'
 

@@ -38,8 +38,9 @@
       white-space:nowrap;
    }
    .div_logContent {
+      margin-top: 5px;
       padding-top: 5px;
-      padding-left: 12px;
+      padding-left: 10px;
       // padding-right: 10px;
       grid-column: 2/4;
       grid-row: 4/10;
@@ -50,13 +51,13 @@
       display: -webkit-box;
       -webkit-line-clamp: 2; 
       -webkit-box-orient: vertical;
-      line-height: 1.1rem;
+      line-height: 1.2rem;
       
       text-align: left;
       align-items: center;
       justify-content: left;
       // height: 2.5rem;
-      max-height: 2.5rem;
+      max-height: 2.4rem;
       
    }
    .div_notReadNum {
