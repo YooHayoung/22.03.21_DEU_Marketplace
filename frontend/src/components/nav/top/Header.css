@@ -1,6 +1,6 @@
 .header {
     display: flex;
-    /* flex-grow: 1 10 1 1 1; */
+    width: auto;
     background-color: black;
     height: 3rem;
     align-items: center;
@@ -21,7 +21,7 @@
     flex-grow: 1;
     background-color: black;
     color: whitesmoke;
-    padding-left: 50px;
+    margin-left: 30px;
     text-align: left;
     /* height: 25px; */
     font-size: larger;
@@ -31,8 +31,16 @@
 .header_MenuIcon {
     background-color: black;
     color: whitesmoke;
-    padding-left: 10px;
-    height: 25px;
+    /* padding-left: 10px; */
+    /* height: 25px; */
+    height: 100%;
+    font-size: 0.6rem;
+    white-space: pre-wrap;
+    font-weight: 900;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
 }
 
 .show-menu {

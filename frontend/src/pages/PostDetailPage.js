@@ -1,8 +1,8 @@
 
-import React from "react";
-import { Backdrop, Box, Button, CircularProgress, Divider, FormControl, Grid, IconButton, Paper, TextField, Typography } from "../../node_modules/@material-ui/core/index";
+import React, { useRef } from "react";
+import { Backdrop, Box, Button, Checkbox, Chip, CircularProgress, Divider, FormControl, FormControlLabel, Grid, IconButton, Paper, TextField, ToggleButton, Typography } from "../../node_modules/@material-ui/core/index";
 import { useNavigate, useParams } from "../../node_modules/react-router/index";
-import { deletePost, deletePostComment, getPostCommentPage, getPostDetail, savePostComment } from "../api/Api";
+import { deletePost, deletePostComment, getPostCommentPage, getPostDetail, savePostComment, setPostRecommend } from "../api/Api";
 import { UseApi } from "../api/UseApi";
 import jwt_decode from "jwt-decode";
 import PostDetailContent from "../components/contents/postDetail/PostDetailContent";
@@ -17,6 +17,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 import './PostDetailPage.scss';
 import PostDetailCommentList from "../components/contents/postDetail/PostDetailCommentList";
@@ -44,10 +45,12 @@ const PostDetailPage = ({token, setToken}) => {
     const [loading, setLoading] = React.useState(false);
     const [commentFeild, setCommentFeild] = React.useState('');
     const [open, setOpen] = React.useState(false);
+    const [recommend, setRecommend] = React.useState(false);
 
     const workAfterGet = (res) => {
         console.log(res.data.body.result);
         setContent(res.data.body.result);
+        setRecommend(res.data.body.result.myRecommend);
         setLoading(true);
     };
     const workAfterGetComment = (res) => {
@@ -56,7 +59,8 @@ const PostDetailPage = ({token, setToken}) => {
         setComments([...res.data.body.result.content]);
         setCommentTotalPage(res.data.body.result.totalPages);
         setCommentCount(res.data.body.result.totalElements);
-    }
+        
+    };
 
     const onUpdateBtnClick = () => {
         console.log("update");
@@ -182,6 +186,7 @@ const PostDetailPage = ({token, setToken}) => {
                 UseApi(savePostComment, token, setToken, workAfterGetComment, {postId: params.postId, comment: commentFeild});
             })();
             setCommentFeild('');
+            homeRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     };
 
@@ -194,6 +199,28 @@ const PostDetailPage = ({token, setToken}) => {
         // else return <ItemDetailImgs imgList={[{img:""}]}/>;
     };
 
+    const afterSetRecommend = (res) => {
+        console.log(res);
+        if (res.data.body.result!=null) {
+            setRecommend(true);
+            setContent((prevState) => ({
+                ...prevState,
+                postRecommendCount: content.postRecommendCount+1
+            }));
+        } else {
+            setRecommend(false);
+            setContent((prevState) => ({
+                ...prevState,
+                postRecommendCount: content.postRecommendCount-1
+            }));
+        }
+    };
+    const onRecommendBtnClick = (e) => {
+        e.stopPropagation();
+        UseApi(setPostRecommend, token, setToken, afterSetRecommend, {postId: params.postId})
+    };
+
+    const homeRef = useRef();
     const renderCon = () => {
         if (loading === true) {
             return (
@@ -205,8 +232,14 @@ const PostDetailPage = ({token, setToken}) => {
                 <Divider />
                 <PostDetailContent content={content.postInfo.content} />
                 {renderPostImgs()}
+                    {recommend?(<Button onClick={onRecommendBtnClick} variant="contained" startIcon={<ThumbUpIcon fontSize="small" />}>
+                        {`추천 ${content.postRecommendCount}`}
+                    </Button>):(<Button onClick={onRecommendBtnClick} variant="outlined" color="inherit" startIcon={<ThumbUpIcon fontSize="small" />}>
+                        {`추천 ${content.postRecommendCount}`}
+                    </Button>)}
                 <Divider />
-                <PostDetailMemberInfo memberInfo={content.postInfo.memberShortInfo} />
+                <div ref={homeRef} />
+                <PostDetailMemberInfo memberInfo={content.postInfo.memberShortInfo}/>
                 <Divider />
                 {/* <PostDetailCommentList commentCount={commentCount} comments={comments} /> */}
                 <Box className="div_paper">
@@ -214,7 +247,7 @@ const PostDetailPage = ({token, setToken}) => {
                         <div className="label">댓글</div><div className="content">{commentCount}개</div>
                     </div>
                     <Divider/>
-                    {renderComments()}
+                    {commentCount!=0?renderComments():null}
                     {commentCount!=0?renderPostListBottom():null}
                 </Box>
                 <Divider/>
@@ -242,32 +275,34 @@ const PostDetailPage = ({token, setToken}) => {
         if (dddYear == nowYear && dddMonth == nowMonth && dddDate == nowDate) {
             return (
             <>
-            <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                <AccessTimeIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-            </span>
-            <span>
+            <div classNam="comment_timeIcon" >
+                <AccessTimeIcon sx={{fontSize:"1rem", color: "gray"}} />
+            </div>
+            <div className="comment_createdDate">
                 {dddTime}
-            </span>
+            </div>
             </>
             );
         } else if (dddYear == nowYear ) {
             return (
             <>
-            <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                <CalendarMonthIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-            </span>
-            <span>
+            <div classNam="comment_timeIcon">
+                <CalendarMonthIcon sx={{fontSize:"1rem", color: "gray"}}/>
+            </div>
+            <div className="comment_createdDate">
                 {`${dddMonth.toString().padStart(2,'0')}-${dddDate.toString().padStart(2,'0')}`}
-            </span></>);
+            </div>
+            </>
+            );
         } else {
             return (
                 <>
-                <span id="sp_icon" style={{paddingLeft: 8, paddingRight: 3}}>
-                    <CalendarMonthIcon style={{fontSize:"1rem", marginBottom: 2}}/>
-                </span>
-                <span>
+                <div classNam="comment_timeIcon">
+                    <CalendarMonthIcon sx={{fontSize:"1rem", color: "gray"}}/>
+                </div>
+                <div className="comment_createdDate">
                     {`${dddYear}-${dddMonth}-${dddDate}`}
-                </span>
+                </div>
                 </>
             );
         }
@@ -281,46 +316,36 @@ const PostDetailPage = ({token, setToken}) => {
             // console.log(comment);
         }
     };
+    const renderNewChip = (date) => {
+        let now = new Date();
+        let commentDate = new Date(Date.parse(date.replace(' ', 'T')));
+        if ((now - commentDate)/1000/60 < 3) {
+            return (<Chip color="info" label="NEW" size="small" id="chip_new" sx={{fontSize: "0.5rem"}} style={{hegiht: '20px', marginRight: '5px'}} />);
+        }
+    };
     const renderComments = () => {
         return (comments.map((comment, idx) => {
             return (
                 <>
                 <Box
                 sx={{
-                    p: 1,
+                    p: 2,
                     margin: 'auto',
                     maxWidth: "100%",
                     flexGrow: 1,
                     backgroundColor: (theme) =>
                     theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                 }}
-                key={`pp${idx}`}
+                key={`pp${comment.postCommentId}`}
                 >
-                <Grid key={`ggg${idx}`} container spacing={0}>
-                    <Grid key={`gggg${idx}`} item xs container direction="column" spacing={0} style={{paddingTop: "0.4rem",paddingRight:"1.5rem", textAlign: "left"}}>
-                        <Grid key={`ggggg${idx}`} item xs>
-                        <div className="div_comments">
-                        <div className="label_blank"></div>
-                        <div className="content">
-                        <Typography key={`ty_com_nick${idx}`} className="ty_nick" component="div" style={{fontSize: "0.97rem", fontWeight: "bold", overflow: "hidden", whiteSpace: "nowrap"}}>
-                            <span key={`spsp${idx}`}>{`${comment.memberInfo.nickname} `}</span>
-                            <span key={`spspsp${idx}`} style={{
-                                fontSize: "0.8rem", color:"gray", fontWeight: "bold"
-                            }}>
-                                {changeDate(comment.createdDate)}
-                            </span>
-                            {comment.memberInfo.memberId == jwt_decode(token).sub?<IconButton onClick={() => onCommentDeleteBtnClick(comment)} style={{padding: 0, paddingLeft:0, marginLeft: "1rem"}}><DeleteIcon style={{color:"gray", fontSize:"1rem", marginBottom: 2}}/></IconButton>:null}
-                        </Typography>
-                        <Typography key={`ty_com_com${idx}`} className="ty_comment" component="div" style={{fontSize: "0.9rem", marginBottom: 4}}>
-                            <span key={`spspspsp${idx}`} className="sp_comment" style={{
-                                whiteSpace: "pre-wrap"
-                                }}>{`${comment.content}`}</span>
-                        </Typography>
-                        </div>
-                        </div>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                    {/* {renderNewChip(comment.createdDate)} */}
+                    <div className="div_comment" key={`dc${comment.postCommentId}`}>
+                        {renderNewChip(comment.createdDate)}
+                        <div className="comment_memberNickname" key={"nick"+comment.postCommentId}>{comment.memberInfo.nickname}</div>
+                        {changeDate(comment.createdDate)}
+                        {jwt_decode(token).sub==comment.memberInfo.memberId?<div className="comment_delIcon" key={"cdi"+comment.postCommentId}><DeleteIcon onClick={()=>onCommentDeleteBtnClick(comment)} sx={{fontSize:"1rem", color: "gray"}} key={"delI"+comment.postCommentId} /></div>:null}
+                    </div>
+                    <div className="comment_content" key={"cc"+comment.postCommentId}>{comment.content}</div>
                 </Box>
                 <Divider />
                 </>

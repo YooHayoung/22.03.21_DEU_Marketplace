@@ -4,20 +4,44 @@
     justify-content: start;
     font-size: 1.3rem;
     margin-bottom: 4;
+    
     .sp_categoryName {
-        font-size: 1rem;
+        font-size: 0.9rem;
         grid-column: 1;
         width: fit-content;
-        margin-top: 0.15rem;
+        margin-top: 0.4rem;
     }
     .sp_title {
+        margin-top: 0.3rem;
+        vertical-align: middle;
+        font-size: 1rem;
         grid-column: 2;
         max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .sp_shortInfo {
+        grid-column: 3;
+    }
 }
-.bottomBtn {
-    // height: 15rem;
+.ty_nick {
+    font-size: 0.8rem;
+    overflow: hidden;
+    white-space: nowrap;
+    display: grid;
+    justify-content: start;
+
+    .div_nickname {
+        grid-column: 1;
+        width: fit-content;
+        margin-right: 8px;
+    }
+    .div_icon {
+        grid-column: 2;
+        margin-right: 3px;
+    }
+    .div_time {
+        grid-column: 3;
+    }
 }

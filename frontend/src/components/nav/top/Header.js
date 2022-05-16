@@ -4,7 +4,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import Person from '@mui/icons-material/Person'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from '../../../../node_modules/react-router-dom/index';
 import { useNavigate } from '../../../../node_modules/react-router/index';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -20,8 +19,25 @@ const Header = (props) => {
 
     const url = window.location.pathname;
 
-    const onBackBtnClick = () => {
+    const onBackBtnClick = (pageName) => {
+        console.log(document.referrer);
         navigate(-1);
+
+        // if (url.startsWith('/item/') && url.substring('/item/'.length)!='') {
+        //     if (pageName=='SELL') {
+        //         window.location.pathname = '/';
+        //     } else if (pageName=='BUY') {
+        //         window.location.pathname = '/buy';
+        //     }
+        // } else if (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') {
+        //     window.location.pathname = '/chatRooms';
+        // } else if ((url === '/search') || (url==='/save') || (url==='/update')) {
+        //     navigate(-1);
+        // } else if (url.startsWith('/board/') && url.substring('/board/'.length)!='') {
+        //     window.location.pathname = '/board';
+        // } else if (url === '/myPage') {
+        //     navigate(-1);
+        // }
     }
     /* 
         type: main || back 
@@ -39,7 +55,8 @@ const Header = (props) => {
         if (url == '/' || url == '/chatRooms' || url == '/buy' || url == '/sell' || url == '/board') {
             return (
             <>
-            <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} />
+            {/* <MenuIcon onClick={() => toggleMenu()} className="header_MenuIcon" fontSize={"large"} /> */}
+            <div className='header_MenuIcon'>{'DEU\nMarket\nPlace'}</div>
             <div className='header_pageName'><b>{pageTitle}</b></div>
             <SearchIcon className="header_searchIcon" fontSize={"large"} onClick={() => window.location.pathname="/search"}/>
             <NotificationsIcon className="header_notificationIcon" fontSize={"large"} />
@@ -55,8 +72,8 @@ const Header = (props) => {
                         console.log(url.substring('/chatRooms/'.length))
             return (
                 <>
-                <ArrowBackIcon className="header_arrow" onClick={() => onBackBtnClick()} fontSize={"large"} />
-                <div className='header_pageName'>{pageTitle}</div>
+                <ArrowBackIcon className="header_arrow" onClick={() => onBackBtnClick(pageName)} fontSize={"large"} />
+                <div className='header_pageName'><b>{pageTitle}</b></div>
                 </>
             );
         }
