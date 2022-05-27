@@ -10,6 +10,7 @@ import BottomNav from "../components/nav/bottom/BottomNav";
 import { useLocation } from "../../node_modules/react-router/index";
 import { Button } from "../../node_modules/@material-ui/core/index";
 import './SellPage.scss';
+import { AWS_SERVER, DOMAIN, LOCAL_SERVER } from "../api/client";
 
 
 const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
@@ -38,7 +39,8 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
       console.log(token);
       if (token === '') {
          (async () => {
-            axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
+            axios.get(DOMAIN+'/oauth/refresh', { withCredentials: true })
+            // axios.get(AWS_SERVER+'/oauth/refresh', { withCredentials: true })
                .catch((error) => {
                   if (error.response.status === 307) {
                      console.log(error.response.headers.authorization);
@@ -46,6 +48,10 @@ const SellPage = ({ token, setToken, onClear, oauth, code, state, accessToken, r
                      getPages();
                      // return Promise.reject(error);
                   } else if (error.response.status === 401) {
+                     console.log(error.response.status);
+                     navigate('/oauth');
+                     // return Promise.reject(error);
+                  } else if (error.response.status === 403) {
                      console.log(error.response.status);
                      navigate('/oauth');
                      // return Promise.reject(error);

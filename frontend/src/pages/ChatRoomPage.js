@@ -29,6 +29,7 @@ import BottomNav from "../components/nav/bottom/BottomNav";
 import HeaderContainer from "../containers/HeaderContainer";
 import { useSelector } from "react-redux";
 import { Button } from "../../node_modules/@material-ui/core/index";
+import { AWS_SERVER } from "../api/client";
 
 // var sock = SockJS("/stomp/chat");
 // var client = null;
@@ -131,7 +132,7 @@ const ChatRoomPage = ({ token, setToken }) => {
                         targetChatCount++;
                         return (
                            <React.Fragment key={'f' + idx}>
-                              <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                              <TargetNickname key={'tn' + idx} nickname={roomInfo.myId !== roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
                               <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
                            </React.Fragment>);
                      } else {
@@ -154,7 +155,7 @@ const ChatRoomPage = ({ token, setToken }) => {
                         {chatDate.getFullYear() == thisChatDate.getFullYear() 
                   && chatDate.getMonth() == thisChatDate.getMonth()
                   && chatDate.getDate() == thisChatDate.getDate()?<div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div>:null}
-                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId !== roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
                         <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
                      </React.Fragment>);
                } else {
@@ -210,7 +211,7 @@ const ChatRoomPage = ({ token, setToken }) => {
                      targetChatCount++;
                      return (
                         <React.Fragment key={'f' + idx}>
-                           <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                           <TargetNickname key={'tn' + idx} nickname={roomInfo.myId !== roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
                            <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
                         </React.Fragment>);
                   } else {
@@ -228,7 +229,7 @@ const ChatRoomPage = ({ token, setToken }) => {
                   return (
                      <React.Fragment key={'f' + idx}>
                         <div className="chatDate" key={'d' + idx}>{thisChatDate.getFullYear()+'년 ' + (thisChatDate.getMonth()+1) + '월 ' + thisChatDate.getDate() + '일'}</div>
-                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId === roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
+                        <TargetNickname key={'tn' + idx} nickname={roomInfo.myId !== roomInfo.itemSavedMemberInfo.memberId ? roomInfo.itemSavedMemberInfo.nickname : roomInfo.requestedMemberInfo.nickname} />
                         <TargetChatLog chatInfo={chat} key={chat.chatLogId} />
                      </React.Fragment>);
                } else {
@@ -272,7 +273,7 @@ const ChatRoomPage = ({ token, setToken }) => {
    const connect = () => {
       setDate(new Date(+new Date() + 3240 * 10000).toISOString().replace("T", "_").replace(/\..*/, ''));
       client.current = new StompJS.Client({
-         webSocketFactory: () => new SockJS("http://localhost:8000/ws"),
+         webSocketFactory: () => new SockJS(AWS_SERVER+"/ws"),
 
          connectHeaders: {
             Authorization: `Bearer ${token}`

@@ -57,7 +57,7 @@ const MyPage = ({ token, setToken }) => {
                 label={"이름"}
                 id="standard-size-normal"
                 value={myInfo.name}
-                variant="standard"
+                variant="outlined"
                 InputProps={{
                     readOnly: true,
                 }}
@@ -69,7 +69,7 @@ const MyPage = ({ token, setToken }) => {
                 label={"이메일"}
                 id="standard-size-normal"
                 value={myInfo.email}
-                variant="standard"
+                variant="outlined"
                 InputProps={{
                     readOnly: true,
                 }}
@@ -81,7 +81,7 @@ const MyPage = ({ token, setToken }) => {
                 label={"닉네임"}
                 id="standard-size-normal"
                 value={myInfo.nickname}
-                variant="standard"
+                variant="outlined"
                 InputProps={{
                     readOnly: true,
                 }}
@@ -93,7 +93,7 @@ const MyPage = ({ token, setToken }) => {
                 label={"가입일"}
                 id="standard-size-normal"
                 value={myInfo.createdDate}
-                variant="standard"
+                variant="outlined"
                 InputProps={{
                     readOnly: true,
                 }}
@@ -105,7 +105,7 @@ const MyPage = ({ token, setToken }) => {
                 label={"학생 인증"}
                 id="standard-size-normal"
                 value={myInfo.stuIdCertificated?"인증 완료":"미인증"}
-                variant="standard"
+                variant="outlined"
                 InputProps={{
                     readOnly: true,
                 }}
@@ -175,17 +175,17 @@ const MyPage = ({ token, setToken }) => {
     return (
         <>
         <HeaderContainer pageName={"마이페이지"} />
-        <Container component="div" sx={{m:1}} >
+        <Container component="div" sx={{mt:2}} >
             {renderModal()}
             {Object.keys(myInfo).length!=0?renderField():null}
-            <div style={{width: "17rem", marginLeft: "auto",  marginRight: "auto"}}>
-                <Button sx={{m:1}} onClick={onHandleModalOpen}>
+            <div style={{minWidth: "15.9rem", marginTop: "0.7rem",marginLeft: "auto",  marginRight: "auto"}}>
+                <Button  sx={{m:0.5, p:1}} variant="outlined"s onClick={onHandleModalOpen}>
                     닉네임 수정
                 </Button>
-                <Button sx={{m:1}}>
+                <Button sx={{m:0.5, p:1}} variant="outlined" disabled>
                     학생 인증
                 </Button>
-                <Button sx={{m:1}}>
+                <Button sx={{m:0.5, p:1}} variant="outlined" disabled>
                     회원 탈퇴
                 </Button>
             </div>

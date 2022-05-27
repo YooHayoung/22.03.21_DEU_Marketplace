@@ -4,6 +4,7 @@ import com.deu.marketplace.domain.member.entity.Role;
 import com.deu.marketplace.domain.memberRefreshToken.repository.MemberRefreshTokenRepository;
 import com.deu.marketplace.utils.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +30,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
         prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${server.host.front}")
+//    @Value("http://localhost:3000")
+    private String frontHost;
 
     private final MemberRefreshTokenRepository memberRefreshTokenRepository;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
@@ -121,7 +126,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-		configuration.addAllowedOrigin("http://localhost:3000");
+//		configuration.addAllowedOrigin("http://localhost:3000");
+//		configuration.addAllowedOrigin("http://13.209.99.188:3000");
+		configuration.addAllowedOrigin(frontHost);
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

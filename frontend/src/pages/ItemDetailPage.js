@@ -237,7 +237,7 @@ const ItemDetailPage = ({token, setToken}) => {
             //     // return 'same';
                 return (
                     <div className="btn_compo">
-                    <Button className="btn_delete" onClick={() => onDeleteBtnClick()}>삭제</Button>
+                    <Button className="btn_delete" onClick={() => onDeleteBtnClick()} disabled>삭제</Button>
                     <Button className="btn_update" onClick={() => onUpdateBtnClick()}>수정</Button>
                     </div>
                 );

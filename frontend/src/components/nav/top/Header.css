@@ -25,7 +25,7 @@
     text-align: left;
     /* height: 25px; */
     font-size: larger;
-    min-width: 10rem;
+    min-width: 6rem;
 }
 
 .header_MenuIcon {
@@ -33,6 +33,7 @@
     color: whitesmoke;
     /* padding-left: 10px; */
     /* height: 25px; */
+    min-width: 2.5rem;
     height: 100%;
     font-size: 0.6rem;
     white-space: pre-wrap;

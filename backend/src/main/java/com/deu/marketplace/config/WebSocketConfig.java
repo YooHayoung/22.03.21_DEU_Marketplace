@@ -1,5 +1,6 @@
 package com.deu.marketplace.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -18,11 +19,17 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${server.host.front}")
+//    @Value("http://localhost:3000")
+    private String frontHost;
+
     // url : ws:/localhost:8000/ws/websocket
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000")
+//                .setAllowedOrigins("http://localhost:3000")
+//                .setAllowedOrigins("http://13.209.99.188:3000")
+                .setAllowedOrigins(frontHost)
                 .withSockJS();
     }
 
