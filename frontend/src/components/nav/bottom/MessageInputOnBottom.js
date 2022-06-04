@@ -14,8 +14,8 @@ const MessageInputOnBottom = (props) => {
    const onClick = () => {
       if (message !== '') {
          // props.GetMessage(message);
-         console.log(message)
-         props.onClick(message)
+         console.log(message);
+         props.onClick(message);
          setMessage('');
       } else {
          alert('메세지를 입력하세요');

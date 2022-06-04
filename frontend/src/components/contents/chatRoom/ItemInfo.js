@@ -27,6 +27,7 @@ const ItemInfo = (props) => {
    const [meetingPlace, setMeetingPlace] = React.useState(props.newChatRoomInfo==null?((props.roomInfo.dealInfo!=null?(Object.keys(props.roomInfo.dealInfo).length):0)!=0?props.roomInfo.dealInfo.meetingPlace:''):null);
    const [dateTime, setDateTime] = React.useState(props.newChatRoomInfo==null?((props.roomInfo.dealInfo!=null?(Object.keys(props.roomInfo.dealInfo).length):0)!=0?(new Date(Date.parse(props.roomInfo.dealInfo.appointmentDate.replace(' ', 'T')))):(new Date())):null);
    const [isUpdateFieldReadOnly, setIsUpdateFieldReadOnly] = React.useState(true);
+   const [openDealInfoModal, setOpenDealInfoModal] = React.useState(false);
 
    
    const handleUpdateFieldReadOnly = () => {
@@ -39,10 +40,19 @@ const ItemInfo = (props) => {
 
    const handleOpen = () => {
       setOpen(true);
-  };
-  const handleClose = () => {
+   };
+   const handleClose = () => {
       setOpen(false);
-  };
+   };
+
+   const handleDealInfoModalOpen = () => {
+      setOpenDealInfoModal(true);
+   };
+   const handleDealInfoModalClose = () => {
+      setOpenDealInfoModal(false);
+   };
+
+  
    
    const renderDealState = (dealState) => {
       if (dealState === 'APPOINTMENT') return "예약중";
@@ -78,13 +88,37 @@ const ItemInfo = (props) => {
                label="거래 시각"
                value={dateTime}
                onChange={dateTimeHandleChange}
-               renderInput={(params) => <TextField variant="standard" {...params} />}
+               renderInput={(params) => <TextField  {...params} />}
             />
             {/* </Stack> */}
          </LocalizationProvider>
       );
    };
   
+   const renderDealInfoModal = () => {
+      return (
+         <Modal
+            open={openDealInfoModal}
+            onClose={handleDealInfoModalClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+         >
+            <Box sx={style}>
+               <Typography id="modal-title" variant="h6" component="h2">
+               {props.newChatRoomInfo==null?(props.roomInfo.itemInfo.dealState?<Chip label={renderDealState(props.roomInfo.itemInfo.dealState)} color={props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?(props.roomInfo.itemInfo.dealState=="APPOINTMENT"?"info":"success"):"default"} />:null):(props.newChatRoomInfo.itemInfo.dealState?<Chip className="dealState" label={renderDealState(props.newChatRoomInfo.itemInfo.dealState)} color={props.newChatRoomInfo.itemInfo.dealState=="APPOINTMENT"?"default":"success"} />:null)} 예약 정보
+               </Typography>
+               <Typography id="modal-description" sx={{ mt: 2 }}>
+                  <FormControl fullWidth style={{marginBottom: 20}}>
+                  <TextField InputProps={{readOnly: true,}} label="거래 시각" value={`${dateTime.getFullYear()}년 ${dateTime.getMonth()+1}월 ${dateTime.getDate()}일 ${dateTime.getHours()}시 ${dateTime.getMinutes()}분`} />
+                  </FormControl>
+                  <FormControl id="div_place" fullWidth style={{marginBottom: 5}}>
+                     <TextField InputProps={{readOnly: true,}} label="거래 장소"  value={meetingPlace} />
+                  </FormControl>
+               </Typography>
+            </Box>
+         </Modal>
+      );
+   }
 
    const renderModal = (mTitle) => {
       return (
@@ -103,7 +137,7 @@ const ItemInfo = (props) => {
                      {renderDateTimePicker()}
                   </FormControl>
                   <FormControl id="div_place" fullWidth style={{marginBottom: 5}}>
-                     <TextField disabled={props.roomInfo.itemInfo.dealState?isUpdateFieldReadOnly:false} label="거래 장소" variant="standard" value={meetingPlace} onChange={onMeetingPlaceHandleChange} />
+                     <TextField disabled={props.roomInfo.itemInfo.dealState?isUpdateFieldReadOnly:false} label="거래 장소" value={meetingPlace} onChange={onMeetingPlaceHandleChange} />
                   </FormControl>
                   <div id="btn_search">
                      {isUpdateFieldReadOnly?(props.roomInfo.itemInfo.dealState?(props.roomInfo.itemInfo.dealState=="APPOINTMENT"?<Button onClick={onCancelBtnClick}>예약취소</Button>:null):null):null}
@@ -121,19 +155,20 @@ const ItemInfo = (props) => {
 
    return (
       <>
+      {props.newChatRoomInfo==null?renderDealInfoModal():null}
       {props.newChatRoomInfo==null?(renderModal(props.roomInfo.itemInfo.dealState?'상태변경':'예약하기')):null}
       <Card className="div_itemInfo">
-         <div className="itemImg">{props.newChatRoomInfo==null?(props.roomInfo.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.roomInfo.itemInfo.itemImg} />):(props.newChatRoomInfo.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.newChatRoomInfo.itemInfo.itemImg} />)}</div>
-         <div className="title">{props.newChatRoomInfo==null?props.roomInfo.itemInfo.title:props.newChatRoomInfo.itemInfo.title}</div>
+         <div className="itemImg" onClick={() => window.location.pathname=`/item/${props.roomInfo.itemInfo.itemId}`}>{props.newChatRoomInfo==null?(props.roomInfo.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.roomInfo.itemInfo.itemImg} />):(props.newChatRoomInfo.itemInfo.itemImg === null ? <img src={noImg} /> : <img src={props.newChatRoomInfo.itemInfo.itemImg} />)}</div>
+         <div className="title" onClick={() => window.location.pathname=`/item/${props.roomInfo.itemInfo.itemId}`}>{props.newChatRoomInfo==null?props.roomInfo.itemInfo.title:props.newChatRoomInfo.itemInfo.title}</div>
          <div className="price">{(props.newChatRoomInfo==null?props.roomInfo.itemInfo.price:props.newChatRoomInfo.itemInfo.price).toLocaleString()}원</div>
          {/* {props.roomInfo.itemInfo.dealState?<div className="dealState">{renderDealState(props.roomInfo.itemInfo.dealState)}</div>:null} */}
-         {props.newChatRoomInfo==null?(props.roomInfo.itemInfo.dealState?<Chip className="dealState" label={renderDealState(props.roomInfo.itemInfo.dealState)} size="small" style={{fontSize: "0.7rem"}} color={props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?(props.roomInfo.itemInfo.dealState=="APPOINTMENT"?"info":"success"):"default"} />:null):(props.newChatRoomInfo.itemInfo.dealState?<Chip className="dealState" label={renderDealState(props.newChatRoomInfo.itemInfo.dealState)} size="small" style={{fontSize: "0.7rem"}} color={props.newChatRoomInfo.itemInfo.dealState=="APPOINTMENT"?"default":"success"} />:null)}
+         {props.newChatRoomInfo==null?(props.roomInfo.itemInfo.dealState?<Chip className="dealState" label={renderDealState(props.roomInfo.itemInfo.dealState)} size="small" style={{fontSize: "0.7rem"}} onClick={props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?handleDealInfoModalOpen:null} color={props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?(props.roomInfo.itemInfo.dealState=="APPOINTMENT"?"info":"success"):"default"} />:null):(props.newChatRoomInfo.itemInfo.dealState?<Chip className="dealState" label={renderDealState(props.newChatRoomInfo.itemInfo.dealState)} size="small" style={{fontSize: "0.7rem"}} onClick={props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?handleDealInfoModalOpen:null} color={props.newChatRoomInfo.itemInfo.dealState=="APPOINTMENT"?"default":"success"} />:null)}
          {props.newChatRoomInfo==null?(props.roomInfo.dealInfo?(props.roomInfo.itemSavedMemberInfo.memberId==props.myId&&props.roomInfo.itemInfo.dealState!=="COMPLETE"&&props.roomInfo.dealInfo.dealTargetMemberInfo.memberId==props.roomInfo.requestedMemberInfo.memberId?
             <Button className="btn_stateChange" 
                variant="contained" 
                size="small" 
                onClick={handleOpen}
-               style={{marginTop: 4}}
+               style={{marginTop: 4, fontSize: "0.74rem"}}
             >
                {props.roomInfo.itemInfo.dealState?'상태변경':'예약하기'}
             </Button>
@@ -142,7 +177,7 @@ const ItemInfo = (props) => {
                variant="contained" 
                size="small" 
                onClick={handleOpen}
-               style={{marginTop: 4}}
+               style={{marginTop: 4, fontSize: "0.74rem"}}
             >
                {props.roomInfo.itemInfo.dealState?'상태변경':'예약하기'}
             </Button>

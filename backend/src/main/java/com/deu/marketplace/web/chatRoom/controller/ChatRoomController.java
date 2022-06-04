@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -58,6 +59,17 @@ public class ChatRoomController {
         log.info("Create ChatRoom.");
         Member requestedMember = memberService.getMemberById(memberId).orElseThrow();
         Item targetItem = itemService.getOneItemById(createChatRoomDto.getItemId()).orElseThrow();
+
+        Optional<ChatRoom> findChatRoom =
+                chatRoomService.getOneChatRoomByItemIdAndMemberId(
+                                targetItem.getId(),
+                                requestedMember.getId()
+                );
+
+        if (findChatRoom.isPresent()) {
+            return ApiResponse.success("result", findChatRoom.orElseThrow().getId());
+        }
+
         ChatRoom chatRoom = ChatRoom.builder()
                 .requestedMember(requestedMember)
                 .item(targetItem)

@@ -29,7 +29,7 @@ import BottomNav from "../components/nav/bottom/BottomNav";
 import HeaderContainer from "../containers/HeaderContainer";
 import { useSelector } from "react-redux";
 import { Button } from "../../node_modules/@material-ui/core/index";
-import { AWS_SERVER } from "../api/client";
+import { AWS_SERVER, DOMAIN } from "../api/client";
 
 // var sock = SockJS("/stomp/chat");
 // var client = null;
@@ -273,7 +273,7 @@ const ChatRoomPage = ({ token, setToken }) => {
    const connect = () => {
       setDate(new Date(+new Date() + 3240 * 10000).toISOString().replace("T", "_").replace(/\..*/, ''));
       client.current = new StompJS.Client({
-         webSocketFactory: () => new SockJS(AWS_SERVER+"/ws"),
+         webSocketFactory: () => new SockJS(DOMAIN+"/ws"),
 
          connectHeaders: {
             Authorization: `Bearer ${token}`

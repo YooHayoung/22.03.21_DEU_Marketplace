@@ -21,23 +21,24 @@ const Header = (props) => {
 
     const onBackBtnClick = (pageName) => {
         console.log(document.referrer);
-        navigate(-1);
+        // navigate(-1);
 
-        // if (url.startsWith('/item/') && url.substring('/item/'.length)!='') {
-        //     if (pageName=='SELL') {
-        //         window.location.pathname = '/';
-        //     } else if (pageName=='BUY') {
-        //         window.location.pathname = '/buy';
-        //     }
-        // } else if (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') {
-        //     window.location.pathname = '/chatRooms';
-        // } else if ((url === '/search') || (url==='/save') || (url==='/update')) {
-        //     navigate(-1);
-        // } else if (url.startsWith('/board/') && url.substring('/board/'.length)!='') {
-        //     window.location.pathname = '/board';
-        // } else if (url === '/myPage') {
-        //     navigate(-1);
-        // }
+        if (url.startsWith('/item/') && url.substring('/item/'.length)!='') {
+            if (props.classification == "SELL") {
+                window.location.pathname = "/";
+            } else if (props.classification == "BUY") {
+                window.location.pathname = "/buy"
+            }
+            // console.log(props.classification);
+        } else if (url.startsWith('/chatRooms/') && url.substring('/chatRooms/'.length)!='') {
+            window.location.pathname = '/chatRooms';
+        } else if ((url === '/search') || (url==='/save') || (url==='/update')) {
+            navigate(-1);
+        } else if (url.startsWith('/board/') && url.substring('/board/'.length)!='') {
+            window.location.pathname = '/board';
+        } else if (url === '/myPage') {
+            navigate(-1);
+        }
     }
     /* 
         type: main || back 

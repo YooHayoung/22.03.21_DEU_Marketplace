@@ -134,7 +134,7 @@ const InputItemInfoPage = ({token, setToken}) => {
     };
 
     function handleClick() {
-      setLoading(true);
+      setLoading(false);
     };
     const [alertOpen, setAlertOpen] = React.useState({
         open: false,
@@ -616,7 +616,7 @@ const InputItemInfoPage = ({token, setToken}) => {
         }
 
         if (cond) {
-            setOpen(true);
+            // setOpen(true);
             setLoading(true);
             save();
             // console.log("데이터 전송");
@@ -681,7 +681,7 @@ const InputItemInfoPage = ({token, setToken}) => {
         }
     };
     const onUpdateBtnClick = () => {
-        let cond = false;
+        let cond = true;
         if (classification == "sell") {
             if (title == '') {
                 cond = false;
@@ -732,9 +732,13 @@ const InputItemInfoPage = ({token, setToken}) => {
                 setCategoryFieldError(true);
             }
         }
+        console.log(classification);
+        console.log(cond);
+
 
         if (cond) {
-            setOpen(true);
+            console.log("do update");
+            // setOpen(true);
             setLoading(true);
             update();
         }
@@ -1162,8 +1166,8 @@ const InputItemInfoPage = ({token, setToken}) => {
         </Container>
         <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={open}
-            onClick={handleClose}
+            open={loading}
+            onClick={handleClick}
         >
             <CircularProgress color="inherit" />
         </Backdrop>

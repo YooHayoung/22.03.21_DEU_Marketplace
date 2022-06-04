@@ -21,6 +21,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Button, ButtonBase, Divider, IconButton, Typography } from "../../node_modules/@material-ui/core/index";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CommentIcon from '@mui/icons-material/Comment';
+import { DOMAIN } from "../api/client";
 
 const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToken, refreshToken, updateToken, remove }) => {
     let navigate = useNavigate();
@@ -41,7 +42,7 @@ const PostListPage = ({ token, setToken, onClear, oauth, code, state, accessToke
         console.log(token);
         if (token === '') {
            (async () => {
-              axios.get('http://localhost:8000/oauth/refresh', { withCredentials: true })
+              axios.get(DOMAIN + '/oauth/refresh', { withCredentials: true })
                  .catch((error) => {
                     if (error.response.status === 307) {
                        console.log(error.response.headers.authorization);

@@ -33,7 +33,8 @@ const NewChatRoomPage = ({ token, setToken }) => {
     console.log(itemInfo);
 
     const afterCreateChatRoom = (res) => {
-        navigate(`/chatRooms/${res.data.body.result}`);
+        // navigate(`/chatRooms/${res.data.body.result}`);
+        window.location.pathname = `/chatRooms/${res.data.body.result}`;
     };
     const onChatSubmitBtnClick = (message) => {
         (async () => {

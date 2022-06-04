@@ -249,7 +249,7 @@ const ItemDetailPage = ({token, setToken}) => {
 
     return (
         <div>
-            <HeaderContainer pageName={"상품 상세"} />
+            <HeaderContainer pageName={"상품 상세"} classification={loading?content.itemDetailDto.classification:""} />
             <div className="div_contents" style={{"padding-bottom": 0}}>
                 {renderItemImgs()}
                 <Divider />
