@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Container, FormControl, InputLabel, Modal, OutlinedInput, TextField, Typography } from "../../node_modules/@material-ui/core/index";
-import { getMyInfo, updateMyNickname } from "../api/Api";
+import { doLogoutFromServer, getMyInfo, updateMyNickname } from "../api/Api";
+import { LOCAL_CLIENT, THIS_CLIENT } from "../api/client";
 import { UseApi } from "../api/UseApi";
 import HeaderContainer from "../containers/HeaderContainer";
 
@@ -172,6 +173,31 @@ const MyPage = ({ token, setToken }) => {
         );
     }
 
+    const afterLogout = () => {
+        //창 크기 지정
+        var width = 500;
+        var height = 500;
+
+        //pc화면기준 가운데 정렬
+        var left = (window.screen.width / 2) - (width / 2);
+        var top = (window.screen.height / 4);
+
+        //윈도우 속성 지정
+        var windowStatus = 'width=' + width + ', height=' + height + ', left=' + left + ', top=' + top + ', scrollbars=yes, status=yes, resizable=yes, titlebar=yes';
+
+        //연결하고싶은url
+        const logoutUrl = "http://nid.naver.com/nidlogin.logout";
+
+        //등록된 url 및 window 속성 기준으로 팝업창을 연다.
+        let popup=window.open(logoutUrl, "logout", windowStatus);
+
+        setTimeout(() => {popup.close(); window.location.href=THIS_CLIENT;}, 1000)
+    };
+
+    const onLogoutBtnClick = () => {
+        UseApi(doLogoutFromServer, token, setToken, afterLogout);
+    };
+
     return (
         <>
         <HeaderContainer pageName={"마이페이지"} />
@@ -187,6 +213,9 @@ const MyPage = ({ token, setToken }) => {
                 </Button>
                 <Button sx={{m:0.5, p:1}} variant="outlined" disabled>
                     회원 탈퇴
+                </Button>
+                <Button sx={{m:0.5, p:1}} variant="outlined" onClick={onLogoutBtnClick}>
+                    로그아웃
                 </Button>
             </div>
         </Container>

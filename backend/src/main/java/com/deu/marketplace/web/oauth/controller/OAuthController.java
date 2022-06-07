@@ -108,8 +108,8 @@ public class OAuthController {
         return ApiResponse.success("token", newAccessToken);
     }
 
-    @GetMapping("/logout")
-    public ApiResponse logout(@AuthenticationPrincipal Long memberId,
+//    @GetMapping("/logout")
+    public ApiResponse logout1(@AuthenticationPrincipal Long memberId,
                               @AuthenticationPrincipal String accessToken,
                               @RequestParam("code") String code,
                               @RequestParam("state") String state,
@@ -159,6 +159,14 @@ public class OAuthController {
         memberRefreshTokenService.deleteByMemberId(memberId);
         return ApiResponse.success("logout", "Logout Success");
     }
+
+    @GetMapping("/logout")
+    public ApiResponse logout(@AuthenticationPrincipal Long memberId) {
+        memberRefreshTokenService.deleteByMemberId(memberId);
+        return ApiResponse.success("logout", "Logout Success");
+    }
+
+
     private String requestToServer(String apiURL) throws IOException {
         return requestToServer(apiURL, null);
     }
