@@ -1,4 +1,3 @@
-# DELETE FROM lecture;
 
 Insert Into lecture (lecture_name,professor_name) values ( '실용한자' ,'이상협');
 Insert Into lecture (lecture_name,professor_name) values ( '영어회화' ,'아데');
@@ -128,7 +127,6 @@ Insert Into lecture (lecture_name,professor_name) values ( '철학의향기와�
 Insert Into lecture (lecture_name,professor_name) values ( '철학의향기와역사이야기' ,'안환');
 Insert Into lecture (lecture_name,professor_name) values ( 'TOPIKⅠ' ,'김은지');
 Insert Into lecture (lecture_name,professor_name) values ( '기본한국어' ,'안은주');
-Insert Into lecture (lecture_name,professor_name) values ( '한국사뿌리깊은이야기' ,NULL);
 Insert Into lecture (lecture_name,professor_name) values ( '컴퓨팅마인드와코딩' ,'권오준');
 Insert Into lecture (lecture_name,professor_name) values ( '컴퓨팅마인드와코딩' ,'이종민');
 Insert Into lecture (lecture_name,professor_name) values ( '컴퓨팅마인드와코딩' ,'박유현');
@@ -159,7 +157,6 @@ Insert Into lecture (lecture_name,professor_name) values ( '문학과삶(슬로�
 Insert Into lecture (lecture_name,professor_name) values ( '문학과삶(슬로리딩)' ,'김대곤');
 Insert Into lecture (lecture_name,professor_name) values ( '문학과삶(슬로리딩)' ,'박지영');
 Insert Into lecture (lecture_name,professor_name) values ( '콜라보인성의이해' ,'윤현서');
-Insert Into lecture (lecture_name,professor_name) values ( '기초여행영어' ,NULL);
 Insert Into lecture (lecture_name,professor_name) values ( '지도교수세미나Ⅲ' ,'송춘호');
 Insert Into lecture (lecture_name,professor_name) values ( '지도교수세미나Ⅲ' ,'이용태');
 Insert Into lecture (lecture_name,professor_name) values ( '지도교수세미나Ⅲ' ,'이상협');
@@ -1758,7 +1755,6 @@ Insert Into lecture (lecture_name,professor_name) values ( '부동산학연습' 
 Insert Into lecture (lecture_name,professor_name) values ( '재무학연습' ,'김지원');
 Insert Into lecture (lecture_name,professor_name) values ( '부동산과자산경영의이해' ,'윤지석');
 Insert Into lecture (lecture_name,professor_name) values ( '수익형부동산투자실무' ,'정쾌호');
-Insert Into lecture (lecture_name,professor_name) values ( '부동산투자론' ,NULL);
 Insert Into lecture (lecture_name,professor_name) values ( '캡스톤디자인Ⅰ' ,'김영식');
 Insert Into lecture (lecture_name,professor_name) values ( '시사부동산정책분석' ,'홍성철');
 Insert Into lecture (lecture_name,professor_name) values ( '절세와세테크' ,'손기준');
@@ -1767,7 +1763,6 @@ Insert Into lecture (lecture_name,professor_name) values ( '도시정비사업�
 Insert Into lecture (lecture_name,professor_name) values ( '경매와NPL투자' ,'강병길');
 Insert Into lecture (lecture_name,professor_name) values ( '부동산e비즈니스기법' ,'김혜경');
 Insert Into lecture (lecture_name,professor_name) values ( '현장프로젝트Ⅰ' ,'손기준');
-Insert Into lecture (lecture_name,professor_name) values ( '부동산경영관리론' ,NULL);
 Insert Into lecture (lecture_name,professor_name) values ( '부동산시장분석' ,'오윤경');
 Insert Into lecture (lecture_name,professor_name) values ( '부동산개발프로젝트사례' ,'박원석');
 Insert Into lecture (lecture_name,professor_name) values ( '감정평가및보상법규' ,'최은열');
@@ -3269,17 +3264,3 @@ Insert Into lecture (lecture_name,professor_name) values ( '약과건강' ,'하�
 Insert Into lecture (lecture_name,professor_name) values ( '바이오아트를통한생명과학의이해' ,'하성남');
 Insert Into lecture (lecture_name,professor_name) values ( '유니티(Unity)를이용한VR/AR콘텐츠제작' ,'하성남');
 
-
-INSERT INTO item_category(category_name) VALUES('대학 교재');
-INSERT INTO item_category(category_name) VALUES('강의 관련 물품');
-INSERT INTO item_category(category_name) VALUES('서적');
-INSERT INTO item_category(category_name) VALUES('전자기기');
-INSERT INTO item_category(category_name) VALUES('스포츠');
-INSERT INTO item_category(category_name) VALUES('가구');
-INSERT INTO item_category(category_name) VALUES('가전');
-INSERT INTO item_category(category_name) VALUES('의류');
-INSERT INTO item_category(category_name) VALUES('기타');
-
-INSERT INTO post_category(category_name) VALUES('자유');
-INSERT INTO post_category(category_name) VALUES('질문');
-INSERT INTO post_category(category_name) VALUES('정보공유');
