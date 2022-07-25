@@ -40,7 +40,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
 public class OAuthController {
