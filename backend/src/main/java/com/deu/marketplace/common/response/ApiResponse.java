@@ -1,4 +1,4 @@
-package com.deu.marketplace.common;
+package com.deu.marketplace.common.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

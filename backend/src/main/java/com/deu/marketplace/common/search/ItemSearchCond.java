@@ -1,6 +1,5 @@
-package com.deu.marketplace.common;
+package com.deu.marketplace.common.search;
 
-import com.deu.marketplace.domain.item.entity.Classification;
 import lombok.Getter;
 
 @Getter
@@ -16,8 +15,6 @@ public class ItemSearchCond { // 검색 조건
     public ItemSearchCond(String classification, String title, Long itemCategoryId,
                           String lectureName, String professorName,
                           Integer priceGoe, Integer priceLoe) {
-        if (classification == null) this.classification = Classification.SELL.name();
-        else this.classification = classification;
         this.title = title;
         this.itemCategoryId = itemCategoryId;
         this.lectureName = lectureName;
