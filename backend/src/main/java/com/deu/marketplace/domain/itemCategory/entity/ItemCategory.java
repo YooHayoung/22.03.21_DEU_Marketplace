@@ -24,10 +24,4 @@ public class ItemCategory {
         Assert.notNull(categoryName, "categoryName must not be null");
         this.categoryName = categoryName;
     }
-
-    @Builder(builderClassName = "dtoToEntityBuilder", builderMethodName = "dtoToEntityBuilder")
-    public ItemCategory(Long id, String categoryName) {
-        this.id = id;
-        this.categoryName = categoryName;
-    }
 }

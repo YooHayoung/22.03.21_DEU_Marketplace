@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
 import { getNewAccessToken } from "./Api";
 
-// api = method, accessToken = string, work = method
+// api = method, accessToken = string, setToken = 새 토큰 받으면 token 값을 저장하기 위함, work = method, object = api에 전달할 값
 export const UseApi = (api, accessToken, setToken, work, object) => {
    if (accessToken === '' || (jwt_decode(accessToken).exp <= Date.now() / 1000)) {
       (async () => {

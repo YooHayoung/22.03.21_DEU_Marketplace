@@ -22,15 +22,19 @@ public class ItemImg extends BaseTimeEntity {
     private Item item;
 
     @Column(nullable = false)
-    private String imgFile;
+    private String origFileName;
+
+    @Column(nullable = false)
+    private String storeFileName;
 
     @Column(nullable = false)
     private int imgSeq;
 
     @Builder
-    public ItemImg(Item item, String imgFile, int imgSeq) {
+    public ItemImg(Item item, String origFileName, String storeFileName, int imgSeq) {
         this.item = item;
-        this.imgFile = imgFile;
+        this.origFileName = origFileName;
+        this.storeFileName = storeFileName;
         this.imgSeq = imgSeq;
 
         item.getItemImgs().add(this);

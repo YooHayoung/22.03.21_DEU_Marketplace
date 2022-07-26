@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
+// TODO 회원 도메인 수정
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
@@ -17,44 +18,38 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false)
     private String oauthId;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String email;
 
-//    private String profileImg;
+    private String name;
+
+    private String profileImg;
 
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private Boolean certification;
+    private String univEmail;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private String token;
+    @Column(nullable = false)
+    private Boolean deleted;
 
-    @Builder(builderClassName = "ByUserBuilder", builderMethodName = "ByUserBuilder")
-    public Member(String oauthId, String name, String email, String token) {
-        Assert.notNull(oauthId, "oauthId must not be null");
-        Assert.notNull(name, "name must not be null");
-        Assert.notNull(email, "email must not be null");
-
+    @Builder(builderClassName = "ByMemberBuilder", builderMethodName = "ByMemberBuilder")
+    public Member(String oauthId, String name, String email, String profileImg, String univEmail) {
         this.oauthId = oauthId;
         this.name = name;
         this.email = email;
-        this.token = token; //
+        this.profileImg = profileImg;
+        this.univEmail = univEmail;
         this.nickname = createRandomNickname();
-        this.certification = false;
         this.role = Role.MEMBER;
+        this.deleted = false;
     }
 
-    public String createRandomNickname() {
+    private String createRandomNickname() {
         int length = 10;
         String defaultFrontNickName = "회원";
         String theAlphaNumericS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -67,25 +62,14 @@ public class Member extends BaseTimeEntity {
         return defaultFrontNickName + stringBuilder.toString();
     }
 
-    public Member updateInfo(String name, String email, String token) {
+    public Member updateInfo(String name, String email) {
         this.name = name;
-        this.email = email;
-        this.token = token; //
+        this.univEmail = email;
         return this;
     }
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public void certifyByUnivEmail() {
-        if(!this.isCertified()) {
-            certification = !certification;
-        }
-    }
-
-    public Boolean isCertified() {
-        return this.certification;
     }
 
     public String getRoleKey() {

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,23 +31,20 @@ public class ChatRoom extends BaseTimeEntity {
     private Member requestedMember;
 
     @Column(nullable = false)
-    private String socket;
+    private Boolean registerOut;
+
+    @Column(nullable = false)
+    private Boolean requesterOut;
 
     @JsonIgnore
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatLog> logs = new ArrayList<>();
 
-//    @Builder
-//    public ChatRoom(Item item, Member requestedMember, String socket) {
-//        this.item = item;
-//        this.requestedMember = requestedMember;
-//        this.socket = socket;
-//    }
-
     @Builder
     public ChatRoom(Item item, Member requestedMember) {
         this.item = item;
         this.requestedMember = requestedMember;
-        this.socket = UUID.randomUUID().toString();
+        this.registerOut = false;
+        this.requesterOut = false;
     }
 }

@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.xml.bind.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +48,8 @@ public class Item extends BaseTimeEntity {
     @Column(nullable = false)
     private String description;
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false, updatable = false)
-    private Classification classification;
+    @Column(nullable = false)
+    private Boolean deleted;
 
     //@Builder.Default
     @JsonIgnore
@@ -60,8 +58,8 @@ public class Item extends BaseTimeEntity {
 
     @Builder(builderClassName = "ByUnivBookBuilder", builderMethodName = "ByUnivBookBuilder")
     public Item(Member member, ItemCategory itemCategory,
-                String title,Lecture lecture, BookState bookState,
-                int price, String description, Classification classification) {
+                String title, Lecture lecture, BookState bookState,
+                int price, String description) {
         this.member = member;
         this.itemCategory = itemCategory;
         this.title = title;
@@ -69,47 +67,42 @@ public class Item extends BaseTimeEntity {
         this.bookState = bookState;
         this.price = price;
         this.description = description;
-        this.classification = classification;
+        this.deleted = false;
     }
 
     @Builder(builderClassName = "ByNormalItemBuilder", builderMethodName = "ByNormalItemBuilder")
     public Item(Member member, ItemCategory itemCategory, String title,
-                int price, String description, Classification classification) {
+                int price, String description) {
         this.member = member;
         this.itemCategory = itemCategory;
         this.title = title;
         this.price = price;
         this.description = description;
-        this.classification = classification;
+        this.deleted = false;
     }
 
     @Builder(builderClassName = "ByUnivItemBuilder", builderMethodName = "ByUnivItemBuilder")
     public Item(Member member, ItemCategory itemCategory, String title,
-                Lecture lecture, int price, String description, Classification classification) {
+                Lecture lecture, int price, String description) {
         this.member = member;
         this.itemCategory = itemCategory;
         this.title = title;
         this.lecture = lecture;
         this.price = price;
         this.description = description;
-        this.classification = classification;
+        this.deleted = false;
     }
 
     @Builder(builderClassName = "ByBookItemBuilder", builderMethodName = "ByBookItemBuilder")
     public Item(Member member, ItemCategory itemCategory, String title, BookState bookState,
-                int price, String description, Classification classification) {
+                int price, String description) {
         this.member = member;
         this.itemCategory = itemCategory;
         this.title = title;
         this.bookState = bookState;
         this.price = price;
         this.description = description;
-        this.classification = classification;
-    }
-
-    public void validWriterIdAndMemberId(Long memberId) throws ValidationException {
-        if (this.member.getId() != memberId)
-            throw new ValidationException("Member is not the same as writer");
+        this.deleted = false;
     }
 
     public void updateItem(Item updateItemInfo) {
@@ -119,50 +112,11 @@ public class Item extends BaseTimeEntity {
         this.bookState = updateItemInfo.bookState;
         this.price = updateItemInfo.price;
         this.description = updateItemInfo.description;
-        this.classification = updateItemInfo.classification;
+        this.deleted = updateItemInfo.deleted;
     }
 
-    public void clearItemImgs() {
-        this.itemImgs.clear();
-    }
-
-    public void updateUnivBookItemInfo(ItemCategory itemCategory, String title, Lecture lecture,
-                                       BookState bookState, int price,String description) {
-        this.itemCategory = itemCategory;
-        this.title = title;
-        this.lecture = lecture;
-        this.bookState = bookState;
-        this.price = price;
-        this.description = description;
-    }
-
-    public void updateNormalItemInfo(ItemCategory itemCategory,
-                                     String title, int price,String description) {
-        this.itemCategory = itemCategory;
-        this.title = title;
-        this.price = price;
-        this.description = description;
-    }
-
-    public void updateUnivItemInfo(ItemCategory itemCategory, String title,
-                                   Lecture lecture, int price,String description) {
-        this.itemCategory = itemCategory;
-        this.title = title;
-        this.lecture = lecture;
-        this.price = price;
-        this.description = description;
-    }
-
-    public void updateBookItemInfo(ItemCategory itemCategory, String title,
-                                   BookState bookState, int price,String description) {
-        this.itemCategory = itemCategory;
-        this.title = title;
-        this.bookState = bookState;
-        this.price = price;
-        this.description = description;
-    }
-
-    public boolean isLectureInfoExist() {
-        return (lecture != null);
+    // Item 삭제 표기
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
