@@ -75,4 +75,8 @@ public class Member extends BaseTimeEntity {
     public String getRoleKey() {
         return role.getKey();
     }
+
+    public void withdrawal(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

@@ -1,19 +1,42 @@
 package com.deu.marketplace.domain.member.service;
 
 import com.deu.marketplace.domain.member.entity.Member;
+import com.deu.marketplace.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface MemberService {
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class MemberService {
 
-    Optional<Member> getMemberById(Long id);
+    private final MemberRepository memberRepository;
 
-    Optional<Member> getMemberByEmail(String email);
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
 
-    List<Member> getMembersByNickname(String nickname);
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 
-    Member saveMember(Member member);
+    @Transactional
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
 
-    Member updateMemberNickname(Long id, String nickname);
+    @Transactional
+    public void updateNickname(Member member, String nickname) {
+        member.updateNickname(nickname);
+    }
+
+    @Transactional
+    public void withdrawal(Member member, boolean deleted) {
+        member.withdrawal(deleted);
+    }
+
+    // TODO 학생 인증 기능 구현
 }
