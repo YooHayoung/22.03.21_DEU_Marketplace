@@ -18,8 +18,8 @@ public class LectureService {
 
     private final LectureRepository lectureRepository;
 
-    public Optional<Lecture> findById(Long id) {
-        return lectureRepository.findById(id);
+    public Optional<Lecture> findById(Long lectureId) {
+        return lectureRepository.findById(lectureId);
     }
 
     public Page<Lecture> findLectures(LectureSearchCond cond, Pageable pageable) {

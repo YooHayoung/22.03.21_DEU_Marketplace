@@ -24,8 +24,8 @@ public class Item extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @JoinColumn(name = "writer_id", nullable = false)
+    private Member writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_category_id", nullable = false)
@@ -57,10 +57,10 @@ public class Item extends BaseTimeEntity {
     private List<ItemImg> itemImgs = new ArrayList<>();
 
     @Builder(builderClassName = "ByUnivBookBuilder", builderMethodName = "ByUnivBookBuilder")
-    public Item(Member member, ItemCategory itemCategory,
+    public Item(Member writer, ItemCategory itemCategory,
                 String title, Lecture lecture, BookState bookState,
                 int price, String description) {
-        this.member = member;
+        this.writer = writer;
         this.itemCategory = itemCategory;
         this.title = title;
         this.lecture = lecture;
@@ -71,9 +71,9 @@ public class Item extends BaseTimeEntity {
     }
 
     @Builder(builderClassName = "ByNormalItemBuilder", builderMethodName = "ByNormalItemBuilder")
-    public Item(Member member, ItemCategory itemCategory, String title,
+    public Item(Member writer, ItemCategory itemCategory, String title,
                 int price, String description) {
-        this.member = member;
+        this.writer = writer;
         this.itemCategory = itemCategory;
         this.title = title;
         this.price = price;
@@ -82,9 +82,9 @@ public class Item extends BaseTimeEntity {
     }
 
     @Builder(builderClassName = "ByUnivItemBuilder", builderMethodName = "ByUnivItemBuilder")
-    public Item(Member member, ItemCategory itemCategory, String title,
+    public Item(Member writer, ItemCategory itemCategory, String title,
                 Lecture lecture, int price, String description) {
-        this.member = member;
+        this.writer = writer;
         this.itemCategory = itemCategory;
         this.title = title;
         this.lecture = lecture;
@@ -94,9 +94,9 @@ public class Item extends BaseTimeEntity {
     }
 
     @Builder(builderClassName = "ByBookItemBuilder", builderMethodName = "ByBookItemBuilder")
-    public Item(Member member, ItemCategory itemCategory, String title, BookState bookState,
+    public Item(Member writer, ItemCategory itemCategory, String title, BookState bookState,
                 int price, String description) {
-        this.member = member;
+        this.writer = writer;
         this.itemCategory = itemCategory;
         this.title = title;
         this.bookState = bookState;
@@ -112,11 +112,11 @@ public class Item extends BaseTimeEntity {
         this.bookState = updateItemInfo.bookState;
         this.price = updateItemInfo.price;
         this.description = updateItemInfo.description;
-        this.deleted = updateItemInfo.deleted;
     }
 
     // Item 삭제 표기
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
 }
