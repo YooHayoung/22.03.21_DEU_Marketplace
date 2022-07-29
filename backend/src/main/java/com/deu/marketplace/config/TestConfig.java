@@ -26,6 +26,12 @@ public class TestConfig {
                 .email("email@email.com")
                 .univEmail("univEmail@email.com")
                 .build());
+        memberRepository.save(Member.ByMemberBuilder()
+                .name("임시2")
+                .oauthId("asd2")
+                .email("email2@email.com")
+                .univEmail("univEmail2@email.com")
+                .build());
 
         itemCategoryRepository.save(ItemCategory.builder()
                 .categoryName("대학 교재")

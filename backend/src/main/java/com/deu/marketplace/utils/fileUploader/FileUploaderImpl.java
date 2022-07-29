@@ -39,4 +39,9 @@ public class FileUploaderImpl implements FileUploader {
         String storeFileName = UUID.randomUUID().toString();
         return storeFileName + "." + ext;
     }
+
+    @Override
+    public void deleteFiles(List<String> storeFileNames) {
+        // TODO 삭제 로직 구현
+    }
 }
