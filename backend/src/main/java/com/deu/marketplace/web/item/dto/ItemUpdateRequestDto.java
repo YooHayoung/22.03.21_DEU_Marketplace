@@ -4,15 +4,16 @@ import com.deu.marketplace.domain.item.entity.BookState;
 import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.itemCategory.entity.ItemCategory;
 import com.deu.marketplace.domain.lecture.entity.Lecture;
-import com.deu.marketplace.domain.member.entity.Member;
 import lombok.Getter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-public class ItemSaveRequestDto {
+public class ItemUpdateRequestDto {
 
     @NotBlank
     private String title;
@@ -32,11 +33,13 @@ public class ItemSaveRequestDto {
 
     private String surfaceState;
 
-    private Integer regularPrice;
+    private int regularPrice;
 
-    public ItemSaveRequestDto(String title, String description, Integer price,
-                              Long itemCategoryId, Long lectureId, String writeState,
-                              String surfaceState, Integer regularPrice) {
+    private List<Long> delImgIdList = new ArrayList<>();
+
+    public ItemUpdateRequestDto(String title, String description, Integer price,
+                                Long itemCategoryId, Long lectureId, String writeState,
+                                String surfaceState, Integer regularPrice, List<Long> delImgIdList) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -45,11 +48,11 @@ public class ItemSaveRequestDto {
         this.writeState = writeState;
         this.surfaceState = surfaceState;
         this.regularPrice = regularPrice;
+        this.delImgIdList = delImgIdList;
     }
 
-    public Item toEntity(Member member, ItemCategory itemCategory, Lecture lecture) {
+    public Item toEntity(ItemCategory itemCategory, Lecture lecture) {
         return Item.ByUnivBookBuilder()
-                .writer(member)
                 .itemCategory(itemCategory)
                 .lecture(lecture)
                 .bookState(BookState.builder()
@@ -63,10 +66,9 @@ public class ItemSaveRequestDto {
                 .build();
     }
 
-    public Item toEntity(Member member, ItemCategory itemCategory) {
+    public Item toEntity(ItemCategory itemCategory) {
         if (itemCategory.getCategoryName().equals("서적")) {
             return Item.ByBookItemBuilder()
-                    .writer(member)
                     .itemCategory(itemCategory)
                     .bookState(BookState.builder()
                             .surfaceState(surfaceState)
@@ -79,11 +81,14 @@ public class ItemSaveRequestDto {
                     .build();
         }
         return Item.ByNormalItemBuilder()
-                .writer(member)
                 .itemCategory(itemCategory)
                 .title(title)
                 .price(price)
                 .description(description)
                 .build();
+    }
+
+    public void setDelImgIdList(List<Long> delImgIdList) {
+        this.delImgIdList = delImgIdList;
     }
 }
