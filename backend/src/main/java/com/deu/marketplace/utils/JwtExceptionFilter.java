@@ -1,6 +1,5 @@
 package com.deu.marketplace.utils;
 
-import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.repository.MemberRepository;
 import com.deu.marketplace.domain.memberRefreshToken.entity.MemberRefreshToken;
@@ -62,7 +61,6 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
             response.setContentType("application/json; charset=UTF-8");
             response.setHeader("Authorization", accessToken);
-//            response.setHeader();
         }
         catch (JwtException ex) {
             log.error(ex.getMessage());

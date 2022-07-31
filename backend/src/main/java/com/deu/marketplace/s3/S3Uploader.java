@@ -4,19 +4,15 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.deu.marketplace.utils.FileUtils;
-import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +25,6 @@ public class S3Uploader {
     private String bucket;
 
     public List<String> upload(List<MultipartFile> multipartFiles, String dirName, Long itemId, Long memberId) throws FileUploadFailedException, EmptyFileException {
-//        validateFileExists(multipartFile);
         List<String> fileUrls = new ArrayList<>();
         List<String> fileNames = new ArrayList<>();
 
@@ -54,14 +49,11 @@ public class S3Uploader {
             }
         }
         return fileNames;
-//        return fileUrls;
-//        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
     public void fileDelete(List<String> fileNames) {
         try {
             for (String fileName : fileNames) {
-//                fileName = fileName.substring(fileName.indexOf('/') + 1);
                 System.out.println("bucket = " + bucket);
                 System.out.println("fileName = " + fileName);
                 amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));

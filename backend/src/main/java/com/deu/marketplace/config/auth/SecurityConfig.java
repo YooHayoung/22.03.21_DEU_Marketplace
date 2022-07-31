@@ -40,10 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService customUserDetailsService;
     private final CustomOAuthUserService customOAuthUserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-//    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
-//    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
@@ -126,8 +124,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
-//		configuration.addAllowedOrigin("http://localhost:3000");
-//		configuration.addAllowedOrigin("http://13.209.99.188:3000");
 		configuration.addAllowedOrigin(frontHost);
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader("Authorization");

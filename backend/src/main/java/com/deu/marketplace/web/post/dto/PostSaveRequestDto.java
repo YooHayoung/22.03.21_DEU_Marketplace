@@ -2,14 +2,8 @@ package com.deu.marketplace.web.post.dto;
 
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.post.entity.Post;
-import com.deu.marketplace.domain.postImg.entity.PostImg;
-import com.deu.marketplace.query.postListView.dto.PostImgDto;
 import com.deu.marketplace.web.postCategory.dto.PostCategoryDto;
-import com.deu.marketplace.web.postImg.dto.PostImgSaveRequestDto;
 import lombok.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder

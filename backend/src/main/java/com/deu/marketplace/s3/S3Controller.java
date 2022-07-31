@@ -5,14 +5,10 @@ import com.deu.marketplace.domain.item.entity.Item;
 import com.deu.marketplace.domain.item.service.ItemService;
 import com.deu.marketplace.domain.itemImg.entity.ItemImg;
 import com.deu.marketplace.domain.itemImg.service.ItemImgService;
-import com.deu.marketplace.domain.member.entity.Member;
-import com.deu.marketplace.domain.member.service.MemberService;
 import com.deu.marketplace.domain.post.entity.Post;
 import com.deu.marketplace.domain.post.service.PostService;
 import com.deu.marketplace.domain.postImg.entity.PostImg;
 import com.deu.marketplace.domain.postImg.service.PostImgService;
-import com.deu.marketplace.web.itemImg.dto.ItemImgDto;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -64,8 +60,6 @@ public class S3Controller {
 
 
         return uploadItemImgFiles(requestDto.getItemId(), requestDto.getFiles(), memberId, origImgs.size());
-
-//        return ApiResponse.success("result", requestDto.getItemId());
     }
 
     private ApiResponse uploadItemImgFiles(@RequestParam("itemId") Long itemId,
@@ -120,12 +114,6 @@ public class S3Controller {
                                       @AuthenticationPrincipal Long memberId)
             throws FileUploadFailedException, EmptyFileException {
 
-//        List<String> findImgFiles =
-//                postImgService.getAllByPostId(postId).stream().map(PostImg::getImgFile).collect(Collectors.toList());
-//        s3Uploader.fileDelete(findImgFiles);
-//        postImgService.deleteAllByPostId(postId);
-//
-//        return uploadPostImgFiles(postId, multipartFiles, memberId);
         List<PostImg> postImgs = postImgService.getAllByPostId(requestDto.getPostId());
         List<PostImg> delImgs = postImgs.stream().filter(postImg -> requestDto.getDelImgs().stream()
                         .map(delImg -> delImg.getImgId()).collect(Collectors.toList()).contains(postImg.getId()))

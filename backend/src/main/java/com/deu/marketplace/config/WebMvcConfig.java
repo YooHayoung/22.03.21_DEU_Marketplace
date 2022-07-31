@@ -1,4 +1,4 @@
-package com.deu.marketplace.config.auth;
+package com.deu.marketplace.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -29,12 +29,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.allowCredentials(true)
 				.maxAge(MAX_AGE_SECS);
 	}
-
-		// Controller 없이 특정 뷰로 이동. /app 으로 들어오는 요청들은 다 보낸다.
-	// React - SPA
-//	@Override
-//	public void addViewControllers(ViewControllerRegistry registry) {
-//	    registry.addViewController("/app/**").setViewName("forward:/index.html");
-//	}
 
 }

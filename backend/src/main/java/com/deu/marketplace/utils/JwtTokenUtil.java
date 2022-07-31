@@ -2,7 +2,6 @@ package com.deu.marketplace.utils;
 
 import com.deu.marketplace.config.AppProperties;
 import com.deu.marketplace.config.auth.UserPrincipal;
-import com.deu.marketplace.config.auth.UserPrincipal;
 import com.deu.marketplace.domain.member.entity.Role;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;

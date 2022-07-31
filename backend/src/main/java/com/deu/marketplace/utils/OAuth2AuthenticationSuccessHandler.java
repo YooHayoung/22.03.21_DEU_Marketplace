@@ -1,13 +1,11 @@
 package com.deu.marketplace.utils;
 
 import com.deu.marketplace.config.AppProperties;
-import com.deu.marketplace.config.auth.OauthUserInfo;
 import com.deu.marketplace.config.auth.UserPrincipal;
 import com.deu.marketplace.domain.memberRefreshToken.entity.MemberRefreshToken;
 import com.deu.marketplace.domain.memberRefreshToken.repository.MemberRefreshTokenRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Component
 @Transactional(readOnly = true)
-//@RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private JwtTokenUtil jwtTokenUtil;
@@ -52,10 +48,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
-        ////
-
-        ////
-
 
         logger.info("onAuthenticationSuccess");
         String targetUrl = determineTargetUrl(request, response, authentication);
@@ -101,11 +93,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             memberRefreshTokenRepository.saveAndFlush(newRefreshToken);
         }
 
-        ////////////
-//        Cookie cookie = CookieUtils.getCookie(request, "refreshToken").orElse(null);
-//        logger.warn("naver refreshToken : "+ cookie.getValue());
-        ////////////
-
         CookieUtils.deleteCookie(request, response, "refreshToken");
         CookieUtils.addCookie(response, "refreshToken", refreshToken,
                 (int) (appProperties.getAuth().getRefreshTokenExpirationMsec()/1000));
@@ -141,7 +128,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         return appProperties.getOauth2().getAuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {
-                    // Only validate host and port. Let the clients use different paths if they want to
                     URI authorizedURI = URI.create(authorizedRedirectUri);
                     if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
                             && authorizedURI.getPort() == clientRedirectUri.getPort()) {

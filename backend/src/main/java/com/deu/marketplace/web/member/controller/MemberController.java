@@ -1,21 +1,15 @@
 package com.deu.marketplace.web.member.controller;
 
 import com.deu.marketplace.common.ApiResponse;
-import com.deu.marketplace.config.auth.SessionMember;
 import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.service.MemberService;
 import com.deu.marketplace.web.member.dto.MemberInfoResponseDto;
-import com.deu.marketplace.web.member.dto.SignUpRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor

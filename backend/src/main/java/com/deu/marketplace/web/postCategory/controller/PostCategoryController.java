@@ -4,7 +4,6 @@ import com.deu.marketplace.common.ApiResponse;
 import com.deu.marketplace.domain.postCategory.service.PostCategoryService;
 import com.deu.marketplace.web.postCategory.dto.PostCategoryDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

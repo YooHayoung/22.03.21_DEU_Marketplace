@@ -13,15 +13,9 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
-//        System.out.println("full message:" + message);
-//        System.out.println("auth:" + headerAccessor.getNativeHeader("Authorization"));
-//        System.out.println(headerAccessor.getHeader("nativeHeaders").getClass());
-//        String token =
-//                headerAccessor.getNativeHeader("Authorization").get(0).substring(7);
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
 
         }
-        //throw new MessagingException("no permission! ");
         return message;
     }
 }

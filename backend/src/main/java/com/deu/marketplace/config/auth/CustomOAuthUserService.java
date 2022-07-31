@@ -4,17 +4,10 @@ import com.deu.marketplace.domain.member.entity.Member;
 import com.deu.marketplace.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final OAuth2AuthorizedClientService authorizedClientService;
     private final MemberRepository memberRepository;
 
     @Override
@@ -48,7 +40,6 @@ public class CustomOAuthUserService implements OAuth2UserService<OAuth2UserReque
         // registrationId에 따라 유저 정보를 통해 공통된 UserProfile 객체로 만들어 줌
 
         Member member = saveOrUpdate(userInfo);
-//        httpSession.setAttribute("member", new SessionMember(member));
 
         return UserPrincipal.byMemberBuilder()
                 .member(member)

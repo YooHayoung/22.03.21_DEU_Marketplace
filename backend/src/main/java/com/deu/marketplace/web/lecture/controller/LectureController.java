@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,20 +24,6 @@ public class LectureController {
     private final LectureService lectureService;
     private final LectureInfoRepository lectureInfoRepository;
 
-    //수정예정
-    
-//    @GetMapping
-//    public ResponseEntity<?> getAllLectures() {
-//        return ResponseEntity.ok().body(lectureService.getAll());
-//    }
-//
-//    @GetMapping("/paging")
-//    public ResponseEntity<?> getAllLecturesByPage(
-//            @PageableDefault(size = 50, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-//        return ResponseEntity.ok().body(lectureService.getAllByPage(pageable));
-//    }
-
-    // ****
     @GetMapping("/search")
     public ApiResponse searchLectures(@RequestParam("lectureName") String lectureName,
                                       @RequestParam("professorName") String professorName,
