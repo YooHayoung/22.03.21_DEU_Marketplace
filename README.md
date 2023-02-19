@@ -22,13 +22,9 @@
 - AWS EC2
 - AWS S3 : 이미지 등 정적 호스팅
 
-## 아키텍처 구조
-예정
 
-## API 명세서
-swagger 예정
-
-## 프로젝트 설명
+## ERD
+![deu_marketplace_erd](https://user-images.githubusercontent.com/81250857/219937770-2aaa1d22-bcf2-478c-99fc-c100cb71522f.png)
 
 
 ## 주요 기능 화면
